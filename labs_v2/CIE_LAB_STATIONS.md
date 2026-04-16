@@ -1,5 +1,172 @@
 # CIE Lab Stations — Non-Destructive, Auto-Resetting, Camera-Monitored
 
+## ATT&CK ICS × CWE × D3FEND Integration
+
+Each lab station maps to real MITRE frameworks — not just CIE
+principles in the abstract, but specific attack techniques,
+software weaknesses, and defensive countermeasures from the
+operational technology security knowledge base.
+
+### ATT&CK ICS Impact Techniques demonstrated in the lab
+
+| ATT&CK ICS Technique | ID | What it does | Lab station |
+|---|---|---|---|
+| **Manipulation of Control** | [T0831](https://attack.mitre.org/techniques/T0831/) | Adversary changes setpoints, tags, parameters to alter physical process | Station 1 (thermostat bypass attempt), Station 4 (pump overpressure) |
+| **Modify Parameter** | [T0836](https://attack.mitre.org/techniques/T0836/) | Adversary modifies PLC/controller parameters | Station 2 (voltage override), Station 3 (speed override) |
+| **Spoof Reporting Message** | [T0856](https://attack.mitre.org/techniques/T0856/) | Adversary sends false data to HMI/historian so operators see "normal" | Station 5 (sensor spoof), Station 1 (false temp on display) |
+| **Damage to Property** | [T0879](https://attack.mitre.org/techniques/T0879/) | Physical destruction from cyber manipulation | All stations show the CONSEQUENCE that CIE controls prevent |
+| **Loss of Safety** | [T0880](https://attack.mitre.org/techniques/T0880/) | Safety systems compromised/bypassed (TRITON scenario) | Station 3 (independent ATOM Lite as SIS analog), Station 4 (relief valve) |
+| **Denial of Control** | [T0813](https://attack.mitre.org/techniques/T0813/) | Operators lose ability to control the process | Station 2 (relay lockout demo), Station 3 (motor ignores commands) |
+| **Loss of View** | [T0829](https://attack.mitre.org/techniques/T0829/) | Operators lose visibility into process state | Station 5 (spoofed sensor hides real condition) |
+
+### CWE Weaknesses exploited in each attack scenario
+
+| CWE | Name | ICS relevance | Lab station demo |
+|---|---|---|---|
+| [CWE-20](https://cwe.mitre.org/data/definitions/20.html) | **Improper Input Validation** | #1 most common ICS weakness (found in 142 ICS advisories). PLC accepts any setpoint without range check. | Station 1: software sends T_setpoint = 200°C (beyond safe range); thermostat catches it. Station 2: voltage command exceeds fuse rating. |
+| [CWE-306](https://cwe.mitre.org/data/definitions/306.html) | **Missing Authentication for Critical Function** | PLC/HMI accepts commands without verifying sender identity | Station 3: any controller can command the motor — the ATOM Lite safety monitor demonstrates independent verification |
+| [CWE-787](https://cwe.mitre.org/data/definitions/787.html) | **Out-of-Bounds Write** | Buffer overflow in PLC firmware allows code execution → parameter modification | Conceptual: the CONSEQUENCE of CWE-787 exploitation is shown as parameter manipulation in Station 2 (modified voltage) |
+| [CWE-119](https://cwe.mitre.org/data/definitions/119.html) | **Improper Memory Buffer Restriction** | Memory corruption in PLC → arbitrary control | Mapped to Station 4: if the pump controller's memory is corrupted, it may command infinite pressurization → relief valve saves |
+| [CWE-287](https://cwe.mitre.org/data/definitions/287.html) | **Improper Authentication** | Attacker authenticates as legitimate operator | All stations: the "attack" phase simulates an authenticated but malicious command |
+
+### D3FEND OT Countermeasures implemented in the lab
+
+[MITRE D3FEND for OT](https://d3fend.mitre.org/) (extended Dec 2025)
+provides defensive technique categories for controllers, sensors,
+actuators, and OT networks. The lab implements these:
+
+| D3FEND Category | Technique | Lab implementation |
+|---|---|---|
+| **Physical Process Monitoring** | Independent sensor validation | Station 5: redundant light sensor on ATOM Lite (physically separate from compromised Core2) |
+| **Controller Integrity** | Firmware verification / independent watchdog | Station 3: ATOM Lite as independent safety controller watching the same physical quantity |
+| **Actuator Limiting** | Physical actuation bounds | Station 4: spring relief valve limits max pressure regardless of controller state; Station 2: PTC fuse limits max current |
+| **Sensor Diversity** | Multi-modal sensing | Station 1: KMeter (digital thermocouple) + bimetallic thermostat (analog) + thermal camera (radiometric) — three independent sensing modalities for the same physical quantity |
+| **Network Segmentation** | Isolated safety network | Station 3: ATOM Lite safety monitor on separate WiFi or hardwired, not on the same bus as the compromised Core2 |
+
+### SavvySuperSaver data enriching CIE lessons
+
+The SSS CVE/KEV datasets provide REAL examples of the weaknesses
+being demonstrated:
+
+| SSS Dataset | CIE lesson it enriches | How |
+|---|---|---|
+| **cve-severity** (314K CVEs) | Station 2 (electrical), Station 1 (thermal) | Query: "show me all CVEs with CWE-20 (improper input validation) in ICS products" → real CVE IDs that exploited the exact weakness the station demonstrates |
+| **kev-timeline** (1568 KEVs) | All stations | Query: "which actively exploited vulns targeted SCADA/PLC/HMI?" → real-world attacks on the same type of controllers the lab uses |
+| **cve-vendor-product** (7.8M rows) | Station 3 (mechanical/SIS) | Query: "which safety-system vendors have the most CVEs?" → connects the TRITON lesson to real vendor risk data |
+| **cpsc-recalls** (9724 rows) | Station 4 (fluid/pressure) | Query: "recalls involving pressure vessel or overpressure failure" → real consumer product failures from the same physics the station demonstrates |
+| **fda-recalls** (1999 rows) | Biomedical CIE scenario | Query: "infusion pump or ventilator recalls" → real medical device failures where software/hardware interaction caused patient risk |
+
+### The full MITRE chain: CWE → CAPEC → ATT&CK → D3FEND → Physics
+
+The four MITRE frameworks form a complete attack-to-defense chain.
+CAPEC ([CAPEC-703: ICS Patterns](https://capec.mitre.org/data/definitions/703.html))
+is the missing link between a software weakness (CWE) and HOW an
+adversary actually exploits it to achieve an ATT&CK technique.
+
+Each CIE lab demo walks through all six layers:
+
+```
+1. CWE (the weakness):
+   "The controller has CWE-20 (Improper Input Validation) —
+   it accepts any setpoint without checking safe bounds"
+
+2. CAPEC (the attack pattern):
+   "CAPEC-703 ICS Patterns: the adversary uses a parameter
+   manipulation attack pattern — injecting an out-of-range
+   setpoint value through the HMI or engineering workstation
+   to the PLC. Related CAPEC patterns:
+   - Modification of legitimate commands
+   - Exploitation of trust in valid protocols (Modbus/DNP3
+     have no authentication by design)
+   - Falsification of sensor reporting to hide the attack"
+
+3. ATT&CK ICS (the technique):
+   "T0836 (Modify Parameter): the adversary changes the
+   temperature setpoint from 70°C to 200°C
+   T0856 (Spoof Reporting Message): the HMI still shows 70°C"
+
+4. CONSEQUENCE (the physics):
+   "At 200°C, the Arrhenius equation predicts the reaction
+   rate increases by exp(E_a/R × (1/343 - 1/473)) = 1,847×
+   — a thermal runaway → T0879 (Damage to Property)"
+
+5. D3FEND (the defensive technique):
+   "Physical Process Monitoring + Actuator Limiting:
+   the bimetallic thermostat opens at 70°C regardless of
+   the software setpoint. D3FEND OT categories:
+   - Sensor Diversity (analog + digital reading same quantity)
+   - Controller Integrity (independent safety controller)
+   - Actuator Limiting (physics-based max enforcement)"
+
+6. PHYSICS (the equation — hequ.ai's contribution):
+   "Hooke's law governs the thermostat: the bimetal strip
+   deflects by Δl = α·l·ΔT and mechanically breaks the
+   circuit. The Arrhenius equation governs the runaway.
+   Both equations are in hequ.ai's corpus with failure_modes
+   and DOV-DSL validity envelopes. The safety control IS
+   an equation — the same kind of equation the attack
+   exploits, but implemented in uncorruptible hardware."
+```
+
+### CAPEC ICS patterns mapped to lab stations
+
+[CAPEC-703](https://capec.mitre.org/data/definitions/703.html)
+is the dedicated ICS attack pattern view slice. Key patterns
+demonstrated in the lab:
+
+| CAPEC Pattern | Description | Lab Station | Physical demo |
+|---|---|---|---|
+| **Parameter manipulation** | Inject out-of-range values to PLC/controller setpoints | Station 1 (T_setpoint), Station 2 (V_setpoint), Station 3 (speed_setpoint) | Core2 sends dangerous setpoint; physical limit activates |
+| **Sensor data falsification** | Send spoofed sensor readings to HMI/historian | Station 5 (light sensor spoof), Station 1 (false T reading) | ATOM Lite independent sensor catches the discrepancy |
+| **Safety system bypass** | Disable or reprogram the SIS to prevent emergency shutdown (TRITON pattern) | Station 3 (ATOM Lite as independent SIS) | The "compromised" Core2 tries to override the safety trip; ATOM Lite is on a separate bus and trips anyway |
+| **Protocol exploitation** | Abuse inherent trust in OT protocols (Modbus has no auth, DNP3 has optional auth) | Station 2 (relay commands accepted without auth) | Any controller can command the relay — the PTC fuse is the physics-layer defense that doesn't need auth |
+| **Supply chain compromise** | Tampered firmware on a replacement controller | All stations conceptually | The independent ATOM Lite monitors validate the primary controller's behavior against physics |
+| **Denial of service on safety network** | Flood the safety controller with traffic to prevent shutdown | Station 3 | ATOM Lite on separate WiFi or hardwired I2C — not affected by network flood on the Core2's WiFi |
+
+### The complete mapping: one row per lab station
+
+| Station | CWE exploited | CAPEC pattern | ATT&CK ICS technique | Physical consequence | D3FEND defense | hequ.ai equation | CIE control |
+|---|---|---|---|---|---|---|---|
+| **1 Thermal** | CWE-20 (no input validation on T_setpoint) | Parameter manipulation via HMI | T0836 Modify Parameter + T0856 Spoof Reporting | Thermal runaway (Arrhenius rate × 1847 at 200°C) → T0879 Damage | Physical Process Monitoring + Actuator Limiting | Arrhenius k(T) + thermal expansion Δl=αlΔT | Bimetallic thermostat (KSD301, clicks at 70°C) |
+| **2 Electrical** | CWE-306 (no auth on command interface) | Protocol exploitation (Modbus-like) | T0831 Manipulation of Control | I²R overheating → conductor damage → T0879 | Actuator Limiting | Ohm V=IR, I²R heating → melting point | PTC resettable fuse (trips at 500mA) |
+| **3 Mechanical** | CWE-287 (improper auth on safety controller) | Safety system bypass (TRITON analog) | T0880 Loss of Safety | Overspeed → centrifugal stress → structural failure | Controller Integrity + Network Segmentation | Newton centripetal a=v²/r, Griffith fracture | Independent ATOM Lite on separate bus |
+| **4 Fluid** | CWE-119 (memory buffer overflow in PLC → arbitrary pump command) | Parameter manipulation + SIS bypass | T0831 + T0880 | Overpressure → vessel rupture → T0879 Damage + potential T0880 Loss of Safety | Actuator Limiting + Sensor Diversity | Poiseuille Q, Bernoulli P, Hooke F=kx | Spring-loaded relief valve |
+| **5 Optical** | CWE-20 (false sensor data accepted without validation) | Sensor data falsification | T0856 Spoof Reporting + T0829 Loss of View | Wrong equation computation → bad decision → T0882 Theft of Operational Info or worse | Physical Process Monitoring + Sensor Diversity | Beer-Lambert A=εlc, DOV-DSL validity envelope | Redundant ATOM Lite with independent sensor |
+
+### SSS data grounding: real CVEs for each scenario
+
+The SSS CVE dataset (314K rows) provides REAL examples of every
+CWE exploited in the lab. During a learning session, makau.ai
+queries the SSS API to show the student:
+
+```python
+# Example query during Station 1 (thermal) CIE demo:
+# "Show me real CVEs with CWE-20 in ICS/SCADA products"
+from framework.sss_bridge import SSSBridge
+bridge = SSSBridge()
+cves = bridge.query("cve-severity", limit=10, filters={
+    "severity": "CRITICAL",
+    # filter for ICS-related products via cve-vendor-product join
+})
+# → Returns real CVE IDs, CVSS scores, KEV status
+# Student sees: "CVE-2024-XXXXX, CVSS 9.8, CRITICAL,
+#   KEV-listed — this EXACT weakness was exploited in the
+#   wild against a real ICS controller"
+```
+
+The KEV timeline (1568 actively exploited vulns) shows WHEN these
+weaknesses were exploited and by whom. The student learns: the
+lab demo is not hypothetical. These attacks happened. The physics-
+based CIE controls are the defense that works even when the
+software doesn't.
+
+This chain makes the abstract (ATT&CK technique ID) concrete
+(the lab station physically demonstrating it), grounded in real
+data (the SSS CVE that proves it happens in the wild), and
+connected to the defensive framework (D3FEND OT + CIE
+engineering controls) — all linked through the equations
+in hequ.ai's corpus.
+
 **Design rule:** every consequence is VISIBLE and DRAMATIC but
 NOTHING BREAKS. Every station returns to baseline automatically
 in under 60 seconds. Every consequence is captured on camera
