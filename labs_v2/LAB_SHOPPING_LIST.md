@@ -1,239 +1,254 @@
-# hequ.ai Live Lab — M5Stack Shopping List
+# hequ.ai Live Lab — M5Stack Shopping List v2
 
-**Purpose:** Build a benchtop lab that can experimentally test
-predictions from hequ.ai's 137-equation corpus. Every item maps
-to specific equations it unlocks for live verification via the
-makau.ai bridge.
+**Purpose:** Build a fully automated, self-resetting benchtop lab
+that tests predictions from hequ.ai's 137-equation corpus 24/7
+without human intervention.
 
-**Philosophy:** Buy wide, not deep. One sensor per physical
-quantity covers dozens of equations. The M5Stack ecosystem is
-ideal because everything is I2C-pluggable, WiFi-native, and
-~$10–$30 per unit.
+**Constraint:** 100% M5Stack ecosystem for all electronics. Only
+non-M5Stack items are passive physical materials (copper rod,
+springs, tubing, etc.) that no electronics vendor sells.
 
----
-
-## 1. Base Controllers (the brains)
-
-| Item | M5Stack Product | Qty | ~Price | Why |
-|------|----------------|-----|--------|-----|
-| **M5Stack Core2** | [Core2 v1.1](https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit-v1-1) | 2 | $40 ea | Main controllers. Two units lets you run two experiments simultaneously or have one dedicated to data streaming while the other runs local display. ESP32, WiFi, Bluetooth, I2C, touchscreen, built-in IMU. |
-| **M5StickC Plus2** | [StickC Plus2](https://shop.m5stack.com/products/m5stickc-plus2-esp32-mini-iot-development-kit) | 2 | $20 ea | Tiny, battery-powered, portable. Good for remote sensor placement (e.g., the "cold end" of a Fourier rod, or an outdoor temperature reference). Built-in IMU + IR transmitter. |
-| **M5Stack ATOM Lite** | [ATOM Lite](https://shop.m5stack.com/products/atom-lite-esp32-development-kit) | 4 | $8 ea | Smallest ESP32 unit. Deploy as dedicated single-sensor nodes — one per sensor, streaming to makau.ai independently. Cheap enough to be disposable. |
-
-**Subtotal: ~$152**
+**Architecture:** Each experiment station is an M5Stack controller
++ sensors + actuators, streaming to makau.ai via WiFi. The
+orchestrator firmware runs a continuous loop:
+set_conditions → wait_steady_state → measure → predict → verify → reset → repeat.
 
 ---
 
-## 2. Temperature Sensors (unlock the most equations)
+## Controllers
 
-**Equations unlocked:** EQ-0005 (energy conservation), EQ-0020 (ideal gas PV=nRT), EQ-0021 (1st law thermo), EQ-0022 (2nd law entropy), EQ-0024 (Carnot η), EQ-0025 (Stefan-Boltzmann), EQ-0027 (Maxwell-Boltzmann), EQ-0028 (Gibbs free energy), EQ-0029 (Clausius-Clapeyron), EQ-0053 (Arrhenius), EQ-0057 (van der Waals), EQ-0088 (Fourier heat conduction), EQ-0089 (Newton cooling), EQ-0115 (radiative forcing), EQ-0117 (Clausius-Clapeyron climate), EQ-0118 (Budyko balance), EQ-0120 (half-life via T-dependent rates), CMP-FOURIER-FICK-SORET-001, CMP-FOURIER-FICK-DUFOUR-001
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 1 | M5Stack Core2 v1.1 | [Core2](https://shop.m5stack.com/products/m5stack-core2-esp32-iot-development-kit-v1-1) | 3 | $40 | $120 | Main experiment controllers. Touchscreen for local status, WiFi to makau.ai, I2C bus for sensors. One per experiment station. |
+| 2 | ATOM Lite (ESP32-PICO) | [ATOM Lite](https://shop.m5stack.com/products/atom-lite-esp32-development-kit) | 6 | $8 | $48 | Dedicated single-sensor nodes. Deploy at remote measurement points (cold end of rod, ambient reference, outlet of tube). Tiny, battery-capable. |
+| 3 | M5StickC Plus2 | [StickC Plus2](https://shop.m5stack.com/products/m5stickc-plus2-esp32-mini-iot-development-kit) | 2 | $20 | $40 | Portable handheld units with display. Use for field measurements, quick spot-checks, or as a mobile reference sensor. Built-in IMU + IR. |
 
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **KMeter ISO Unit** (K-type thermocouple, MAX31855) | [KMeter ISO](https://shop.m5stack.com/products/kmeter-isolation-unit-with-thermocouple-temperature-sensor-max31855) | 3 | $10 ea | High-temp measurement (-50°C to 250°C probe, chip handles -200°C to 1350°C). For Fourier rod ends, Arrhenius reaction vessel, Carnot heat source/sink. 14-bit resolution, I2C. |
-| **ENV Pro Unit** (BME688: T + humidity + pressure + VOC gas) | [ENV Pro](https://shop.m5stack.com/products/env-pro-unit-with-temperature-humidity-pressure-and-gas-sensor-bme688) | 2 | $15 ea | All-in-one environmental sensing. Unlocks ideal gas (P,T), Clausius-Clapeyron (vapor pressure vs T), Budyko (temperature balance), plus humidity for psychrometric equations. Also detects VOCs for air-quality equations. |
-| **Thermal Camera Unit** (MLX90640) | [Thermal Camera](https://shop.m5stack.com/products/thermal-camera-unit-mlx90640) | 1 | $30 | 32×24 pixel thermal array. Visualizes temperature gradients along a conductor (Fourier), heat loss from a cooling body (Newton), radiation patterns (Stefan-Boltzmann). Not strictly needed but makes experiments visual and publishable. |
-
-**Subtotal: ~$90**
+**Subtotal: $208**
 
 ---
 
-## 3. Electrical Sensors (unlock circuit equations + all electromechanical composites)
+## Temperature Sensing (unlocks ~25 equations)
 
-**Equations unlocked:** EQ-0017 (Ohm V=IR), EQ-0013 (Faraday induction), EQ-0054 (Nernst), EQ-0062 (Faraday electrolysis), EQ-0086 (Kirchhoff), CMP-NEWTON-OHM-MOTOR-001 (DC motor), CMP-NEWTON-OHM-VOICECOIL-001 (voice coil)
+Equations: Fourier heat, Newton cooling, Arrhenius, Carnot, Stefan-Boltzmann, ideal gas, 1st/2nd law thermo, Gibbs, Clausius-Clapeyron, van der Waals, Soret, Dufour, Budyko, radiative forcing, all thermal composites.
 
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **Voltmeter Unit** (ADS1115, ±36V, 16-bit) | [VMeter](https://shop.m5stack.com/products/voltmeter-unit-ads1115) | 2 | $8 ea | Voltage measurement for Ohm's law, back-EMF in motors, Nernst cell potential. I2C isolated. |
-| **Ammeter Unit** (ADS1115, ±4A, 16-bit) | [AMeter](https://shop.m5stack.com/products/ammeter-unit-ads1115) | 2 | $8 ea | Current measurement for Ohm's law, motor current, electrolysis current. 0.3mA resolution. |
-| **VAMeter** (INA226, V+A+Power, relay) | [VAMeter](https://shop.m5stack.com/products/m5stack-voltage-and-amperage-meter-with-m5stamps3) | 1 | $25 | Precision V+I+P measurement with relay control. For DC motor composite verification: measure V_s, I, compute P_in = V·I, compare to P_mech + P_resist. 2.5μA resolution. |
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 4 | KMeter ISO Unit (MAX31855 thermocouple) | [KMeter ISO](https://shop.m5stack.com/products/kmeter-isolation-unit-with-thermocouple-temperature-sensor-max31855) | 4 | $10 | $40 | High-range thermocouple readers (-200°C to 1350°C chip, -50°C to 250°C probe). Two for Fourier rod ends, one for reaction vessel (Arrhenius), one for cooling body (Newton). 14-bit, I2C, galvanically isolated. |
+| 5 | ENV Pro Unit (BME688: T+H+P+VOC) | [ENV Pro](https://shop.m5stack.com/products/env-pro-unit-with-temperature-humidity-pressure-and-gas-sensor-bme688) | 3 | $15 | $45 | All-in-one environmental: temperature, humidity, barometric pressure, VOC gas. Unlocks ideal gas (P,T simultaneously), Clausius-Clapeyron (vapor pressure), psychrometric equations, gas detection. Three units for multi-point environmental profiling. |
+| 6 | Thermal Camera Unit (MLX90640) | [Thermal Cam](https://shop.m5stack.com/products/thermal-camera-unit-mlx90640) | 1 | $30 | $30 | 32×24 pixel thermal array. Visualizes temperature gradients along Fourier rod, radiation patterns (Stefan-Boltzmann), heat loss maps. Makes experiments publishable. |
 
-**Subtotal: ~$57**
-
----
-
-## 4. Motion / Force / Displacement Sensors (unlock mechanics)
-
-**Equations unlocked:** EQ-0001 (Newton F=ma), EQ-0006 (Hooke F=-kx), EQ-0007 (centripetal a=v²/r), EQ-0008 (work-energy), EQ-0009 (impulse-momentum), EQ-0010 (angular momentum L=Iω), EQ-0045 (Stokes drag), EQ-0083 (Euler buckling), EQ-0085 (beam bending), EQ-0129 (Hall-Petch), CMP-NEWTON-HOOKE-SHO-001
-
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **6-Axis IMU Unit** (MPU6886) | [IMU Unit](https://shop.m5stack.com/products/6-axis-imu-unitmpu6886) | 2 | $5 ea | Accelerometer (±16g) + gyroscope (±2000°/s). Attach to a spring-mass system for SHO verification, to a pendulum for period measurement, to a rotating body for angular velocity. The Core2 has a built-in IMU but external units can be placed on the moving object. |
-| **Accel Unit** (ADXL345, ±16g) | [Accel Unit](https://shop.m5stack.com/products/3-axis-digital-accelerometer-unit-adxl345) | 1 | $5 | Higher-precision 3-axis accelerometer. For Newton II (F=ma): apply a known force, measure acceleration, verify F/a = m. 13-bit resolution. |
-| **Angle Sensor Unit** | [Angle Unit](https://shop.m5stack.com/products/angle-unit) | 1 | $5 | Rotary potentiometer. Measure angular displacement for pendulum, torsional oscillator, or any rotational equation. |
-| **ToF Distance Unit** (VL53L0X) | [ToF Unit](https://shop.m5stack.com/products/tof-sensor-unit) | 2 | $8 ea | Laser time-of-flight distance sensor, 2m range, mm precision. Measure spring displacement (Hooke), beam deflection (Euler-Bernoulli bending), or pendulum amplitude. Non-contact, fast. |
-| **Mini Weight Unit** (HX711 + load cell) | [Weight Unit](https://shop.m5stack.com/products/weight-unit-hx711) | 1 | $8 | Load cell for direct force measurement. Verify Hooke's law: hang known masses, measure force, plot F vs x from ToF. Also: beam bending loads, Stokes drag on a falling sphere. |
-| **Vibration Sensor Unit** | [Vibration Unit](https://shop.m5stack.com/products/vibration-motor-unit) | 1 | $5 | Detect oscillation frequency. For SHO: measure the actual oscillation frequency and compare to predicted T = 2π√(m/k). |
-
-**Subtotal: ~$54**
+**Subtotal: $115**
 
 ---
 
-## 5. Pressure / Flow Sensors (unlock fluid dynamics + transport)
+## Electrical Sensing (unlocks ~12 equations + all electromechanical composites)
 
-**Equations unlocked:** EQ-0020 (ideal gas PV=nRT), EQ-0041 (Navier-Stokes), EQ-0042 (Bernoulli), EQ-0043 (Reynolds number), EQ-0044 (Poiseuille), EQ-0116/EQ-0119 (Darcy), EQ-0122 (Starling capillary), EQ-0128 (Poiseuille blood flow), CMP-DARCY-RADPRESS-001 (novel prediction!)
+Equations: Ohm, Kirchhoff, Faraday induction, Faraday electrolysis, Nernst, Coulomb (derived), DC motor composite, voice-coil composite, PID controller.
 
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **Tube Pressure Unit** | [Tube Pressure](https://shop.m5stack.com/products/tube-air-pressure-unit) | 2 | $12 ea | Differential pressure sensor, -100 to 200 kPa. For Poiseuille (ΔP across a tube), Bernoulli (pressure along a streamline), Darcy (pressure gradient in porous media). Two units give you ΔP directly. |
-| **Mini BPS Unit** (QMP6988 barometric) | [Mini BPS](https://shop.m5stack.com/products/mini-bps-unit) | 1 | $5 | Barometric pressure for ideal gas law, altitude equations, atmospheric Clausius-Clapeyron. |
-| **Water Flow Unit** | [Water Flow](https://shop.m5stack.com/products/water-flow-unit) | 1 | $8 | Hall-effect flow sensor for pipe flow. For Poiseuille verification: measure Q through a known tube, compare to πr⁴ΔP/(8μL). |
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 7 | Voltmeter Unit (ADS1115, ±36V) | [VMeter](https://shop.m5stack.com/products/voltmeter-unit-ads1115) | 3 | $8 | $24 | 16-bit voltage measurement. For Ohm (V across R), back-EMF (motor/voice-coil), Nernst cell potential, Kirchhoff loop voltages. I2C isolated. |
+| 8 | Ammeter Unit (ADS1115, ±4A) | [AMeter](https://shop.m5stack.com/products/ammeter-unit-ads1115) | 3 | $8 | $24 | 16-bit current measurement. For Ohm (I through R), motor armature current, electrolysis current. 0.3mA resolution. |
+| 9 | VAMeter (INA226, V+A+Power+Relay) | [VAMeter](https://shop.m5stack.com/products/m5stack-voltage-and-amperage-meter-with-m5stamps3) | 1 | $25 | $25 | Precision V+I+P with built-in relay + WiFi (StampS3). For automated power measurements: P_in = V·I vs P_mech + P_resist on motor/voice-coil composites. 2.5μA resolution. |
+| 10 | ADC I2C Unit v1.1 (ADS1110) | [ADC Unit](https://shop.m5stack.com/products/adc-i2c-unit-v1-1-ads1100) | 2 | $5 | $10 | General-purpose 16-bit ADC for any analog sensor not in the M5Stack catalog (pH probe, photodiode, strain gauge). |
 
-**Subtotal: ~$37**
-
----
-
-## 6. Light / Optics Sensors (unlock radiation + spectroscopy)
-
-**Equations unlocked:** EQ-0025 (Stefan-Boltzmann j=σT⁴), EQ-0026 (Planck radiation), EQ-0034 (Planck-Einstein E=hν), EQ-0046 (Snell's law), EQ-0047 (photoelectric effect), EQ-0056 (Beer-Lambert A=εlc), CMP-DARCY-RADPRESS-001 (beam intensity I for the novel prediction)
-
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **Light Unit** (photoresistor) | [Light Unit](https://shop.m5stack.com/products/light-sensor-unit) | 2 | $3 ea | Basic light intensity measurement. For Beer-Lambert: measure transmitted intensity through a dye solution. For inverse-square law. Cheap enough to use in pairs (incident + transmitted). |
-| **DLight Unit** (BH1750, digital lux) | [DLight Unit](https://shop.m5stack.com/products/dlight-unit-ambient-light-sensor-bh1750fvi-tr) | 1 | $5 | Calibrated digital lux meter. Better than photoresistor for quantitative Beer-Lambert and illumination equations. |
-| **Laser TX/RX Unit** | [Laser Unit](https://shop.m5stack.com/products/laser-tx-unit) | 1 | $5 | Laser transmitter for optical path experiments: Beer-Lambert (attenuated beam through solution), Snell's law (refraction angle measurement). |
-| **Color Sensor Unit** (TCS34725) | [Color Sensor](https://shop.m5stack.com/products/color-unit) | 1 | $5 | RGB + clear light sensing. For spectroscopic measurements: track color shift as a proxy for concentration change (Beer-Lambert at specific wavelengths). |
-
-**Subtotal: ~$21**
+**Subtotal: $83**
 
 ---
 
-## 7. Chemistry / Environmental Sensors (unlock chem + bio + environmental)
+## Motion / Force / Displacement Sensing (unlocks ~15 equations)
 
-**Equations unlocked:** EQ-0053 (Arrhenius), EQ-0055 (Henderson-Hasselbalch pH), EQ-0056 (Beer-Lambert), EQ-0058 (equilibrium constant), EQ-0061 (Raoult's law), EQ-0063 (Michaelis-Menten), EQ-0065 (logistic growth), EQ-0068 (Fick diffusion), EQ-0115 (CO₂ radiative forcing), EQ-0117 (Clausius-Clapeyron climate)
+Equations: Newton F=ma, Hooke F=-kx, centripetal, work-energy, impulse-momentum, angular momentum, Stokes drag, SHO composite, Euler buckling, beam bending.
 
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **CO2 Unit** (SCD40) | [CO2 Unit](https://shop.m5stack.com/products/co2-unit-with-temperature-and-humidity-sensor-scd40) | 1 | $25 | CO₂ concentration + T + humidity. For radiative forcing ΔF = 5.35·ln(C/C₀): measure indoor CO₂ buildup over time in a closed room, verify logarithmic relationship. Also: reaction kinetics (CO₂ as a product indicator). |
-| **Earth Moisture Unit** | [Earth Unit](https://shop.m5stack.com/products/earth-sensor-unit) | 1 | $3 | Soil moisture for Richards equation (unsaturated soil hydraulics). Analog output proportional to water content. |
-| **pH Sensor Unit** (if available, or use an external pH probe with ADC) | External probe + ADC Unit | 1 | $15 | For Henderson-Hasselbalch pH = pKa + log([A⁻]/[HA]). M5Stack doesn't have a dedicated pH unit; use an industrial pH probe connected via the ADC Unit. |
-| **MQ Gas Sensor Unit** (various: MQ-2 smoke, MQ-5 combustible, MQ-135 air quality) | [MQ-5 Gas](https://shop.m5stack.com/products/m5stack-mq-5-gas-unit-stm32g030) | 1 | $8 | Gas concentration for reaction kinetics, Arrhenius (monitor reaction product gas evolution), equilibrium constant (gas-phase equilibria). |
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 11 | 6-Axis IMU Unit (MPU6886) | [IMU Unit](https://shop.m5stack.com/products/6-axis-imu-unitmpu6886) | 3 | $5 | $15 | Accelerometer (±16g) + gyroscope (±2000°/s). Attach to spring-mass for SHO, pendulum for period, rotating body for ω. Three units: one on each moving body + one reference. |
+| 12 | Accel Unit (ADXL345, ±16g) | [Accel](https://shop.m5stack.com/products/3-axis-digital-accelerometer-unit-adxl345) | 1 | $5 | $5 | High-precision accelerometer for Newton II (F=ma): apply known force, measure a, verify F/a = m. |
+| 13 | ToF Distance Unit (VL53L0X) | [ToF](https://shop.m5stack.com/products/tof-sensor-unit) | 3 | $8 | $24 | Laser time-of-flight, 2m range, mm precision. Non-contact displacement for Hooke (spring stretch), beam deflection, pendulum amplitude. Three for multi-axis. |
+| 14 | ToF 4M Unit (VL53L1X) | [ToF 4M](https://shop.m5stack.com/products/time-of-flight-distance-unit-vl53l1x) | 1 | $10 | $10 | Extended 4m range for longer-distance experiments (projectile, free fall, tube flow front tracking). |
+| 15 | Ultrasonic Distance Unit I2C (RCWL-9620) | [Ultrasonic](https://shop.m5stack.com/products/ultrasonic-distance-unit-i2c-rcwl-9620) | 2 | $6 | $12 | 2cm–450cm range, ±2%. For larger displacement (Darcy flow front, spring oscillation at distance, fluid level in a tank). |
+| 16 | Weight I2C Unit (HX711) | [Weight I2C](https://shop.m5stack.com/products/weight-i2c-unit-hx711) | 2 | $8 | $16 | 24-bit load cell amplifier. Direct force measurement for Hooke's law, beam loading, Stokes drag on a falling sphere, material testing (Hall-Petch, Griffith). |
+| 17 | Scale Kit with Weight Unit | [Scale Kit](https://shop.m5stack.com/products/scale-kit-with-weight-unit) | 1 | $15 | $15 | Complete scale: 4 strain gauges + HX711 + platform. For mass measurement (Newton II, conservation of momentum, Arrhenius reactant mass). |
+| 18 | Encoder Unit | [Encoder](https://shop.m5stack.com/products/encoder-unit) | 2 | $6 | $12 | Rotary encoder with push button. Measure shaft rotation (motor ω for DC motor composite), count oscillations (SHO period), or as a manual input dial for parameter adjustment. |
 
-**Subtotal: ~$51**
-
----
-
-## 8. Actuators / Output Units (for controlled experiments)
-
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **DC Motor Driver Unit** | [Motor Driver](https://shop.m5stack.com/products/motor-driver-module) | 1 | $10 | Drive a DC motor for CMP-NEWTON-OHM-MOTOR-001 verification: control V_s, measure ω with encoder, verify ω = V_s/K - τ_L·R/K². |
-| **Servo Unit** | [Servo Unit](https://shop.m5stack.com/products/servo-unit) | 2 | $4 ea | Controlled angular positioning. For pendulum release angle, beam loading position, or any experiment needing precise mechanical actuation. |
-| **Relay Unit** | [Relay Unit](https://shop.m5stack.com/products/relay-unit) | 2 | $5 ea | Switch circuits on/off for transient experiments: Ohm's law step response, RC circuit charging (Kirchhoff), Faraday induction (make/break). |
-| **DAC Unit** (GP8413) | [DAC Unit](https://shop.m5stack.com/products/dac-2-unit-gp8413) | 1 | $8 | Programmable voltage output (0-10V). Generate controlled input signals for PID controller verification (EQ-0084), transfer function testing. |
-
-**Subtotal: ~$40**
+**Subtotal: $109**
 
 ---
 
-## 9. Communication / Timing / Infrastructure
+## Pressure / Flow Sensing (unlocks ~10 equations + novel prediction)
 
-| Item | M5Stack Product | Qty | ~Price | Purpose |
-|------|----------------|-----|--------|---------|
-| **RTC Unit** (real-time clock) | [RTC Unit](https://shop.m5stack.com/products/real-time-clock-rtc-unit-hym8563) | 1 | $5 | Accurate timestamps for time-dependent equations: radioactive decay N(t)=N₀e^(-λt), Newton's cooling dT/dt, half-life t½. |
-| **GPS Unit** | [GPS Unit](https://shop.m5stack.com/products/mini-gps-bds-unit-at6558) | 1 | $12 | Lat/lon/altitude for geophysics equations (gravity variation with latitude, atmospheric pressure vs altitude). Also provides precise UTC timestamps. |
-| **Proto Board Unit** | [Proto Unit](https://shop.m5stack.com/products/mini-proto-board-unit) | 2 | $3 ea | General-purpose prototyping for connecting non-M5Stack sensors (pH probe, custom load cell, photodiode arrays). |
-| **Hub Unit** (I2C port expander) | [PaHub2](https://shop.m5stack.com/products/pahub2-unit) | 2 | $5 ea | Expand I2C ports when running many sensors simultaneously. Each PaHub2 gives 6 additional I2C ports. |
-| **Grove cables** | [Grove cables pack](https://shop.m5stack.com/products/grove-cable) | 3 packs | $3 ea | Connection cables for all units. |
-| **USB-C cables** | Standard | 4 | $3 ea | Power and programming. |
+Equations: ideal gas PV=nRT, Navier-Stokes, Bernoulli, Reynolds, Poiseuille, Darcy, Starling, Poiseuille blood-flow analog, CMP-DARCY-RADPRESS-001 (NOVEL).
 
-**Subtotal: ~$56**
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 19 | Tube Pressure Unit | [Tube Pressure](https://shop.m5stack.com/products/tube-air-pressure-unit) | 3 | $12 | $36 | Differential pressure, -100 to 200 kPa. For Poiseuille (ΔP across tube), Bernoulli (P along streamline), Darcy (pressure gradient in porous media). Three units for simultaneous multi-point pressure profiling. |
+| 20 | Mini BPS Unit (QMP6988) | [Mini BPS](https://shop.m5stack.com/products/mini-bps-unit) | 2 | $5 | $10 | Barometric pressure for ideal gas law, altitude-pressure relationship, atmospheric Clausius-Clapeyron. Two for differential atmospheric measurements. |
+| 21 | Water Flow Unit (hall-effect) | [Water Flow](https://shop.m5stack.com/products/water-flow-unit) | 2 | $8 | $16 | Flow rate measurement for Poiseuille (Q through known tube), Darcy (seepage velocity through porous sample). Two units: inlet + outlet for mass-balance check. |
+
+**Subtotal: $62**
 
 ---
 
-## 10. Experiment-Specific Additions (non-M5Stack, local hardware store)
+## Light / Optics Sensing (unlocks ~8 equations)
 
-| Item | Source | ~Price | Equations |
-|------|--------|--------|-----------|
-| Copper rod, 30cm × 1cm | Hardware store | $5 | Fourier heat conduction |
-| Springs (assorted k values) | Amazon/hardware | $10 | Hooke's law, SHO |
-| Known masses (50g, 100g, 200g, 500g) | Amazon | $15 | Newton II, Hooke, Work-Energy |
-| Resistor assortment (100Ω–10kΩ) | Electronics supplier | $5 | Ohm's law, Kirchhoff |
-| Small DC motor (with specs) | Amazon | $5 | DC motor composite |
-| Small speaker driver (with BL spec) | Amazon | $10 | Voice-coil composite |
-| Glass cuvettes + food coloring | Amazon | $10 | Beer-Lambert |
-| Clear tubing + funnel | Hardware store | $5 | Poiseuille flow |
-| Sand + container | Hardware store | $5 | Darcy's law |
-| Pendulum (string + weight) | DIY | $2 | Newton II pendulum period |
-| Magnifying lens / prism | Amazon | $8 | Snell's law |
-| Styrofoam cup (calorimetry) | Kitchen | $0 | First law of thermodynamics |
+Equations: Stefan-Boltzmann, Planck radiation, Planck-Einstein, Snell's law, photoelectric, Beer-Lambert, CMP-DARCY-RADPRESS-001 (beam intensity I).
 
-**Subtotal: ~$80**
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 22 | Light Unit (photoresistor) | [Light](https://shop.m5stack.com/products/light-sensor-unit) | 3 | $3 | $9 | Basic light intensity. For Beer-Lambert (incident + transmitted + reference), inverse-square law, Weber-Fechner (psychophysics stimulus). |
+| 23 | DLight Unit (BH1750, digital lux) | [DLight](https://shop.m5stack.com/products/dlight-unit-ambient-light-sensor-bh1750fvi-tr) | 2 | $5 | $10 | Calibrated digital lux meter for quantitative Beer-Lambert and illumination equations. More accurate than photoresistor. |
+| 24 | Color Sensor Unit (TCS34725) | [Color](https://shop.m5stack.com/products/color-unit) | 1 | $5 | $5 | RGB + clear channel. Spectroscopic proxy: track color shift as concentration changes (Beer-Lambert at specific wavelengths). |
+
+**Subtotal: $24**
+
+---
+
+## Chemistry / Environmental Sensing (unlocks ~12 equations)
+
+Equations: Arrhenius, Henderson-Hasselbalch, Beer-Lambert, equilibrium constant, Raoult's law, Michaelis-Menten, logistic growth, Fick diffusion, CO₂ radiative forcing, Clausius-Clapeyron climate.
+
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 25 | CO2 Unit (SCD40) | [CO2](https://shop.m5stack.com/products/co2-unit-with-temperature-and-humidity-sensor-scd40) | 2 | $25 | $50 | CO₂ + T + humidity. For radiative forcing ΔF = 5.35·ln(C/C₀): seal a room, measure CO₂ buildup, verify logarithmic curve. Also reaction kinetics (CO₂ as product indicator). Two for differential. |
+| 26 | Earth Moisture Unit | [Earth](https://shop.m5stack.com/products/earth-sensor-unit) | 2 | $3 | $6 | Soil moisture for Richards equation, Darcy in unsaturated media. Two for gradient measurement across a soil column. |
+| 27 | MQ-5 Gas Unit (STM32G030) | [MQ-5 Gas](https://shop.m5stack.com/products/m5stack-mq-5-gas-unit-stm32g030) | 1 | $8 | $8 | Combustible gas detection for reaction kinetics monitoring, equilibrium constant (gas-phase), Arrhenius product evolution. |
+| 28 | Hall Effect Unit (A3144E) | [Hall](https://shop.m5stack.com/products/hall-effect-unit-a3144e) | 2 | $3 | $6 | Magnetic field detection. For Faraday induction (detect rotating magnet), motor commutation timing, electromagnetic experiments. |
+
+**Subtotal: $70**
+
+---
+
+## Actuators & Drivers (for FULL AUTOMATION — no human reset)
+
+These are what make the lab self-resetting. Every manual action
+(heating, releasing a spring, switching a circuit, pumping fluid)
+is replaced by an electronically controlled actuator.
+
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 29 | GoPlus2 Module (2× DC motor + 4× servo) | [GoPlus2](https://shop.m5stack.com/products/goplus2-dc-motor-and-servo-driver-module-stm32f0) | 2 | $12 | $24 | Stackable on Core2. Drive DC motors (for motor/voice-coil composites) + servos (for automated spring compression, valve control, pendulum release). Two modules = 4 DC + 8 servo channels total. |
+| 30 | 8-Channel Servo Driver Unit (STM32) | [8-Servo](https://shop.m5stack.com/products/8-channel-servo-driver-unit-stm32f030) | 1 | $8 | $8 | Extra servo channels for complex multi-actuator experiments. |
+| 31 | H-Bridge Unit (STM32F030) | [H-Bridge](https://shop.m5stack.com/products/h-bridge-unitstm32f030) | 2 | $6 | $12 | Bidirectional DC motor control (forward/reverse/brake). For motor composite: programmatically set V_s, measure ω, reverse direction, measure again. Also drives Peltier elements for automated heating/cooling. |
+| 32 | 4-Channel Relay Module v1.1 (STM32) | [4-Relay](https://shop.m5stack.com/products/4-channel-relay-13-2-module-v1-1-stm32f030) | 2 | $12 | $24 | Switch circuits on/off for automated Ohm's law cycling, Kirchhoff multi-loop switching, Faraday make/break. Four channels per module = 8 relay channels total. |
+| 33 | BLDC Motor Driver Unit (STM32) | [BLDC Driver](https://shop.m5stack.com/products/bldc-motor-drive-unit-stm32) | 1 | $12 | $12 | Brushless motor driver for higher-speed/higher-precision motor experiments. PWM speed control + direction via I2C. |
+| 34 | DAC 2 Unit (GP8413, 0-10V) | [DAC 2](https://shop.m5stack.com/products/dac-2-unit-gp8413) | 2 | $8 | $16 | Programmable voltage output. Generate controlled input signals: set V_s for motor, drive LED intensity for Beer-Lambert, generate PID controller setpoints. Two channels per unit. |
+| 35 | Stepper Motor Driver Module (DRV8825) | [Stepmotor](https://shop.m5stack.com/products/stepmotor-driver-module-with-mega328p) | 1 | $12 | $12 | Precision linear positioning. Move a sensor along the Fourier rod to map the temperature profile point-by-point. Also: translate a weight along a beam for bending tests. |
+
+**Subtotal: $108**
+
+---
+
+## Infrastructure & Connectivity
+
+| # | Item | SKU / Link | Qty | ~$ ea | Total | Role |
+|---|------|-----------|-----|-------|-------|------|
+| 36 | PaHub2 (6-port I2C expander) | [PaHub2](https://shop.m5stack.com/products/pahub2-unit) | 3 | $5 | $15 | Expand I2C bus when running 8+ sensors on one controller. Each gives 6 ports. |
+| 37 | RTC Unit (HYM8563) | [RTC](https://shop.m5stack.com/products/real-time-clock-rtc-unit-hym8563) | 2 | $5 | $10 | Accurate timestamps for time-dependent equations (radioactive decay, Newton cooling dT/dt, half-life). Battery-backed, survives power cycles. |
+| 38 | GNSS Module (NEO-M9N + BMP280 + BMI270 + BMM150) | [GNSS Module](https://shop.m5stack.com/products/gnss-module-with-barometric-pressure-imu-magnetometer-sensors) | 1 | $45 | $45 | GPS + barometric pressure + IMU + magnetometer in one module. For geophysics: gravity variation with latitude, atmospheric pressure vs altitude, magnetic field experiments. |
+| 39 | Mini Proto Board Unit | [Proto](https://shop.m5stack.com/products/mini-proto-board-unit) | 3 | $3 | $9 | General-purpose breakout for connecting passive components (resistors, springs, Peltier) to the M5Stack I2C/GPIO bus. |
+| 40 | Grove-to-Pin Cable Pack | [Cables](https://shop.m5stack.com/products/grove-cable) | 5 packs | $3 | $15 | Connection cables for all units. |
+| 41 | USB-C Power Cable | Standard | 6 | $3 | $18 | Power and programming for controllers. |
+| 42 | 8-Encoder Unit (STM32) | [8-Encoder](https://shop.m5stack.com/products/8-encoder-unit-stm32f030) | 1 | $15 | $15 | 8 rotary encoders for multi-channel rotation sensing. For simultaneous shaft-speed measurement on multiple motors, or counting multiple oscillating systems. |
+
+**Subtotal: $127**
+
+---
+
+## Passive Materials (the only non-M5Stack items)
+
+| # | Item | Source | ~$ | Equations it enables |
+|---|------|--------|-----|---------------------|
+| 43 | Copper rod 30cm × 1cm | Hardware store | $5 | Fourier heat conduction |
+| 44 | Aluminum rod 30cm × 1cm | Hardware store | $3 | Fourier (different k, validate scaling) |
+| 45 | Spring assortment (3-5 springs, various k) | Amazon | $10 | Hooke's law, SHO composite |
+| 46 | Known masses (50g, 100g, 200g, 500g, 1kg) | Amazon | $15 | Newton II, Hooke, work-energy, conservation of momentum |
+| 47 | Resistor assortment (10Ω–10kΩ) | Electronics | $5 | Ohm's law, Kirchhoff, RC circuits |
+| 48 | Small DC motor (with K spec on label) | Amazon | $5 | DC motor composite |
+| 49 | Small speaker driver (with BL spec) | Amazon | $10 | Voice-coil composite |
+| 50 | Peltier element (TEC1-12706) + heatsink | Amazon | $10 | Automated heating/cooling (replaces boiling water) |
+| 51 | Clear silicone tubing (various ID) | Amazon | $8 | Poiseuille flow, Darcy porous media |
+| 52 | Fine sand + glass bead packing | Hardware/Amazon | $8 | Darcy's law, CMP-DARCY-RADPRESS-001 |
+| 53 | Glass cuvettes (4-pack) | Amazon | $10 | Beer-Lambert (optical path cell) |
+| 54 | Food coloring / India ink | Grocery/Amazon | $5 | Beer-Lambert (absorber), Darcy+RadPress (dye) |
+| 55 | Pendulum (string + steel ball) | DIY | $3 | Newton II pendulum period |
+| 56 | Prism + lens | Amazon | $8 | Snell's law, refraction |
+| 57 | Small peristaltic pump (12V) | Amazon | $12 | Automated fluid cycling for Darcy/Poiseuille experiments |
+| 58 | Breadboard + jumper wires | Electronics | $8 | Circuit assembly |
+| 59 | LED array (white + RGB, 12V) | Amazon | $8 | Controlled light source for Beer-Lambert, radiation |
+| 60 | Small aquarium air pump | Amazon | $8 | Gas bubble experiments, pressure generation |
+
+**Subtotal: $133**
 
 ---
 
 ## Grand Total
 
-| Category | Items | Cost |
-|----------|-------|------|
-| Base controllers | 8 units | $152 |
-| Temperature | 6 units | $90 |
-| Electrical | 5 units | $57 |
-| Motion/Force | 9 units | $54 |
-| Pressure/Flow | 4 units | $37 |
-| Light/Optics | 5 units | $21 |
-| Chemistry/Environment | 4 units | $51 |
-| Actuators | 6 units | $40 |
-| Infrastructure | ~12 items | $56 |
-| Non-M5Stack lab supplies | ~12 items | $80 |
-| **TOTAL** | **~71 items** | **~$638** |
+| Category | M5Stack items | Non-M5Stack | Cost |
+|----------|--------------|-------------|------|
+| Controllers | 11 units | — | $208 |
+| Temperature | 8 units | — | $115 |
+| Electrical | 9 units | — | $83 |
+| Motion/Force | 16 units | — | $109 |
+| Pressure/Flow | 7 units | — | $62 |
+| Light/Optics | 6 units | — | $24 |
+| Chemistry/Env | 7 units | — | $70 |
+| Actuators/Drivers | 11 units | — | $108 |
+| Infrastructure | ~20 items | — | $127 |
+| Passive materials | — | 18 items | $133 |
+| **TOTAL** | **~95 M5Stack items** | **18 passive items** | **~$1,039** |
 
 ---
 
-## Equation Coverage Summary
+## Equation Coverage (137 total)
 
-With this lab kit, you can directly test predictions from
-**~85 of the 137 equations** in the corpus:
-
-| Discipline | Total equations | Testable | Key sensors needed |
-|------------|----------------|----------|--------------------|
-| Physics (mechanics) | 10 | 10 | IMU, ToF, weight, angle |
-| Physics (E&M) | 9 | 7 | VMeter, AMeter, relay, motor |
-| Physics (thermo) | 10 | 9 | KMeter, ENV Pro, tube pressure |
-| Physics (fluids) | 5 | 5 | Tube pressure, water flow, ENV Pro |
-| Physics (optics/radiation) | 5 | 4 | Light, DLight, laser, thermal cam |
-| Physics (quantum) | 6 | 2 | Light (photoelectric qualitative), laser |
-| Physics (relativity/cosmo) | 6 | 1 | GPS (gravity/altitude only) |
-| Chemistry | 10 | 7 | KMeter, pH, CO2, light, VMeter |
-| Biology & Biochemistry | 10 | 5 | KMeter, CO2, earth moisture, light |
-| Engineering | 8 | 7 | VMeter, AMeter, DAC, servo, IMU |
-| Medicine & Pharmacology | 9 | 4 | Tube pressure, KMeter, ENV Pro |
-| Environmental & Earth Sci | 5 | 5 | CO2, ENV Pro, earth moisture, GPS |
-| Materials Science | 3 | 2 | Weight, ToF (crack/deformation) |
-| Aerospace | 2 | 1 | Tube pressure (lift measurement) |
-| **Subtotal physical sciences** | **~98** | **~80** | |
-| Computer Science | 9 | 0 | (computational, not physical) |
-| Economics & Finance | 9 | 0 | (market data feeds, not sensors) |
-| Social Sciences | 7 | 1 | Light (Weber-Fechner stimulus) |
-| Mathematics | 9 | 0 | (pure math, not measurable) |
-| Linguistics | 2 | 0 | (text corpus, not sensors) |
-| Political Science | 2 | 0 | (voting data, not sensors) |
-| **Subtotal non-physical** | **~38** | **~1** | |
-| **GRAND TOTAL** | **137** | **~81** | |
-
-The non-physical equations (economics, CS, linguistics, political
-science) need DATA FEEDS not sensors — market APIs, text corpora,
-voting records. Those connect through makau.ai's event and
-knowledge-base APIs rather than through M5Stack hardware.
+| Category | Equations | Testable with this lab | Examples |
+|----------|-----------|----------------------|----------|
+| Classical mechanics | 10 | **10** | F=ma, Hooke, SHO, work-energy, pendulum, centripetal |
+| Electromagnetism | 9 | **8** | Ohm, Kirchhoff, Faraday, Coulomb, Lorentz force, Biot-Savart |
+| Thermodynamics | 10 | **10** | Ideal gas, 1st/2nd law, Carnot, Stefan-Boltzmann, Gibbs, Clausius-Clapeyron |
+| Fluid dynamics | 5 | **5** | Navier-Stokes (Reynolds), Bernoulli, Poiseuille, Stokes drag, Darcy |
+| Optics/radiation | 5 | **4** | Snell, Beer-Lambert, photoelectric, Planck (qualitative) |
+| Quantum | 6 | **1** | Photoelectric (qualitative with light sensor) |
+| Relativity/cosmo | 6 | **1** | Gravity variation with GPS altitude |
+| Chemistry | 10 | **8** | Arrhenius, Nernst, Beer-Lambert, van der Waals, Faraday electrolysis |
+| Biology | 10 | **6** | Fick diffusion, logistic growth (simulated), Michaelis-Menten (pH tracking) |
+| Engineering | 8 | **8** | Fourier heat, PID, Kirchhoff, Euler buckling, beam bending, Nyquist |
+| Medicine | 9 | **5** | Poiseuille (blood flow analog), Starling, half-life, BMI, Henderson-Hasselbalch |
+| Environmental | 5 | **5** | CO₂ forcing, Darcy groundwater, Clausius-Clapeyron, Budyko |
+| Materials | 3 | **2** | Hall-Petch (load+grain size), crack growth (fatigue cycling with servo) |
+| Aerospace | 2 | **1** | Lift coefficient (tube pressure on airfoil) |
+| **Verified composites** | 8 | **8** | ALL 8 composites testable (including CMP-DARCY-RADPRESS-001 novel) |
+| | | | |
+| CS/Math/Econ/Social/Linguistics/PoliSci | 38 | **2** | Weber-Fechner (light stimulus), Zipf (text corpus via makau.ai) |
+| **TOTAL** | **137** | **~84** | |
 
 ---
 
-## First Three Experiments to Run (in order)
+## Automated Experiment Stations (3 stations, running 24/7)
 
-### Experiment 1: Fourier Heat Conduction
-**Equipment:** Core2 + 2× KMeter ISO + copper rod + hot water
-**Equation:** q = k·(T_hot − T_cold)/L
-**What you verify:** linear temperature gradient at steady state
-**Cost of just this experiment:** ~$60
+### Station 1: Thermal (Core2 #1)
+**Sensors:** 4× KMeter ISO, 2× ENV Pro, thermal camera
+**Actuators:** H-Bridge driving Peltier, stepper for sensor positioning
+**Experiments:** Fourier heat conduction, Newton cooling, Arrhenius
+rate vs temperature, ideal gas P vs T, Carnot efficiency
+**Cycle time:** ~5 min (heat up, stabilize, measure, cool down)
 
-### Experiment 2: Ohm's Law
-**Equipment:** Core2 + VMeter + AMeter + 120Ω resistor + battery
-**Equation:** V = I·R
-**What you verify:** voltage and current readings satisfy V/I = R
-**Cost of just this experiment:** ~$56
+### Station 2: Electrical + Electromechanical (Core2 #2)
+**Sensors:** 3× VMeter, 3× AMeter, VAMeter, 2× encoder, IMU
+**Actuators:** GoPlus2 (motor + servo), 4-relay module, DAC
+**Experiments:** Ohm's law, Kirchhoff loops, DC motor composite,
+voice-coil composite, Faraday induction, PID controller
+**Cycle time:** ~30 sec (switch circuit, measure, switch next)
 
-### Experiment 3: Simple Harmonic Oscillator (Newton+Hooke composite)
-**Equipment:** Core2 + IMU (on mass) + spring + known mass
-**Equation:** T = 2π√(m/k)
-**What you verify:** measured period matches predicted from m and k
-**Cost of just this experiment:** ~$50
+### Station 3: Fluid + Optical + Chemical (Core2 #3)
+**Sensors:** 3× tube pressure, 2× water flow, 2× light, DLight,
+CO2, earth moisture, color sensor
+**Actuators:** GoPlus2 (servo valves), DAC (LED intensity), relay (pump)
+**Experiments:** Poiseuille flow, Darcy law, Beer-Lambert, CO₂
+radiative forcing, Fick diffusion, Darcy+RadPress novel prediction
+**Cycle time:** ~10 min (fill, stabilize, measure, drain)
+
+### Remote Nodes (6× ATOM Lite + 2× StickC Plus2)
+Placed at measurement points away from the stations: ambient
+reference temperature, outdoor CO₂ baseline, secondary pressure
+taps, flow outlet sensors. Stream independently to makau.ai.
