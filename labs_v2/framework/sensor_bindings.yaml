@@ -1,0 +1,195 @@
+# Sensor-to-equation variable bindings for live verification.
+#
+# Each entry maps a hequ.ai equation variable to a makau.ai
+# sensor, enabling automated verification of equation predictions
+# against real measured values.
+#
+# Human-in-the-loop gate: this file is manually authored and
+# reviewed. The automation pipeline reads it but does not modify
+# it without human approval.
+
+experiments:
+
+  # --- Fourier heat conduction verification ---
+  - id: EXP-FOURIER-001
+    equation_id: EQ-FOURIER-HEAT
+    description: >
+      Verify Fourier's law q = k·(T_hot - T_cold)/L against
+      a live temperature gradient across a known conductor.
+    formula: "k * (T_hot - T_cold) / L"
+    predicted_variable: q
+    predicted_unit: "W/m^2"
+    bindings:
+      T_hot:
+        sensor_id: null          # ← fill when sensor is connected
+        sensor_type: temperature
+        unit: K
+        description: "Temperature at the hot end"
+      T_cold:
+        sensor_id: null
+        sensor_type: temperature
+        unit: K
+        description: "Temperature at the cold end"
+    constants:
+      k: 401.0                   # copper, W/(m·K)
+      L: 0.5                     # conductor length, m
+    tolerance: 0.05
+
+  # --- Ohm's law verification ---
+  - id: EXP-OHM-001
+    equation_id: EQ-OHM
+    description: >
+      Verify V = I·R against live voltage and current readings
+      across a known resistor.
+    formula: "I * R"
+    predicted_variable: V
+    predicted_unit: "V"
+    bindings:
+      I:
+        sensor_id: null
+        sensor_type: current
+        unit: A
+        description: "Current through the resistor"
+      V:
+        sensor_id: null
+        sensor_type: voltage
+        unit: V
+        description: "Voltage across the resistor (measured for comparison)"
+    constants:
+      R: 120.0                   # known resistor, Ω
+    tolerance: 0.02
+
+  # --- Newton's cooling law verification ---
+  - id: EXP-NEWTON-COOLING-001
+    equation_id: EQ-NEWTON-II
+    description: >
+      Verify Newton's law of cooling dT/dt = -h·(T - T_env)
+      against a live temperature time series of a cooling body.
+    formula: "-h * (T - T_env)"
+    predicted_variable: dT_dt
+    predicted_unit: "K/s"
+    bindings:
+      T:
+        sensor_id: null
+        sensor_type: temperature
+        unit: K
+        description: "Temperature of the cooling body (time series)"
+      T_env:
+        sensor_id: null
+        sensor_type: temperature
+        unit: K
+        description: "Ambient temperature"
+    constants:
+      h: 10.0                    # heat transfer coefficient, 1/s (typical)
+    tolerance: 0.10
+    notes: >
+      dT/dt is computed from the time series (finite difference
+      on consecutive readings). This requires history, not just
+      latest-value reads.
+
+# --- Sensor types hequ.ai needs ---
+# These are the sensor types that enable equation verification
+# across the current corpus. Priority ordered by how many
+# equations they unlock.
+required_sensor_types:
+  - type: temperature
+    unit: K or °C
+    equations_unlocked:
+      - EQ-FOURIER-HEAT (T_hot, T_cold)
+      - EQ-ARRHENIUS (T → k(T) rate constant)
+      - CMP-FOURIER-FICK-SORET-001 (T profile → C profile)
+      - Newton's cooling (T time series)
+    priority: 1
+    notes: >
+      Most versatile sensor type. Unlocks thermal, chemical
+      kinetics, and thermodiffusion equations. Thermocouples,
+      RTDs, or DHT22 digital sensors all work.
+
+  - type: voltage
+    unit: V
+    equations_unlocked:
+      - EQ-OHM (V = IR)
+      - CMP-NEWTON-OHM-MOTOR-001 (V_s input, V_back = K·ω)
+      - CMP-NEWTON-OHM-VOICECOIL-001 (V_s input, V_back = BL·v)
+    priority: 2
+    notes: >
+      Multimeter or ADC voltage channel. Combined with current
+      sensing, unlocks all electrical composites.
+
+  - type: current
+    unit: A
+    equations_unlocked:
+      - EQ-OHM (I in V = IR)
+      - CMP-NEWTON-OHM-MOTOR-001 (i = τ_L/K)
+      - CMP-NEWTON-OHM-VOICECOIL-001 (i = F_load/BL)
+    priority: 2
+    notes: >
+      Current sense resistor + ADC, or hall-effect sensor.
+
+  - type: displacement
+    unit: m
+    equations_unlocked:
+      - EQ-HOOKE (x displacement from equilibrium)
+      - CMP-NEWTON-HOOKE-SHO-001 (x(t) oscillation)
+    priority: 3
+    notes: >
+      LVDT, laser displacement, or ultrasonic range sensor.
+      For SHO verification, needs time-series at ≥100 Hz.
+
+  - type: force
+    unit: N
+    equations_unlocked:
+      - EQ-HOOKE (F_spring = -k·x)
+      - EQ-NEWTON-II (F = m·a)
+    priority: 3
+    notes: >
+      Load cell or strain-gauge force sensor.
+
+  - type: flow_rate
+    unit: m³/s or m/s
+    equations_unlocked:
+      - EQ-FICK-DIFFUSION (J mass flux)
+      - CMP-DARCY-RADPRESS-001 (u seepage velocity — the novel prediction!)
+    priority: 4
+    notes: >
+      For the Darcy+RadPress novel prediction, needs sensitivity
+      to ~10⁻⁶ m/s in a porous sample. Differential pressure
+      transducer or PIV (particle image velocimetry) could work.
+
+  - type: pressure
+    unit: Pa
+    equations_unlocked:
+      - Darcy's law (pressure gradient)
+      - Bernoulli (pressure along streamline)
+    priority: 4
+
+  - type: angular_velocity
+    unit: rad/s
+    equations_unlocked:
+      - CMP-NEWTON-OHM-MOTOR-001 (ω = V_s/K - τ_L·R/K²)
+    priority: 5
+    notes: >
+      Optical encoder or tachometer on a DC motor shaft.
+      For the motor composite, reading ω directly validates
+      the entire coupled prediction.
+
+  - type: light_intensity
+    unit: W/m²
+    equations_unlocked:
+      - CMP-DARCY-RADPRESS-001 (I beam intensity)
+      - EQ-BEER-LAMBERT (transmitted intensity)
+    priority: 5
+    notes: >
+      Photodiode or power meter. For the novel Darcy+RadPress
+      prediction, needs calibrated absolute intensity measurement.
+
+  - type: concentration
+    unit: mol/m³
+    equations_unlocked:
+      - EQ-FICK-DIFFUSION (C_high, C_low)
+      - CMP-FOURIER-FICK-SORET-001 (C at hot/cold ends)
+      - CMP-ARRHENIUS-FICK-001 (reactant concentration)
+    priority: 5
+    notes: >
+      Conductivity probe (for ionic solutes), colorimeter, or
+      pH meter (for acid-base). Harder to instrument than T or V.
