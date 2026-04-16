@@ -40,9 +40,14 @@ step "3/4 Referential integrity on the live corpus"
   && ok "live corpus referential integrity OK" \
   || fail "live corpus has referential errors — fix equation.yaml or unbound DOV-DSL vars"
 
-step "4/4 Regenerate unity_map.yaml from descriptors"
+step "4/5 Regenerate unity_map.yaml from descriptors"
 "$PY" labs_v2/cross_analysis/build_unity_map.py \
   && ok "unity_map.yaml regenerated" \
   || fail "unity map generation failed"
 
-printf '\n\033[1;32mAll failure_modes CI checks passed.\033[0m\n'
+step "5/5 Physical-admissibility checks on composites"
+"$PY" labs_v2/framework/physical_admissibility.py \
+  && ok "all composites physically admissible" \
+  || fail "composite admissibility check failed — gyrator power conservation or Onsager reciprocity violation"
+
+printf '\n\033[1;32mAll CI checks passed.\033[0m\n'
