@@ -83,10 +83,22 @@ def _get_makau(path, api_key, user):
 
 
 def read_sensor(sensor_id, transform, api_key, user):
-    data = _get_makau(f"/api/hequ/sensors/{sensor_id}/latest", api_key, user)
+    # Option B: single-field extraction via ?field= query parameter
+    data = _get_makau(
+        f"/api/hequ/sensors/{sensor_id}/latest?field={transform}",
+        api_key, user,
+    )
+    read_sensor._last_raw = data
     if isinstance(data, dict):
-        return data.get(transform, data.get("value", 0))
+        val = data.get("value")
+        if val is not None:
+            return val
+        # Fallback: try nested readings dict (pre-Option-B format)
+        val = data.get("readings", {}).get(transform)
+        if val is not None:
+            return val
     return 0
+read_sensor._last_raw = None
 
 
 def run_experiment(exp, api_key, user):
@@ -112,10 +124,13 @@ def run_experiment(exp, api_key, user):
                 "raw_value": raw,
                 "converted": val,
                 "unit": "K" if binding.get("convert_K") else binding["transform"],
+                "raw_api_keys": list(read_sensor._last_raw.keys()) if isinstance(read_sensor._last_raw, dict) else str(type(read_sensor._last_raw)),
+                "raw_api_sample": str(read_sensor._last_raw)[:300],
             }
         except Exception as exc:
             result["status"] = "sensor_error"
             result["error"] = f"{var_name}: {exc}"
+            result["raw_api_response"] = str(read_sensor._last_raw)[:500]
             return result
 
     try:
