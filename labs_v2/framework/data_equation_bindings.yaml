@@ -1,0 +1,328 @@
+# hequ.ai equation ↔ dataset bindings
+#
+# hequ.ai's own analysis of which SSS datasets can verify which
+# equations. SSS provides raw data; all equation mapping decisions
+# are made here by hequ.ai.
+#
+# Data source: SavvySuperSaver API
+# Base: https://sss-api-281207837690.us-central1.run.app/api/hequ
+# Auth: X-Hequ-Key (env var SSS_API_KEY)
+
+bindings:
+
+  # =================================================================
+  # STATISTICS & INFORMATION THEORY
+  # =================================================================
+
+  - equation: EQ-0090 Shannon Entropy
+    formula: "H = -sum(p_i * log2(p_i))"
+    datasets:
+      - id: cve-severity
+        method: >
+          Compute frequency distribution of severity labels
+          (LOW/MEDIUM/HIGH/CRITICAL) across 314K CVEs.
+          H measures the information content of the severity
+          classification system. Maximum H = log2(4) ≈ 2 bits
+          if perfectly uniform.
+        field: severity
+        operation: frequency_distribution → compute_entropy
+      - id: cve-vendor-product
+        method: >
+          Frequency distribution of vendors across 7.8M CVE-vendor
+          records. High entropy = CVEs spread across many vendors;
+          low entropy = concentrated in few.
+        field: vendor
+        operation: frequency_distribution → compute_entropy
+      - id: legislative-bills
+        method: >
+          Word frequency distribution in legislative text.
+          Shannon entropy of the vocabulary measures linguistic
+          information density.
+        field: bill_text (if accessible)
+        operation: tokenize → frequency_distribution → compute_entropy
+
+  - equation: EQ-0077 Central Limit Theorem
+    formula: "(X_bar - mu) / (sigma / sqrt(n)) → N(0,1)"
+    datasets:
+      - id: cve-severity
+        method: >
+          Draw N=1000 random batches of n=50 CVSS scores each.
+          Compute mean of each batch. The distribution of batch
+          means should converge to normal regardless of the
+          underlying CVSS distribution shape. Verify with
+          Shapiro-Wilk test on the batch means.
+        field: cvss_v3
+        operation: batch_sample → compute_means → normality_test
+      - id: grocery-prices
+        method: >
+          For each grocery item, draw batches of n stores.
+          Batch means should converge to normal. Tests CLT
+          on real consumer price data.
+        field: price
+        operation: batch_sample → compute_means → normality_test
+
+  - equation: EQ-0108 Pearson Correlation
+    formula: "r = cov(x,y) / (std(x) * std(y))"
+    datasets:
+      - id: cve-severity
+        method: >
+          Correlate CVSS score with days-to-KEV-listing for CVEs
+          that appear in KEV. Tests: does severity predict
+          exploitation speed?
+        fields: [cvss_v3, date → days_to_kev]
+        join: kev-timeline on cve_id
+      - id: economic-indicators
+        method: >
+          Correlate CPI with unemployment (Phillips curve proxy).
+          Correlate GDP with capital stock (Cobb-Douglas proxy).
+          Correlate stock returns across tickers (diversification).
+        fields: varies by sub-dataset
+
+  - equation: EQ-0109 Chi-Square Test
+    formula: "chi2 = sum((O_i - E_i)^2 / E_i)"
+    datasets:
+      - id: cve-severity
+        method: >
+          Test if CVE severity distribution matches a hypothesized
+          distribution (e.g., uniform, or the 2023 baseline).
+          Expected under null = equal proportion per severity level.
+        field: severity
+        operation: contingency_table → chi_square_test
+      - id: grocery-prices
+        method: >
+          Test if price distribution across 30 stores is uniform
+          for a given item. Significant chi-square → systematic
+          regional pricing differences.
+        field: price (binned)
+        operation: contingency_table → chi_square_test
+
+  - equation: EQ-0110 ANOVA F-statistic
+    formula: "F = MS_between / MS_within"
+    datasets:
+      - id: grocery-prices
+        method: >
+          Group prices by store. F-test asks: do stores differ
+          significantly in pricing, or is the variation within
+          stores comparable to between-stores? Classic one-way
+          ANOVA on a real consumer dataset.
+        groups: store_name
+        values: price
+
+  - equation: EQ-0112 Student's t-test
+    formula: "t = (x_bar - mu) / (s / sqrt(n))"
+    datasets:
+      - id: grocery-prices
+        method: >
+          For each item, test if a specific store's price is
+          significantly different from the national mean price.
+          One-sample t-test per store×item combination.
+        field: price
+        operation: one_sample_t_test
+
+  - equation: EQ-0075 Bayes' Theorem
+    formula: "P(A|B) = P(B|A) * P(A) / P(B)"
+    datasets:
+      - id: cve-severity
+        method: >
+          P(KEV-listed | CRITICAL severity) vs P(KEV-listed).
+          Does critical severity predict active exploitation?
+          Compute from the joint distribution of severity × kev_listed.
+        fields: [severity, kev_listed]
+        operation: contingency → posterior
+
+  - equation: EQ-0113 Logistic Regression
+    formula: "P(Y=1) = 1 / (1 + exp(-(b0 + b1*X)))"
+    datasets:
+      - id: cve-severity
+        method: >
+          Predict kev_listed (binary) from cvss_v3 (continuous).
+          Fit logistic regression, verify sigmoid shape, compute
+          AUC as a measure of predictive power.
+        X: cvss_v3
+        Y: kev_listed
+
+  - equation: EQ-0114 Signal Detection Theory (d')
+    formula: "d_prime = z(hit_rate) - z(false_alarm_rate)"
+    datasets:
+      - id: cve-severity
+        method: >
+          Treat a CVSS threshold (e.g., ≥9.0) as a "detector"
+          for KEV-listing. Hit = CVSS≥9 AND KEV-listed.
+          False alarm = CVSS≥9 AND NOT KEV-listed.
+          Compute d' as a function of threshold — the ROC curve
+          of CVSS as an exploitation predictor.
+        fields: [cvss_v3, kev_listed]
+        operation: threshold_sweep → d_prime_curve
+
+  # =================================================================
+  # GRAPH / NETWORK EQUATIONS
+  # =================================================================
+
+  - equation: EQ-0096 PageRank
+    formula: "PR(p) = (1-d)/N + d * sum(PR(q)/L(q))"
+    datasets:
+      - id: cve-vendor-product
+        method: >
+          Build a bipartite graph: vendor → CVE edges. Run
+          PageRank on the vendor projection. Highest-ranked
+          vendors have the most "CVE influence" — connected to
+          CVEs that also affect many other vendors.
+          7.8M edges provides a substantial graph.
+        operation: build_graph → pagerank(damping=0.85)
+      - id: attack-chains
+        method: >
+          CVE → ATT&CK technique graph. PageRank identifies
+          the most "central" attack techniques — those connected
+          to the most diverse set of CVEs.
+        operation: build_graph → pagerank
+
+  # =================================================================
+  # ECONOMICS & FINANCE
+  # =================================================================
+
+  - equation: EQ-0100 CAPM
+    formula: "E(R_i) = R_f + beta * (E(R_m) - R_f)"
+    datasets:
+      - id: economic-indicators
+        method: >
+          Use 10 stock tickers (daily close) as individual assets.
+          Use S&P 500 or market average as R_m.
+          Use T-bill rate as R_f.
+          Compute beta for each stock via regression of excess
+          returns on market excess returns.
+        fields: [stock_close, t_bill_rate]
+
+  - equation: EQ-0104 Fisher Equation
+    formula: "(1+i) = (1+r) * (1+pi)"
+    datasets:
+      - id: economic-indicators
+        method: >
+          Nominal rate (Federal Funds or T-bill), real rate (TIPS
+          yield or derived), inflation (CPI). Verify the Fisher
+          identity across the time series.
+        fields: [interest_rate, cpi, t_bill]
+
+  - equation: EQ-0106 Phillips Curve
+    formula: "pi = pi_e - beta * (u - u_n) + epsilon"
+    datasets:
+      - id: economic-indicators
+        method: >
+          Plot inflation (CPI) vs unemployment rate over decades.
+          Fit the Phillips curve. Test if the slope beta is
+          significantly negative (trade-off exists).
+        fields: [cpi, unemployment]
+
+  - equation: EQ-0101 Cobb-Douglas
+    formula: "Y = A * L^alpha * K^beta"
+    datasets:
+      - id: economic-indicators
+        method: >
+          GDP, labor force, and capital stock for 20 countries
+          (World Bank data). Fit log-linearized Cobb-Douglas
+          to estimate alpha (labor share) and beta (capital share).
+          Classic cross-country production function estimation.
+        fields: [gdp, labor, capital]
+
+  - equation: EQ-0107 Supply-Demand Equilibrium
+    formula: "Q_d(P*) = Q_s(P*)"
+    datasets:
+      - id: grocery-prices
+        method: >
+          Price variation across 30 stores for the same item
+          reveals the supply-demand equilibrium band. Stores
+          with higher prices have lower implicit demand (fewer
+          units moved). Cross-store price dispersion measures
+          market efficiency.
+        fields: [price, store]
+
+  # =================================================================
+  # LINGUISTICS
+  # =================================================================
+
+  - equation: EQ-0134 Zipf's Law
+    formula: "f(r) proportional to r^(-s), s approx 1"
+    datasets:
+      - id: legislative-bills
+        method: >
+          Extract word frequencies from legislative text.
+          Plot log(frequency) vs log(rank). Verify slope ≈ -1.
+          546 bills provides substantial text corpus.
+        operation: tokenize → rank_frequency → fit_power_law
+      - id: cve-vendor-product
+        method: >
+          Rank vendors by CVE count. The vendor-frequency
+          distribution may follow Zipf — a few vendors
+          dominate, many have 1-2 CVEs.
+        field: vendor
+        operation: count → rank → fit_power_law
+
+  - equation: EQ-0135 Heaps' Law
+    formula: "V(n) = K * n^beta, beta approx 0.4-0.6"
+    datasets:
+      - id: legislative-bills
+        method: >
+          Process bills incrementally (by date). Track unique
+          words (vocabulary) as a function of total words
+          processed. Fit V(n) = K·n^β and verify β ∈ [0.4, 0.6].
+        operation: incremental_vocab_growth → fit_heaps
+
+  # =================================================================
+  # TIME SERIES & TRANSFORMS
+  # =================================================================
+
+  - equation: EQ-0076 Fourier Transform
+    formula: "F(omega) = integral f(t) * exp(-i*omega*t) dt"
+    datasets:
+      - id: kev-timeline
+        method: >
+          Compute FFT of the KEV addition time series (daily
+          binned counts of new exploited vulns). Reveals
+          periodicity in exploitation disclosure — weekly cycle?
+          Monthly? Quarterly reporting patterns?
+        field: date_added (binned daily)
+        operation: daily_counts → fft → power_spectrum
+      - id: economic-indicators
+        method: >
+          FFT of stock price time series. Reveals dominant
+          frequencies (if any) in market oscillations.
+        field: stock_close (daily)
+        operation: fft → power_spectrum
+
+  - equation: EQ-0074 Fundamental Theorem of Calculus
+    formula: "integral_a^b f(x)dx = F(b) - F(a)"
+    datasets:
+      - id: kev-timeline
+        method: >
+          daily_kev_count is f(t). Cumulative sum is F(t).
+          Verify F(b) - F(a) = sum of daily counts between
+          dates a and b. Trivially true by construction, but
+          exercises the integration pipeline on real time-series data.
+        operation: cumulative_sum → verify_FTC
+
+  # =================================================================
+  # POLITICAL SCIENCE (limited data but testable)
+  # =================================================================
+
+  - equation: EQ-0136 Median Voter Theorem
+    formula: "x* = median(x_i)"
+    datasets:
+      - id: state-ban-graph
+        method: >
+          Model states as "voters" on a ban-adoption dimension.
+          The median state's position predicts the equilibrium
+          policy outcome. With 26 ban records across states,
+          verify that the median adopting state's timing predicts
+          the modal adoption wave.
+        operation: rank_states → find_median → compare_outcome
+
+  - equation: EQ-0102 Nash Equilibrium
+    formula: "u_i(s_i*, s_{-i}*) >= u_i(s_i, s_{-i}*)"
+    datasets:
+      - id: state-ban-graph
+        method: >
+          Model ban adoption as a 2-player game (state A vs
+          state B): adopt or not adopt. Payoffs depend on
+          whether the other state also adopted (coordination
+          game). Check if observed adoption pattern matches
+          Nash prediction.
+        operation: construct_payoff_matrix → solve_NE → compare
