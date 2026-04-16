@@ -74,19 +74,24 @@ class MakauBridge:
     def __init__(
         self,
         api_base: Optional[str] = None,
-        tenant: Optional[str] = None,
+        api_key: Optional[str] = None,
         user: Optional[str] = None,
     ):
         self.api_base = (
             api_base
             or os.environ.get("MAKAU_API_BASE", "https://makau.ai")
         ).rstrip("/")
-        self.tenant = tenant or os.environ.get("MAKAU_TENANT", "hequ")
+        self.api_key = api_key or os.environ.get("MAKAU_API_KEY", "")
         self.user = user or os.environ.get("MAKAU_USER", "hequ-bridge")
+        if not self.api_key:
+            raise MakauBridgeError(
+                "MAKAU_API_KEY environment variable not set. "
+                "Set it to the X-Makau-Api-Key value before running."
+            )
 
     def _headers(self) -> Dict[str, str]:
         return {
-            "X-Makau-Tenant": self.tenant,
+            "X-Makau-Api-Key": self.api_key,
             "X-Makau-User": self.user,
             "Content-Type": "application/json",
         }
