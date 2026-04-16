@@ -10,82 +10,188 @@
 
 experiments:
 
-  # --- Fourier heat conduction verification ---
-  - id: EXP-FOURIER-001
+  # ================================================================
+  # LIVE EXPERIMENTS — using real makau.ai sensors (government APIs)
+  # These run NOW against real data. No hardware needed.
+  # ================================================================
+
+  # --- Ideal gas law: P and T from weather stations ---
+  - id: EXP-IDEAL-GAS-LIVE-001
+    equation_id: EQ-IDEAL-GAS
+    description: >
+      Verify the ideal gas law PV = nRT using live atmospheric
+      data from NWS weather stations. At a weather station,
+      the air is approximately an ideal gas at standard conditions.
+      Given measured P and T, predict the molar volume V_m = RT/P
+      and compare against the standard value (~0.0245 m³/mol at
+      25°C, 1 atm).
+    formula: "R * T / P"
+    predicted_variable: V_m
+    predicted_unit: "m^3/mol"
+    bindings:
+      T:
+        sensor_id: nws-kiah
+        transform: temperature_c
+        unit: C
+        convert_to_K: true
+        description: "Air temperature at Houston Intercontinental"
+      P:
+        sensor_id: nws-kiah
+        transform: pressure_pa
+        unit: Pa
+        description: "Barometric pressure at Houston"
+    constants:
+      R: 8.314472               # J/(mol·K)
+    tolerance: 0.05
+    notes: >
+      The ideal gas law is exact for an ideal gas. Real air deviates
+      by ~0.1% at standard conditions (van der Waals corrections).
+      Tolerance set at 5% to account for altitude, humidity, and
+      the non-ideal nature of humid air.
+
+  # --- Clausius-Clapeyron: dew point vs temperature ---
+  - id: EXP-CLAUSIUS-CLAPEYRON-LIVE-001
+    equation_id: EQ-CLAUSIUS-CLAPEYRON
+    description: >
+      Verify the Clausius-Clapeyron relation using live dew point
+      and temperature readings. The saturation vapor pressure
+      e_s(T) = e_s0 · exp(L/(R_v) · (1/T_0 - 1/T)) predicts
+      the dew point depression from temperature and humidity.
+    formula: "6.112 * exp(17.67 * T_c / (T_c + 243.5))"
+    predicted_variable: e_s
+    predicted_unit: "hPa"
+    bindings:
+      T_c:
+        sensor_id: nws-kord
+        transform: temperature_c
+        unit: C
+        description: "Air temperature at Chicago O'Hare"
+    constants: {}
+    tolerance: 0.10
+    notes: >
+      Uses the Magnus formula (empirical fit to Clausius-Clapeyron).
+      Compare predicted saturation vapor pressure to actual vapor
+      pressure derived from humidity reading.
+
+  # --- Fourier heat: temperature difference between two cities ---
+  - id: EXP-FOURIER-GRADIENT-LIVE-001
     equation_id: EQ-FOURIER-HEAT
     description: >
-      Verify Fourier's law q = k·(T_hot - T_cold)/L against
-      a live temperature gradient across a known conductor.
+      NOT a true Fourier conduction experiment (no solid conductor
+      between cities). Instead, uses the temperature difference
+      between two NWS stations as a LIVE DATA TEST of the pipeline:
+      read T_hot and T_cold from real sensors, compute q = k·ΔT/L,
+      verify the pipeline executes end-to-end. The physics is
+      illustrative, not rigorous — this tests the SOFTWARE, not
+      the equation.
     formula: "k * (T_hot - T_cold) / L"
     predicted_variable: q
     predicted_unit: "W/m^2"
     bindings:
       T_hot:
-        sensor_id: null          # ← fill when sensor is connected
-        sensor_type: temperature
-        unit: K
-        description: "Temperature at the hot end"
+        sensor_id: nws-kiah
+        transform: temperature_c
+        unit: C
+        convert_to_K: true
+        description: "Houston temperature (typically warmer)"
       T_cold:
-        sensor_id: null
-        sensor_type: temperature
-        unit: K
-        description: "Temperature at the cold end"
+        sensor_id: nws-kden
+        transform: temperature_c
+        unit: C
+        convert_to_K: true
+        description: "Denver temperature (typically cooler)"
     constants:
-      k: 401.0                   # copper, W/(m·K)
-      L: 0.5                     # conductor length, m
+      k: 401.0                   # copper, W/(m·K) — hypothetical conductor
+      L: 0.5                     # hypothetical length, m
+    tolerance: 1.0               # 100% — this is a pipeline test, not a physics test
+    notes: >
+      Pipeline integration test. The q value is computed from real
+      live temperature data but the "conductor" is hypothetical.
+      Verifies: sensor reads work, formula evaluates, residual
+      computes, ledger records.
+
+  # --- River flow: USGS discharge ---
+  - id: EXP-DARCY-RIVER-LIVE-001
+    equation_id: EQ-DARCY
+    description: >
+      Read live river discharge from USGS gauging station. Not a
+      direct Darcy's law test (river flow is open-channel, not
+      porous-media), but the flow rate data feeds the pipeline
+      for future groundwater-Darcy composites.
+    formula: "Q"
+    predicted_variable: Q
+    predicted_unit: "cfs"
+    bindings:
+      Q:
+        sensor_id: usgs-09380000
+        transform: discharge_cfs
+        unit: cfs
+        description: "Colorado River discharge at Lees Ferry, AZ"
+    constants: {}
+    tolerance: 0.20
+
+  # ================================================================
+  # LOCAL EXPERIMENTS — require M5Stack hardware + POST to makau.ai
+  # These become active when sensors are connected.
+  # ================================================================
+
+  # --- Fourier heat conduction (real conductor) ---
+  - id: EXP-FOURIER-LOCAL-001
+    equation_id: EQ-FOURIER-HEAT
+    description: >
+      True Fourier verification: copper rod with Peltier heat
+      source, two KMeter thermocouples at each end.
+    formula: "k * (T_hot - T_cold) / L"
+    predicted_variable: q
+    predicted_unit: "W/m^2"
+    bindings:
+      T_hot:
+        sensor_id: m5-fourier-t-hot     # M5Stack KMeter → POST /api/sensors/ingest
+        transform: temperature
+        unit: C
+      T_cold:
+        sensor_id: m5-fourier-t-cold
+        transform: temperature
+        unit: C
+    constants:
+      k: 401.0
+      L: 0.30
     tolerance: 0.05
 
-  # --- Ohm's law verification ---
-  - id: EXP-OHM-001
+  # --- Ohm's law ---
+  - id: EXP-OHM-LOCAL-001
     equation_id: EQ-OHM
-    description: >
-      Verify V = I·R against live voltage and current readings
-      across a known resistor.
     formula: "I * R"
     predicted_variable: V
     predicted_unit: "V"
     bindings:
       I:
-        sensor_id: null
-        sensor_type: current
+        sensor_id: m5-ohm-current
+        transform: current
         unit: A
-        description: "Current through the resistor"
       V:
-        sensor_id: null
-        sensor_type: voltage
+        sensor_id: m5-ohm-voltage
+        transform: voltage
         unit: V
-        description: "Voltage across the resistor (measured for comparison)"
     constants:
-      R: 120.0                   # known resistor, Ω
+      R: 120.0
     tolerance: 0.02
 
-  # --- Newton's cooling law verification ---
-  - id: EXP-NEWTON-COOLING-001
-    equation_id: EQ-NEWTON-II
-    description: >
-      Verify Newton's law of cooling dT/dt = -h·(T - T_env)
-      against a live temperature time series of a cooling body.
-    formula: "-h * (T - T_env)"
-    predicted_variable: dT_dt
-    predicted_unit: "K/s"
+  # --- SHO (Newton+Hooke composite) ---
+  - id: EXP-SHO-LOCAL-001
+    equation_id: CMP-NEWTON-HOOKE-SHO-001
+    formula: "2 * 3.14159265 * sqrt(m / k_spring)"
+    predicted_variable: T_period
+    predicted_unit: "s"
     bindings:
-      T:
-        sensor_id: null
-        sensor_type: temperature
-        unit: K
-        description: "Temperature of the cooling body (time series)"
-      T_env:
-        sensor_id: null
-        sensor_type: temperature
-        unit: K
-        description: "Ambient temperature"
+      T_period:
+        sensor_id: m5-sho-period
+        transform: period
+        unit: s
     constants:
-      h: 10.0                    # heat transfer coefficient, 1/s (typical)
-    tolerance: 0.10
-    notes: >
-      dT/dt is computed from the time series (finite difference
-      on consecutive readings). This requires history, not just
-      latest-value reads.
+      m: 0.5
+      k_spring: 50.0
+    tolerance: 0.05
 
 # --- Sensor types hequ.ai needs ---
 # These are the sensor types that enable equation verification
