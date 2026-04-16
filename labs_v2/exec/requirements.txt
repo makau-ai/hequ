@@ -1,0 +1,31 @@
+# Frozen requirements for the sandboxed notebook-execution
+# image (design v4 §11b). Versions are pinned; hashes are
+# intentionally omitted in this first draft because generating
+# them requires a clean pip-compile run against the Phase 12
+# lockfile. A subsequent commit will replace this file with
+# the full --require-hashes variant.
+#
+# Phase 12 commitment (tracked in TECHNICAL_DEBT.md):
+#   - Replace this file with pip-compile --generate-hashes output
+#   - Make `pip install --require-hashes` a hard requirement
+#     in the Dockerfile before Phase 13 runs any composite notebook
+#
+# The versions below are pinned to the exact releases used at
+# the time of v4 discharge approval (2026-04-15). Any upgrade
+# requires a design-doc note and a fresh discharge cycle.
+sympy==1.13.3
+scipy==1.14.1
+numpy==2.1.3
+pint==0.24.4
+matplotlib==3.9.2
+nbformat==5.10.4
+nbclient==0.10.0
+ipykernel==6.29.5
+pyyaml==6.0.2
+# Hypothesis library for stratified property-based testing (v4 §5.2.2, FCS C5)
+hypothesis==6.115.5
+# python-flint (Arb-based interval arithmetic) for genuinely
+# independent numeric backend (v4 §5.2.4, FCS C2). Best-effort
+# in Phase 12, hard requirement in Phase 13+. Installed at image
+# build time so Check D runs inside the sandbox.
+python-flint==0.7.0

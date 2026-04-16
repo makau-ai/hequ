@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Equations — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">The Corpus</span>
+<h1>16 <em>equations</em>.<br>14 domains.</h1>
+<p class="lead">Each entry is parsed to a canonical implicit form with pint-typed variables and a four-field I-ADOPT semantic descriptor keyed against QUDT.</p>
+</div>
+<section class="domain-section">
+<div class="domain-label">Chemical Kinetics</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-ARRHENIUS.html"><div class="card-id">EQ-ARRHENIUS</div><div class="card-name">Arrhenius Rate Law</div><div class="card-math">-A*exp(-Ea/(R*T)) + k_rate = 0</div><div class="card-meta"><span>5 variables</span><span>6 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Classical Mechanics</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-HOOKE.html"><div class="card-id">EQ-HOOKE</div><div class="card-name">Hooke&#x27;s Law (Linear Elastic Restoring Force)</div><div class="card-math">F_spring + k*x = 0</div><div class="card-meta"><span>3 variables</span><span>8 axioms</span></div></a>
+<a class="card" href="/discovery/equations/EQ-NEWTON-II.html"><div class="card-id">EQ-NEWTON-II</div><div class="card-name">Newton&#x27;s Second Law</div><div class="card-math">F - a*m = 0</div><div class="card-meta"><span>3 variables</span><span>7 axioms</span></div></a>
+<a class="card" href="/discovery/equations/EQ-WORK-ENERGY.html"><div class="card-id">EQ-WORK-ENERGY</div><div class="card-name">Work–Energy Theorem</div><div class="card-math">W - m*(v_f**2 - v_i**2)/2 = 0</div><div class="card-meta"><span>4 variables</span><span>5 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Electrical Circuits</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-OHM.html"><div class="card-id">EQ-OHM</div><div class="card-name">Ohm&#x27;s Law</div><div class="card-math">-I*R + V = 0</div><div class="card-meta"><span>3 variables</span><span>7 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Fluid Dynamics</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-NAVIER-STOKES.html"><div class="card-id">EQ-NAVIER-STOKES</div><div class="card-name">Navier–Stokes Momentum Equation (1D, incompressible)</div><div class="card-math">P_x - g*rho - mu*u_xx + rho*u*u_x + rho*u_t = 0</div><div class="card-meta"><span>8 variables</span><span>11 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Information Theory</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-SHANNON-ENTROPY.html"><div class="card-id">EQ-SHANNON-ENTROPY</div><div class="card-name">Shannon Entropy (binary form)</div><div class="card-math">H + p*log(p) + (1 - p)*log(1 - p) = 0</div><div class="card-meta"><span>2 variables</span><span>5 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Mass Transport</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-FICK-DIFFUSION.html"><div class="card-id">EQ-FICK-DIFFUSION</div><div class="card-name">Fick&#x27;s First Law of Diffusion (1D)</div><div class="card-math">D*dC_dx + J = 0</div><div class="card-meta"><span>3 variables</span><span>8 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Population Dynamics</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-LOTKA-VOLTERRA.html"><div class="card-id">EQ-LOTKA-VOLTERRA</div><div class="card-name">Lotka–Volterra Predator-Prey Equations</div><div class="card-math">alpha*x - beta*x*y = 0</div><div class="card-meta"><span>4 variables</span><span>8 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Probability</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-BAYES.html"><div class="card-id">EQ-BAYES</div><div class="card-name">Bayes&#x27; Theorem</div><div class="card-math">-P_A*P_B_given_A + P_A_given_B*P_B = 0</div><div class="card-meta"><span>4 variables</span><span>5 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Quantitative Finance</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-BLACK-SCHOLES.html"><div class="card-id">EQ-BLACK-SCHOLES</div><div class="card-name">Black–Scholes PDE</div><div class="card-math">S**2*V_SS*sigma**2/2 + S*V_S*r - V*r + V_t = 0</div><div class="card-meta"><span>7 variables</span><span>5 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Quantum Mechanics</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-SCHRODINGER.html"><div class="card-id">EQ-SCHRODINGER</div><div class="card-name">Schrödinger Equation (1D, time-dependent, free particle)</div><div class="card-math">hbar**2*psi_xx/(2*m) + I*hbar*psi_t = 0</div><div class="card-meta"><span>4 variables</span><span>12 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Special Relativity</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-LORENTZ-FACTOR.html"><div class="card-id">EQ-LORENTZ-FACTOR</div><div class="card-name">Lorentz Factor (Special Relativity)</div><div class="card-math">gamma**2*(1 - v**2/c**2) - 1 = 0</div><div class="card-meta"><span>3 variables</span><span>5 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Spectroscopy</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-BEER-LAMBERT.html"><div class="card-id">EQ-BEER-LAMBERT</div><div class="card-name">Beer–Lambert Law</div><div class="card-math">A - c*ell*epsilon = 0</div><div class="card-meta"><span>4 variables</span><span>7 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Thermal Transport</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-FOURIER-HEAT.html"><div class="card-id">EQ-FOURIER-HEAT</div><div class="card-name">Fourier&#x27;s Law of Heat Conduction (1D)</div><div class="card-math">dT_dx*k + q = 0</div><div class="card-meta"><span>3 variables</span><span>7 axioms</span></div></a>
+</div>
+</section>
+<section class="domain-section">
+<div class="domain-label">Variational Mechanics</div>
+<div class="card-grid">
+<a class="card" href="/discovery/equations/EQ-EULER-LAGRANGE.html"><div class="card-id">EQ-EULER-LAGRANGE</div><div class="card-name">Euler–Lagrange Equation (1D)</div><div class="card-math">-dL_dq + d_dt_dL_dqdot = 0</div><div class="card-meta"><span>2 variables</span><span>8 axioms</span></div></a>
+</div>
+</section>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

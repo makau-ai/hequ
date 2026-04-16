@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Schrödinger Equation (1D, time-dependent, free particle) — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">EQ-SCHRODINGER · Quantum Mechanics</span>
+<h1>Schrödinger Equation (1D, time-dependent, free particle)</h1>
+<div class="math-display">hbar**2*psi_xx/(2*m) + I*hbar*psi_t = 0</div>
+</div>
+<h2>Derivative form</h2>
+<div class="math-display">hbar**2*Derivative(psi(x, t), (x, 2))/(2*m) + I*hbar*Derivative(psi(x, t), t) = 0</div>
+<h2>Variables</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">hbar</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">reduced Planck constant ℏ ≈ 1.0546e-34 J·s</p><div class="card-meta"><span class="mono">joule * second</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>abstract_quantity</dd><dt>Property</dt><dd>ReducedPlanckConstant</dd><dt>Context</dt><dd>time_dependent</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">m</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">particle mass</p><div class="card-meta"><span class="mono">kilogram</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>point_particle</dd><dt>Property</dt><dd>Mass</dd><dt>Context</dt><dd>non_relativistic</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">psi_t</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">partial time derivative of the wavefunction ∂ψ/∂t</p><div class="card-meta"><span class="mono">1 / (meter ** 0.5 * second)</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>wavefunction</dd><dt>Property</dt><dd>WaveFunctionTimeDerivative</dd><dt>Context</dt><dd>time_dependent</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">psi_xx</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">second spatial derivative ∂²ψ/∂x²</p><div class="card-meta"><span class="mono">1 / meter ** 2.5</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>wavefunction</dd><dt>Property</dt><dd>WaveFunctionSecondSpatialDerivative</dd><dt>Context</dt><dd>time_dependent</dd></dl></div>
+</div>
+<h2>Axioms</h2>
+<p><span class="badge neutral" style="margin-right:0.3rem">constant_coefficients</span> <span class="badge neutral" style="margin-right:0.3rem">deterministic</span> <span class="badge neutral" style="margin-right:0.3rem">differential</span> <span class="badge neutral" style="margin-right:0.3rem">hermitian</span> <span class="badge neutral" style="margin-right:0.3rem">homogeneous</span> <span class="badge neutral" style="margin-right:0.3rem">isotropic</span> <span class="badge neutral" style="margin-right:0.3rem">linear</span> <span class="badge neutral" style="margin-right:0.3rem">linear_superposition</span> <span class="badge neutral" style="margin-right:0.3rem">non_relativistic</span> <span class="badge neutral" style="margin-right:0.3rem">probability_conserving</span> <span class="badge neutral" style="margin-right:0.3rem">quantum</span> <span class="badge neutral" style="margin-right:0.3rem">unitary</span></p>
+<h2>Assumptions</h2>
+<ul>
+<li>Free particle (V = 0) or equivalent classical field</li>
+<li>Non-relativistic kinetic energy (|p| &lt;&lt; mc)</li>
+<li>ψ is a complex scalar field, normalisable over the domain</li>
+<li>Time evolution is unitary (norm conserved)</li>
+</ul>
+<h2>Derivation</h2>
+<ul>
+<li>Schrödinger, Ann. der Physik 79 (1926), 361 (original derivation via matter waves)</li>
+<li>Modern derivation: correspondence principle + E = p²/2m + symmetrisation</li>
+<li>Wick rotation t → −iτ converts the oscillatory kernel to the diffusive kernel of the heat equation (Feynman-Kac 1949)</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Griffiths &amp; Schroeter, Introduction to Quantum Mechanics, 3rd ed., Ch. 1</li>
+<li>Sakurai &amp; Napolitano, Modern Quantum Mechanics, 2nd ed., §2.1</li>
+<li>Feynman &amp; Hibbs, Quantum Mechanics and Path Integrals (1965)</li>
+</ul>
+<a class="back-link" href="/discovery/equations/index.html">← back to corpus</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

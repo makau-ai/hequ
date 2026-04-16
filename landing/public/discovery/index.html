@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Overview — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="current">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Discovery Engine · Medium Milestone II · Phase 13 (in flight)</span>
+<h1>The <em>unity</em> of equations,<br>verified by real math.</h1>
+<p class="lead">A cross-domain coupling engine with four layered checks, a four-phase AI review board modelled on academic peer review, and a formal scope-frozen discharge protocol. Every reference value comes from a real symbolic math engine — sympy, mpmath, and python-flint — not from an LLM. The board is asked for formulas and citations; the architect runs the arithmetic.</p>
+</div>
+<div class="stat-grid">
+<div class="stat"><div class="value">16</div><div class="label">equations loaded</div></div>
+<div class="stat"><div class="value">6</div><div class="label">canonical problems verified</div></div>
+<div class="stat"><div class="value">3</div><div class="label">composites verified</div></div>
+<div class="stat"><div class="value">20</div><div class="label">empirical ledger entries</div></div>
+</div>
+<h2>Where the engine is now</h2>
+<p class="prose">Phase 12 established the foundation: six flagship equations — Newton II, Hooke, Fourier, Fick, Ohm, Work-Energy — each with a real canonical problem that passes the four-check verification pipeline (symbolic canonicalization, stratified property-based sampling, high-precision mpmath, python-flint interval arithmetic). Phase 13 layers composites on top: two parent equations plus a transducer producing a new physical system whose prediction is verified against a textbook reference.</p>
+<div class="phases">
+<div class="phase"><span class="roman">12.1</span><h3>Canonical problem library</h3><p>Each equation in the corpus gets a <code>problems.yaml</code> with at least one closed-form problem and a board-sourced citation chain. The reference numeric value is computed locally by a real CAS, never by the board. Six equations covered; more coming.</p></div>
+<div class="phase"><span class="roman">12.2</span><h3>Four-check verification</h3><p>Symbolic equivalence via canonicalization (rational normalization → trig/power simp → polynomial remainder → branch-cut-aware discriminating random eval). Hypothesis-based stratified property testing. mpmath high-precision fragility check. python-flint interval arithmetic as the genuinely independent numeric engine.</p></div>
+<div class="phase"><span class="roman">13.1</span><h3>Composites from parents</h3><p>Two verified parent equations plus a transducer compose into a new physical system. Newton II + Hooke → simple harmonic oscillator. Newton II + Work-Energy → work done by constant force. Each composite gets its own reference value, its own four-check verification, its own ledger entry.</p></div>
+<div class="phase"><span class="roman">13.2</span><h3>Port-Hamiltonian transducers</h3><p>Every cross-domain coupling carries a named transducer with explicit ports (effort/flow), Dirac structure, and a symbolic power-conservation equation verified at composition time — conservation by construction, not by post-hoc numeric check.</p></div>
+<div class="phase"><span class="roman">∞</span><h3>AI review board</h3><p>Four-phase academic-mirror protocol: independent drafts, consolidated briefing + informed vote, editor synthesis, bounded rebuttal. <b>Three core reviewers</b> — Claude Opus 4.6 · OpenAI GPT-5 · Gemini 2.5 Pro — with <b>Grok-4 as optional fourth seat</b> on high-stakes governance rounds (architecture review, adversarial testing). Cost-neutrality disclaimer, specialist personas, rubric scoring, COI self-declaration, all-must-respond enforcement.</p></div>
+<div class="phase"><span class="roman">§11h</span><h3>No corner cuts</h3><p>On any verification failure, the Failure Investigation Protocol fires: state audit, assumption audit, literature RAG, board failure review. Equation modifications require explicit user approval. Tolerance loosening is categorically forbidden.</p></div>
+</div>
+<h2>Canonical problems in the ledger</h2>
+<p>6 equations each with a verified closed-form problem. Board provided the formula and primary-source citations; local sympy + mpmath computed the authoritative numerical value; four-check verification passed.</p>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">EQ-FICK-DIFFUSION</div><div class="card-name">PRB-FICK-001</div><div class="card-math">4e-07 mol / (m**2 * s)</div><div class="card-meta"><span class="badge empirical">verified</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-FOURIER-HEAT</div><div class="card-name">PRB-FOURIER-001</div><div class="card-math">80200 W/m**2</div><div class="card-meta"><span class="badge empirical">verified</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-HOOKE</div><div class="card-name">PRB-HOOKE-001</div><div class="card-math">10 newton</div><div class="card-meta"><span class="badge empirical">verified</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-NEWTON-II</div><div class="card-name">PRB-NEWTON-II-001</div><div class="card-math">2.00641 second</div><div class="card-meta"><span class="badge empirical">verified</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-OHM</div><div class="card-name">PRB-OHM-001</div><div class="card-math">60 volt</div><div class="card-meta"><span class="badge empirical">verified</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-WORK-ENERGY</div><div class="card-name">PRB-WORK-ENERGY-001</div><div class="card-math">55 joule</div><div class="card-meta"><span class="badge empirical">verified</span></div></div>
+</div>
+<h2>Composites verified</h2>
+<p>Phase 13 composites: two parent equations plus a coupling produce a new physical prediction, verified against a textbook reference with the same four-check pipeline as a single-equation canonical.</p>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">CMP-FOURIER-FICK-SORET-001</div><div class="card-name">EQ-FOURIER-HEAT <span style="color:var(--accent);font-style:italic">+</span> EQ-FICK-DIFFUSION</div><div class="card-math">99.005 mol/m**3</div><div class="card-meta"><span class="badge empirical">verified</span> <span style="color:var(--fg-dim);font-size:0.7rem">tier2 structural</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">CMP-NEWTON-HOOKE-SHO-001</div><div class="card-name">EQ-NEWTON-II <span style="color:var(--accent);font-style:italic">+</span> EQ-HOOKE</div><div class="card-math">0.628319 s</div><div class="card-meta"><span class="badge empirical">verified</span> <span style="color:var(--fg-dim);font-size:0.7rem">tier1 equivalence</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">CMP-NEWTON-WORKENERGY-001</div><div class="card-name">EQ-NEWTON-II <span style="color:var(--accent);font-style:italic">+</span> EQ-WORK-ENERGY</div><div class="card-math">55 joule</div><div class="card-meta"><span class="badge empirical">verified</span> <span style="color:var(--fg-dim);font-size:0.7rem">tier1 equivalence</span></div></div>
+</div>
+<h2>Layer 5 coupling sieve (Phase 11)</h2>
+<p>The earlier structural-matching sieve, reviewed by the board in Phase 11 before the current v5 protocol. 2 tier-I equivalences and 12 tier-II structural analogies were emitted; 15 were promoted to PROVED under the old protocol. These records remain in the ledger as Phase 11 audit and are being re-evaluated under the stricter Phase 12+ rules.</p>
+<h2>Ledger at a glance</h2>
+<div class="stat-grid" style="grid-template-columns: repeat(auto-fit, minmax(160px, 1fr))">
+<div class="stat"><div class="value">15</div><div class="label">proved</div></div>
+<div class="stat"><div class="value">20</div><div class="label">empirical</div></div>
+<div class="stat"><div class="value">27</div><div class="label">conjectural</div></div>
+<div class="stat"><div class="value">157</div><div class="label">rejected</div></div>
+</div>
+<p>Every record — proof, conjecture, rejection, failure investigation, or board discharge — is browsable on the <a href="/discovery/ledger.html">full ledger</a>. The full protocol is documented on the <a href="/discovery/methodology.html">methodology</a> page.</p>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

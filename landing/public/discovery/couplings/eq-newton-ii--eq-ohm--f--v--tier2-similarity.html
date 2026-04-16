@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-NEWTON-II.F ↔ EQ-OHM.V — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="current">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Coupling · Tier2 Similarity</span>
+<h1><em>F</em> ↔ <em>V</em></h1>
+<p class="lead"><span class="badge tier2">Tier II — Similarity</span> &nbsp; <span class="badge empirical">EMPIRICAL</span></p>
+</div>
+<div class="pairing">
+<div class="side left">
+<div class="side-label">Equation A</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-NEWTON-II.html" style="color:inherit; border:none">EQ-NEWTON-II</a></div>
+<div class="side-var">F</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Force</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+<dt>Constraint</dt><dd>net_external</dd>
+</dl>
+</div>
+<div class="connector"><div class="arrow">↔</div></div>
+<div class="side right">
+<div class="side-label">Equation B</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-OHM.html" style="color:inherit; border:none">EQ-OHM</a></div>
+<div class="side-var">V</div>
+<dl class="kv">
+<dt>Object</dt><dd>conductor</dd>
+<dt>Property</dt><dd>ElectricPotentialDifference</dd>
+<dt>Context</dt><dd>steady_state</dd>
+</dl>
+</div>
+</div>
+<h2>Sieve rationale</h2>
+<p class="prose">Structural equation-level identity (sign=+1): the canonical forms of EQ-NEWTON-II and EQ-OHM are syntactically equal under rename, and F maps to V under the discovered bijection</p>
+<h2>Physical constraint filter</h2>
+<div class="check-card passed">
+<div class="check-head">
+<span class="check-name">tellegen pairing</span>
+<span class="badge proved">PASSED</span>
+</div>
+<p class="reasoning">Both variables are bond-graph efforts but pint dimensions differ ([mass] * [length] / [time] ** 2 vs [mass] * [length] ** 2 / [time] ** 3 / [current]); accepted as a STRUCTURAL effort-analogy (e.g., force ↔ voltage: both occupy the effort slot in their respective bond graphs but are not dimensionally equal). Any downstream composite that needs a numerical identity must supply a transducer coefficient.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">onsager reciprocity</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Onsager reciprocity applies only to pairs of linear transport laws; at least one equation is not a linear PDE.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">energy conservation</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Energy conservation check is narrowly targeted at the Newton+Hooke → SHO composite in Medium m2; other composites require the Phase 7 Lyapunov/Noether machinery (not yet built).</p>
+</div>
+<h2>Emergent properties</h2>
+<h2>AI review board</h2>
+<p class="prose">1 REJECT vote(s); the coupling is demoted to conjectural per §12.2.</p>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">claude-opus-4-6</span>
+<span class="badge proved">APPROVE</span>
+</div>
+<p class="reasoning">The coupling correctly identifies the well-known force–voltage analogy between mechanical and electrical domains. Both F (force) and V (voltage) occupy the effort slot in their respective bond-graph representations, and the structural isomorphism between F = m·a and V = I·R under variable renaming is a textbook result. The physical-constraint filter appropriately flags that dimensions differ while accepting the mapping as a structural effort-analogy, and it correctly notes that a transducer coefficient would be needed for any numerical composite. The Buckingham π groups are dimensionally consistent within each domain. The emergent properties are modest and not overclaimed. This is a legitimate tier-2 structural analogy with no artefactual claims.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">openai-gpt-5</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The proposal equates force and voltage via an identity transfer despite them being different physical quantities with incompatible dimensions; the descriptors confirm Force vs ElectricPotentialDifference with no named transducer or transform to relate them. The physical-constraint filter’s pass rests only on a structural bond‑graph effort analogy, which cannot justify numerical identity. With no genuine emergent properties and a missing transduction coefficient (e.g., motor/piezo constant), the coupling is not physically plausible as stated.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">gemini-2.5-pro</span>
+<span class="badge neutral">ERROR</span>
+</div>
+<p class="reasoning">HTTP 503 from https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-pro:generateContent?key=REDACTED: {
+  &quot;error&quot;: {
+    &quot;code&quot;: 503,
+    &quot;message&quot;: &quot;This model is currently experiencing high demand. Spikes in demand are usually temporary. Please try again later.&quot;,
+    &quot;status&quot;: &quot;UNAVAILABLE&quot;
+  }
+}
+</p>
+</div>
+<a class="back-link" href="/discovery/couplings/index.html">← back to couplings</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

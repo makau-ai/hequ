@@ -1,0 +1,210 @@
+id: EQ-HOOKE
+name: Hooke's Law (Linear Elastic Restoring Force)
+domain: classical_mechanics
+
+# Hooke's law gives the restoring force of an ideal linear spring:
+#   F_spring = -k * x
+# Implicit form:
+#   F_spring + k * x = 0
+#
+# This equation is authored directly in the new I-ADOPT descriptor
+# schema and is the 16th equation of the corpus. It exists to
+# unlock the first pre-registered coupling test of Medium m2:
+# Newton II + Hooke → simple harmonic oscillator
+#   m * a = -k * x  ⇒  m * d²x/dt² + k*x = 0
+#
+# The coupling the sieve must discover is the tier-1 equivalence
+# F <-> F_spring (both rigid-body force on the same body in the
+# same inertial frame), which lets the composite be formed by
+# substituting Hooke's F_spring into Newton II's F slot.
+canonical_form: "F_spring + k*x"
+
+variables:
+  F_spring:
+    dimension: "[force]"
+    unit: "newton"
+    meaning: "restoring force exerted by the spring on the body"
+    descriptor:
+      object_of_interest: rigid_body
+      property: http://qudt.org/vocab/quantitykind/Force
+      context: inertial_frame
+      constraint: net_external
+  k:
+    dimension: "[force] / [length]"
+    unit: "newton / meter"
+    meaning: "spring constant (linear stiffness)"
+    descriptor:
+      object_of_interest: spring
+      property: http://qudt.org/vocab/quantitykind/Stiffness
+      context: inertial_frame
+  x:
+    dimension: "[length]"
+    unit: "meter"
+    meaning: "displacement from the spring's natural length (signed)"
+    descriptor:
+      object_of_interest: rigid_body
+      property: http://qudt.org/vocab/quantitykind/Position
+      context: inertial_frame
+      constraint: displacement_from_equilibrium
+
+assumptions:
+  - "Linear-elastic regime: k is independent of x (no yielding or hardening)"
+  - "No damping: pure elastic, no dissipative term"
+  - "Spring has zero mass (massless idealisation)"
+  - "One-dimensional motion along the spring axis"
+  - "The body is a point mass attached to one end of the spring"
+
+derivation_from:
+  - "Hooke (1676): 'Ut tensio, sic vis' — 'as the extension, so the force'"
+  - "Linearisation of a generic potential V(x) near its minimum: V(x) ≈ V(x*) + (1/2) V''(x*) (x − x*)², yielding F = −V'(x) = −V''(x*)(x − x*)"
+  - "First term in the Taylor expansion of any restoring force around a stable equilibrium — the universal small-oscillation law"
+  - "STRUCTURAL IDENTITY with Newton II via F <-> F_spring: substituting Hooke's F into Newton II gives the simple harmonic oscillator equation m*ẍ + k*x = 0, the archetype of cross-domain composition the coupling sieve must rediscover"
+
+references:
+  - "Hooke, Lectures De Potentia Restitutiva, or of Spring Explaining the Power of Springing Bodies (1678)"
+  - "Goldstein, Classical Mechanics, 3rd ed., §6.1"
+  - "Landau & Lifshitz, Theory of Elasticity, 3rd ed., §4"
+
+axioms:
+  - algebraic
+  - linear
+  - constant_coefficients
+  - commutative_factors
+  - deterministic
+  - classical
+  - non_relativistic
+  - conservative_force
+
+# -------------------------------------------------------------------
+# failure_modes — machine-checkable validity envelopes + alternatives
+#
+# Hooke's law breaks when the deformation leaves the linear-elastic
+# regime: either (a) the strain exceeds the material's proportional
+# limit (non-linear elasticity, then yielding), or (b) loading is
+# fast enough that viscoelastic / rate-dependent terms dominate. Both
+# are textbook cases with textbook alternatives.
+# -------------------------------------------------------------------
+failure_modes:
+  - id: F1
+    name: "applied beyond the linear-elastic proportional limit"
+    assumption_violated: linear_elastic_regime
+    envelope_variables:
+      strain:
+        dimension: "dimensionless"
+        unit: "1"
+        meaning: "applied strain x/L₀ (fractional deformation)"
+      strain_proportional_limit:
+        dimension: "dimensionless"
+        unit: "1"
+        meaning: >
+          material-specific strain at which the stress-strain curve
+          first deviates from linearity (typically ~0.002 for metals,
+          ~0.01 for polymers, ~0.001 for ceramics)
+    validity_envelope:
+      inequalities:
+        - "strain < strain_proportional_limit"
+    detection:
+      algorithm: >
+        measure the applied strain; compare against the material's
+        tabulated proportional limit. Flag if strain equals or
+        exceeds the limit.
+      preconditions: >
+        strain is observable; the material's proportional limit is
+        known from a quasi-static tensile test or materials database.
+    use_instead:
+      - target_equation: EQ-HOOKE
+        reason: >
+          Stay in Hooke's law if the loading can be redesigned to
+          reduce strain below the proportional limit (stiffer spring,
+          larger cross-section, shorter displacement). This is the
+          cheapest path back into envelope and is usually preferred
+          for engineering design.
+        ranking: primary
+      - target_equation: EQ-HOOKE
+        reason: >
+          For metals past the yield point, switch to a Ramberg-Osgood
+          stress-strain law or a full elastic-plastic constitutive
+          model (J2 plasticity, kinematic hardening). Hequ does not
+          yet carry a dedicated plasticity equation; this alternative
+          is recorded for future EQ-RAMBERG-OSGOOD.
+        ranking: conditional
+    historical_example:
+      description: >
+        Tacoma Narrows Bridge (1940) — wind-induced torsional
+        flutter drove the main span into non-linear amplitudes
+        where Hooke's law no longer described the cable deformation;
+        the failure analysis explicitly invoked geometric and
+        material non-linearities that the original linear-elastic
+        design had assumed away.
+      citation: >
+        Billah, K. Y. & Scanlan, R. H. (1991). Resonance, Tacoma
+        Narrows bridge failure, and undergraduate physics textbooks.
+        American Journal of Physics 59, 118.
+      evidence_level: primary_experiment
+    references:
+      - "Landau & Lifshitz, Theory of Elasticity, 3rd ed., §4 (linear-elastic regime) and §18 (beyond it)"
+      - "Hertzberg, Deformation and Fracture Mechanics of Engineering Materials, 5th ed., Ch 1"
+
+  - id: F2
+    name: "applied under rapid / rate-dependent loading (viscoelasticity)"
+    assumption_violated: rate_independent_response
+    envelope_variables:
+      omega:
+        dimension: "1/[time]"
+        unit: "radian/second"
+        meaning: "angular frequency of the applied loading"
+      tau_relax:
+        dimension: "[time]"
+        unit: "second"
+        meaning: "material's characteristic viscoelastic relaxation time"
+    validity_envelope:
+      named_groups:
+        De:
+          definition: "omega * tau_relax"
+          dimensionless: true
+          interpretation: >
+            Deborah number (ratio of material relaxation time to
+            observation / loading time). Small De = elastic-like;
+            large De = solid-like fast; De ~ 1 = viscoelastic.
+      inequalities:
+        - "De < 0.1"
+    detection:
+      algorithm: >
+        compute De = ω · τ_relax using the loading frequency and the
+        material's relaxation time (measured via DMA or tabulated).
+        Flag if De ≥ 0.1 — rate-dependent storage/loss moduli must
+        be used instead of a single spring constant.
+      preconditions: >
+        loading frequency ω is observable; τ_relax is known from a
+        dynamic mechanical analysis scan or a tabulated reference.
+    use_instead:
+      - target_equation: EQ-HOOKE
+        reason: >
+          For solids with De < 0.1, Hooke's law with the appropriate
+          Young's modulus remains accurate. This is the default for
+          quasi-static loading and for metals/ceramics at typical
+          engineering frequencies.
+        ranking: primary
+      - target_equation: EQ-HOOKE
+        reason: >
+          For polymers and biological tissues with De ~ 1, switch to
+          a complex-modulus description E*(ω) = E'(ω) + iE''(ω) with
+          storage (E') and loss (E'') moduli. Hequ does not yet
+          carry EQ-VISCOELASTIC-COMPLEX-MODULUS; reference is
+          recorded for future addition.
+        ranking: conditional
+    historical_example:
+      description: >
+        Silly Putty — the archetypal demonstration: rolled into a
+        ball and dropped, it bounces elastically (short loading
+        time, small De). Left on a table, it flows like a viscous
+        liquid (long loading time, De ≫ 1). Same material, same
+        temperature, opposite mechanical response — Hooke's law
+        holds in exactly one limit.
+      citation: >
+        Reiner, M. (1964). The Deborah Number. Physics Today 17, 62.
+      evidence_level: textbook_consensus
+    references:
+      - "Ferry, Viscoelastic Properties of Polymers, 3rd ed., Ch 2"
+      - "Lakes, Viscoelastic Solids, 2nd ed., §2.5"
+

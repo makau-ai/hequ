@@ -1,0 +1,38 @@
+equation_id: EQ-OHM
+description: >
+  Canonical problems for Ohm's law V = I·R. Sourced under v5
+  'board is not a CAS' protocol.
+problems:
+  - id: PRB-OHM-001
+    name: Voltage drop across a resistor
+    statement: >
+      An ideal ohmic resistor with resistance R = 120 Ω carries
+      a steady current of I = 0.5 A. The resistor is operating
+      in its linear regime (constant R with respect to voltage,
+      current, and temperature over the measurement window).
+      There are no reactive elements, no dynamic dV/dt or dI/dt
+      effects, and the resistor obeys V = I·R.
+
+      What is the magnitude of the voltage drop V across the
+      resistor in volts?
+    local_formula: "I * R"
+    canonical_substitutions:
+      I: 0.5
+      R: 120.0
+    variable_ranges:
+      I: [1.0e-6, 100.0]          # µA to hundred-A scale
+      R: [0.001, 1.0e9]           # milliohm to gigaohm
+    expected_unit: volt
+    expected_dimension: "[mass] * [length]**2 / ([current] * [time]**3)"
+    assumptions_required:
+      - "Linear (ohmic) material: R is independent of V, I, and temperature in the operating regime"
+      - "Steady state (no significant dV/dt or dI/dt effects)"
+      - "Scalar currents/voltages (no anisotropy or tensorial resistivity)"
+    pbt:
+      n_samples: 200
+      rel_tolerance: 1e-10        # integer arithmetic; tight is fine
+      seed: 20260415
+    architect_anchor_citations:
+      - "Ohm, Die galvanische Kette (1827)"
+      - "Jackson, Classical Electrodynamics, 3rd ed., §5.18"
+      - "Ashcroft & Mermin, Solid State Physics, Ch 1 (Drude model)"

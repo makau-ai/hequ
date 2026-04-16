@@ -1,0 +1,129 @@
+composite_id: CMP-FOURIER-FICK-SORET-001
+name: Soret thermodiffusion equilibrium from Fourier + Fick composition
+description: >
+  The first cross-domain composite in the corpus. Fourier's law
+  (heat conduction) and Fick's first law (mass diffusion) are
+  coupled through the Soret effect: a temperature gradient in a
+  dilute binary solution drives a concentration gradient, and
+  by Onsager reciprocity, a concentration gradient drives a
+  heat flux (the dual Dufour effect).
+
+  The coupling variable is NOT a single identified variable
+  (this is not a tier-1 equivalence like Newton+Hooke). The
+  transport processes are linked by a NAMED TRANSDUCER: the
+  Soret coefficient s_T (units 1/K), which lives in the
+  off-diagonal of the Onsager linear-transport coefficient
+  matrix. s_T = L_12 / (L_11·T) where L is the 2×2 Onsager
+  matrix, L_12 = L_21 by Onsager reciprocity.
+
+  At thermodynamic steady state with no net mass flux J = 0,
+  Fick + the Soret term balance to give the equilibrium
+  concentration profile:
+     C(x) = C_0 · exp(-s_T · (T(x) - T_0))
+  where T_0 is the reference temperature and C_0 is the
+  concentration there. The Fourier term sets the temperature
+  profile (linear gradient at steady state with fixed-T
+  boundaries), and Fick + Soret sets the concentration
+  response. This is the **Soret equilibrium** result — a real
+  experimentally-measured phenomenon (Ludwig 1856, Soret 1879).
+
+  This composite is the first real tier-2 structural coupling
+  in the corpus and the first time the port-Hamiltonian
+  transducer machinery is exercised across two physical
+  domains (thermal + mass transport).
+
+parents:
+  eq_a: EQ-FOURIER-HEAT
+  eq_a_problem_id: PRB-FOURIER-001
+  eq_b: EQ-FICK-DIFFUSION
+  eq_b_problem_id: PRB-FICK-001
+
+coupling:
+  tier: tier2_structural
+  v_a: dT_dx                             # Fourier: temperature gradient
+  v_b: dC_dx                             # Fick: concentration gradient
+  descriptor_note: >
+    These are NOT the same quantity. They are conjugate
+    driving forces in their respective transport laws, linked
+    by the Soret coefficient as a named cross-coefficient in
+    the Onsager matrix.
+  transducer_id: TRANSDUCER-SORET
+  transducer_properties:
+    type: "Onsager_cross_coefficient"
+    domains: [thermal_transport, mass_transport]
+    coefficient_name: "Soret coefficient s_T"
+    coefficient_dimensions: "1 / [temperature]"
+    constitutive_relation: "J/C = -D · s_T · dT/dx  (in the J=0 Soret equilibrium limit)"
+    onsager_symmetry: "L_12 = L_21  (cross-coefficient symmetry)"
+    citation:
+      - "Ludwig, C. (1856). Diffusion zwischen ungleich erwärmten Orten gleich zusammengesetzter Lösungen. Sitzungsber. Akad. Wiss. Wien 20, 539."
+      - "Soret, C. (1879). Sur l'état d'équilibre que prend, au point de vue de sa concentration, une dissolution saline primitivement homogène. Arch. Sci. Phys. Nat. 2, 48."
+      - "de Groot & Mazur, Non-Equilibrium Thermodynamics (1962), Ch XI §4"
+      - "Kondepudi & Prigogine, Modern Thermodynamics, 2nd ed., §16.6"
+
+composite_canonical_form: >
+  C(x) = C_0 · exp(-s_T · (T(x) - T_0))
+composite_state_vars: [C, T]
+composite_parameters: [s_T]
+
+canonical_problem:
+  id: CMP-FOURIER-FICK-SORET-001-Q1
+  statement: >
+    A dilute aqueous solute is held in a 1D cell bounded by
+    two thermal reservoirs. The cold reservoir is at
+    T_cold = 298.15 K (25 °C) and holds the reference
+    concentration C_cold = 100.0 mol/m³. The hot reservoir is
+    at T_hot = 308.15 K (35 °C). The Soret coefficient of the
+    solute is s_T = 1.0e-3 K⁻¹ (typical for small ions in
+    water at room temperature). The system is allowed to
+    reach thermodynamic steady state (zero net mass flux).
+
+    Under these conditions, Fourier's law establishes a linear
+    temperature profile between the reservoirs, and the
+    Soret-coupled Fick equation gives the equilibrium
+    concentration at the hot end by the balance
+    J = -D·∇C - D·s_T·C·∇T = 0 which integrates to
+    C_hot = C_cold · exp(-s_T · (T_hot - T_cold)).
+
+    What is the equilibrium concentration C_hot at the hot
+    reservoir, in mol/m³?
+  local_formula: "C_cold * exp(-s_T * (T_hot - T_cold))"
+  canonical_substitutions:
+    C_cold: 100.0
+    s_T: 0.001
+    T_hot: 308.15
+    T_cold: 298.15
+  variable_ranges:
+    C_cold: [0.01, 10000.0]
+    s_T: [1.0e-5, 0.1]          # from weakly coupled ions to strongly coupled polymers
+    T_hot: [300.0, 1000.0]
+    T_cold: [200.0, 299.0]
+  expected_unit: mol / meter**3
+  expected_dimension: "[substance] / [length]**3"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260415
+
+assumptions_required:
+  - "Dilute binary solution: C << C_solvent (no solute-solute interactions)"
+  - "Linear-response regime: fluxes proportional to gradients (Onsager)"
+  - "One-dimensional transport along the thermal gradient"
+  - "Onsager reciprocity holds: L_12 = L_21"
+  - "Steady state (no time evolution)"
+  - "Zero net mass flux J = 0 (Soret equilibrium)"
+  - "Small temperature gradient: s_T · ΔT << 1 so the exponential is well-approximated by its Taylor expansion if needed"
+  - "Both parent equations' assumptions also hold (Fourier: isotropic k, no radial loss; Fick: isotropic D, no bulk flow)"
+  - "Fourier and Fick equations combine via a single linear Onsager matrix (not via more exotic thermodynamic coupling)"
+
+emergent_properties_expected:
+  - "Soret equilibrium: a concentration gradient maintained by a temperature gradient with no net mass flux"
+  - "Onsager reciprocity symmetry L_12 = L_21 (the key constraint making the composite physically valid)"
+  - "Dimensionless group: s_T · ΔT (the small parameter that linearizes the exponential)"
+  - "Characteristic relaxation time to Soret equilibrium: τ ≈ L² / D"
+
+architect_anchor_citations:
+  - "de Groot, S. R. & Mazur, P. (1962) Non-Equilibrium Thermodynamics. North-Holland, Ch XI §4."
+  - "Kondepudi, D. & Prigogine, I. (2014) Modern Thermodynamics, 2nd ed., Wiley, §16.6."
+  - "Platten, J. K. (2006) The Soret effect: A review of recent experimental results. J. Appl. Mech. 73, 5."
+  - "Würger, A. (2010) Thermal non-equilibrium transport in colloids. Rep. Prog. Phys. 73, 126601."

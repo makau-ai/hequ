@@ -1,0 +1,52 @@
+id: EQ-SHANNON-ENTROPY
+name: Shannon Entropy (binary form)
+domain: information_theory
+
+# Binary Shannon entropy: H(p) = -p log p - (1-p) log (1-p).
+# Written here without log base to leave Layer 2 free to test
+# equivalence with the Gibbs form S = -k_B Σ p_i ln p_i (same
+# functional up to a unit conversion — the second sanity-check
+# cross-domain identity).
+canonical_form: "H + p*log(p) + (1-p)*log(1-p)"
+
+variables:
+  H:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "entropy of a Bernoulli(p) random variable in nats (will be converted to bits externally if needed)"
+    descriptor:
+      object_of_interest: information_channel
+      property: http://qudt.org/vocab/quantitykind/InformationEntropy
+      context: frequentist
+      constraint: bernoulli
+  p:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "probability of outcome 1 (Bernoulli success probability)"
+    descriptor:
+      object_of_interest: random_variable
+      property: http://qudt.org/vocab/quantitykind/Probability
+      context: frequentist
+      constraint: bernoulli_success
+
+assumptions:
+  - "p ∈ (0, 1): boundary cases p=0 and p=1 are limits, not values of the expression"
+  - "Natural logarithm; convert to bits by dividing by ln(2) if the application expects binary units"
+  - "Bernoulli case only; the general formula is H = -Σ p_i log p_i"
+
+derivation_from:
+  - "Shannon, Bell System Technical Journal 27 (1948), Appendix 2 Theorem 2"
+  - "Derived axiomatically: H is the unique (up to a multiplicative constant) functional that is (i) continuous in p, (ii) monotonic in n for the uniform distribution, (iii) additive under conditional decomposition (the grouping axiom)"
+  - "STRUCTURAL IDENTITY: identical functional to Boltzmann/Gibbs thermodynamic entropy S = -k_B Σ p_i ln p_i — the only difference is k_B (J/K) vs dimensionless. The sieve should catch this."
+
+references:
+  - "Shannon, BSTJ 27 (1948), 379-423, 623-656"
+  - "Cover & Thomas, Elements of Information Theory, 2nd ed., §2.1"
+  - "Jaynes, Information Theory and Statistical Mechanics, Phys. Rev. 106 (1957), 620"
+
+axioms:
+  - algebraic
+  - nonlinear
+  - dimensionless
+  - deterministic
+  - concave

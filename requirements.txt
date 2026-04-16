@@ -1,0 +1,29 @@
+# =============================================================================
+# hequ lab environment — Python dependencies
+# =============================================================================
+# Pinned for reproducibility. Update deliberately.
+#
+# Categories:
+#   - Verification:    icontract (runtime Hoare enforcement), hypothesis
+#                      (property-based testing as empirical backstop)
+#   - Symbolic math:   sympy (already in base, re-asserted for version pinning
+#                      when the weakest-precondition calculator needs a known
+#                      version)
+#   - Notebook tooling: jupytext (source-of-truth .py <-> .ipynb), nbformat,
+#                      nbconvert (headless execution)
+#   - Graphing:        networkx (derivation chains, equation dependency
+#                      graphs for cross-analysis). pygraphviz intentionally
+#                      omitted — it requires libgraphviz-dev and a C build,
+#                      and networkx + matplotlib handles our layout needs.
+#                      Add pygraphviz later if we need Graphviz-quality
+#                      auto-layout.
+#   - Data:            pandas, numpy already in base image
+# =============================================================================
+
+icontract==2.7.1
+hypothesis==6.112.1
+jupytext==1.16.4
+networkx==3.3
+# v2 additions: dimensional analysis and real-data handling
+pint==0.24.4
+pyyaml==6.0.2

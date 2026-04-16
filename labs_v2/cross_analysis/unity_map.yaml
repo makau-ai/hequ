@@ -1,0 +1,60 @@
+generated_from: equations
+n_equations: 16
+n_coupling_candidates: 2
+rule: "Variables from different equations whose I-ADOPT descriptor tuple (property URI, object_of_interest) matches are tier-1\
+  \ equivalence candidates \u2014 the places where a cross-domain composite can be built. Context and constraint further refine\
+  \ the match and become the basis for the composite's assumption set."
+equations_in_corpus:
+- EQ-ARRHENIUS
+- EQ-BAYES
+- EQ-BEER-LAMBERT
+- EQ-BLACK-SCHOLES
+- EQ-EULER-LAGRANGE
+- EQ-FICK-DIFFUSION
+- EQ-FOURIER-HEAT
+- EQ-HOOKE
+- EQ-LORENTZ-FACTOR
+- EQ-LOTKA-VOLTERRA
+- EQ-NAVIER-STOKES
+- EQ-NEWTON-II
+- EQ-OHM
+- EQ-SCHRODINGER
+- EQ-SHANNON-ENTROPY
+- EQ-WORK-ENERGY
+coupling_candidates:
+- descriptor_key:
+    property: Mass
+    property_uri: http://qudt.org/vocab/quantitykind/Mass
+    object_of_interest: rigid_body
+  n_equations_sharing: 2
+  occurrences:
+  - equation: EQ-NEWTON-II
+    domain: classical_mechanics
+    variable: m
+    context: inertial_frame
+    constraint: null
+    meaning: inertial mass of the body (strictly positive, time-independent)
+  - equation: EQ-WORK-ENERGY
+    domain: classical_mechanics
+    variable: m
+    context: inertial_frame
+    constraint: null
+    meaning: inertial mass (constant)
+- descriptor_key:
+    property: Force
+    property_uri: http://qudt.org/vocab/quantitykind/Force
+    object_of_interest: rigid_body
+  n_equations_sharing: 2
+  occurrences:
+  - equation: EQ-HOOKE
+    domain: classical_mechanics
+    variable: F_spring
+    context: inertial_frame
+    constraint: net_external
+    meaning: restoring force exerted by the spring on the body
+  - equation: EQ-NEWTON-II
+    domain: classical_mechanics
+    variable: F
+    context: inertial_frame
+    constraint: net_external
+    meaning: net (vector) force on the body, summed over all contact and field interactions

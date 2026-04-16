@@ -1,0 +1,128 @@
+id: EQ-NAVIER-STOKES
+name: Navier–Stokes Momentum Equation (1D, incompressible)
+domain: fluid_dynamics
+
+# The 1D incompressible Navier-Stokes momentum equation:
+#   ρ (∂u/∂t + u ∂u/∂x) = −∂P/∂x + μ ∂²u/∂x² + ρg
+# Implicit form (gravity and pressure terms moved to LHS):
+#   ρ u_t + ρ u u_x + P_x − μ u_xx − ρg = 0
+#
+# The algebraic `canonical_form` uses atomic derivative symbols.
+# The `canonical_form_derivatives` representation expresses u as a
+# function of (x, t) with real sympy Derivative objects. The
+# **linearised** Navier-Stokes (small u or zero convective term)
+# reduces to the heat equation in u, which is the CoV sieve target
+# via identity substitution on the linearised form. The full form
+# below is nonlinear due to the convective term u * u_x.
+canonical_form: "rho*u_t + rho*u*u_x + P_x - mu*u_xx - rho*g"
+
+canonical_form_derivatives:
+  functions:
+    u: ["x", "t"]
+  expression: >
+    rho * Derivative(u(x, t), t)
+    + rho * u(x, t) * Derivative(u(x, t), x)
+    + P_x
+    - mu * Derivative(u(x, t), x, 2)
+    - rho * g
+
+variables:
+  u_t:
+    dimension: "[length] / [time] ** 2"
+    unit: "meter / second ** 2"
+    meaning: "partial time derivative of velocity"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/Acceleration
+      context: incompressible
+      constraint: local_time_derivative_of_velocity
+  u_x:
+    dimension: "1 / [time]"
+    unit: "1 / second"
+    meaning: "partial spatial derivative of velocity (rate of strain along flow)"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/Frequency
+      context: incompressible
+      constraint: velocity_gradient
+  u_xx:
+    dimension: "1 / ([length] * [time])"
+    unit: "1 / (meter * second)"
+    meaning: "second spatial derivative of velocity"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/Frequency
+      context: incompressible
+      constraint: velocity_laplacian
+  P_x:
+    dimension: "[mass] / ([length] ** 2 * [time] ** 2)"
+    unit: "pascal / meter"
+    meaning: "pressure gradient along flow"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/Pressure
+      context: incompressible
+      constraint: spatial_gradient
+  u:
+    dimension: "[length] / [time]"
+    unit: "meter / second"
+    meaning: "local fluid velocity"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/Velocity
+      context: incompressible
+  rho:
+    dimension: "[mass] / [length] ** 3"
+    unit: "kilogram / meter ** 3"
+    meaning: "fluid density (constant for incompressible flow)"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/MassDensity
+      context: incompressible
+  mu:
+    dimension: "[mass] / ([length] * [time])"
+    unit: "pascal * second"
+    meaning: "dynamic viscosity"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/DynamicViscosity
+      context: incompressible
+  g:
+    dimension: "[length] / [time] ** 2"
+    unit: "meter / second ** 2"
+    meaning: "gravitational acceleration"
+    descriptor:
+      object_of_interest: fluid_parcel
+      property: http://qudt.org/vocab/quantitykind/Acceleration
+      context: incompressible
+      constraint: body_force_acceleration
+
+assumptions:
+  - "Incompressible flow (ρ constant; ∇·v = 0)"
+  - "Newtonian fluid (linear stress-strain-rate relation)"
+  - "Constant dynamic viscosity μ"
+  - "No thermal coupling (isothermal)"
+  - "Gravity is the only body force"
+
+derivation_from:
+  - "Navier (1823) and Stokes (1845) via continuum mechanics + Newton's second law applied to a fluid element"
+  - "Conservation of mass + momentum with the Newtonian stress tensor τ_ij = −P δ_ij + μ(∂_i u_j + ∂_j u_i)"
+  - "Reduces to the heat equation ρ u_t = μ u_xx when the convective term u·u_x is negligible (low Reynolds number or small perturbation)"
+
+references:
+  - "Batchelor, An Introduction to Fluid Dynamics, §3.1"
+  - "Landau & Lifshitz, Fluid Mechanics, 2nd ed., §15"
+  - "Kundu & Cohen, Fluid Mechanics, 6th ed., Ch. 4"
+
+axioms:
+  - differential
+  - nonlinear
+  - constant_coefficients
+  - isotropic
+  - homogeneous
+  - incompressible
+  - viscous
+  - deterministic
+  - classical
+  - galilean_invariant
+  - non_relativistic

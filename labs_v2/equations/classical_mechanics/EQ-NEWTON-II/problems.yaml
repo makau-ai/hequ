@@ -1,0 +1,69 @@
+equation_id: EQ-NEWTON-II
+description: >
+  Canonical problems that verify the implementation of Newton's
+  Second Law against known-correct reference values. Each problem
+  is a real physical scenario with a closed-form answer from
+  standard textbooks. Reference values are sourced from the AI
+  consensus board with three-way verification (§5.2 of design v4):
+  symbolic equivalence via canonicalization pipeline, Hypothesis-
+  based stratified property testing, mpmath high-precision
+  evaluation, and python-flint interval arithmetic (when
+  available).
+
+  No tolerance loosening. No equation modification. If any check
+  fails, the Failure Investigation Protocol (§11h) fires.
+problems:
+  - id: PRB-NEWTON-II-001
+    name: Simple pendulum period (small-angle)
+    statement: >
+      A simple pendulum of length L = 1.0 m swings under Earth
+      gravity g = 9.80665 m/s² in the small-angle approximation
+      (amplitude << 1 radian). The bob is a point mass; the rod
+      is massless and rigid; air drag is neglected. Find the
+      period T of oscillation.
+
+      In the small-angle limit, Newton's second law applied to
+      the tangential direction gives m·L·d²θ/dt² = −m·g·sin(θ)
+      ≈ −m·g·θ, which is a harmonic oscillator with angular
+      frequency ω = √(g/L). The period is T = 2π/ω =
+      2π·√(L/g).
+    # The local expected formula (architect's independent
+    # sympy formulation). Used by Check A to compare against
+    # the board's claimed formula.
+    local_formula: "2*pi*sqrt(L/g)"
+    # Canonical substitution point for Check C and Check D
+    canonical_substitutions:
+      L: 1.0
+      g: 9.80665
+    # Variable ranges for Check B stratified sampling
+    variable_ranges:
+      L: [0.01, 100.0]     # pendulum lengths from 1 cm to 100 m
+      g: [0.1, 30.0]       # g values from lunar (1.62) through Jupiter (24.79)
+    # Expected dimensional signature of the result
+    expected_unit: second
+    expected_dimension: "[time]"
+    # Test conditions under which this canonical problem is valid.
+    # A verifier that runs outside these conditions must NOT
+    # loosen the tolerance — it must either constrain the test
+    # or invoke the Failure Investigation Protocol.
+    assumptions_required:
+      - "Small-angle approximation: amplitude << 1 rad"
+      - "Rod is massless and rigid"
+      - "Point mass at the bob's centre"
+      - "Air drag neglected"
+      - "Gravitational field uniform over the pendulum's motion"
+    # Property-based testing parameters
+    pbt:
+      n_samples: 200        # Phase 12 MVP; Phase 13+ scales to N≈10000 via power analysis
+      rel_tolerance: 1e-8
+      seed: 20260415        # reproducibility seed, ledger-logged
+    # Literature anchors for the academic readiness checklist.
+    # These are NOT used as board-sourced references — they
+    # are the architect's independent anchor citations for
+    # the small-angle pendulum period. The board will
+    # independently produce its own citations; the two sets
+    # should overlap but don't need to match exactly.
+    architect_anchor_citations:
+      - "Goldstein, Classical Mechanics, 3rd ed., §1.1"
+      - "Feynman Lectures on Physics Vol I, Ch 22 (resonance)"
+      - "Landau & Lifshitz, Mechanics, §5 (small oscillations)"

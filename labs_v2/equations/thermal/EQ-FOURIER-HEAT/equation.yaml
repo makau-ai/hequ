@@ -1,0 +1,70 @@
+id: EQ-FOURIER-HEAT
+name: Fourier's Law of Heat Conduction (1D)
+domain: thermal_transport
+
+# Two representations of the same law:
+#
+# 1. `canonical_form` — the algebraic fragment the Layer 2 structural
+#    sieve operates on. dT/dx is represented as an atomic symbol
+#    `dT_dx`.
+#
+# 2. `canonical_form_derivatives` — the real derivative form with
+#    T as a function of position x. Consumed by the (future)
+#    change-of-variables sieve which needs actual sympy Derivative
+#    objects to apply the chain rule.
+canonical_form: "q + k*dT_dx"
+
+canonical_form_derivatives:
+  functions:
+    T: ["x"]
+  expression: "q + k * Derivative(T(x), x)"
+
+variables:
+  q:
+    dimension: "[energy] / ([length] ** 2 * [time])"
+    unit: "watt / meter ** 2"
+    meaning: "heat flux (energy per area per time) in the +x direction"
+    descriptor:
+      object_of_interest: heat_conducting_medium
+      property: http://qudt.org/vocab/quantitykind/HeatFluxDensity
+      context: near_equilibrium
+  k:
+    dimension: "[energy] / ([length] * [time] * [temperature])"
+    unit: "watt / (meter * kelvin)"
+    meaning: "thermal conductivity of the medium"
+    descriptor:
+      object_of_interest: heat_conducting_medium
+      property: http://qudt.org/vocab/quantitykind/ThermalConductivity
+      context: near_equilibrium
+  dT_dx:
+    dimension: "[temperature] / [length]"
+    unit: "kelvin / meter"
+    meaning: "temperature gradient in the +x direction (atomic alias for ∂T/∂x)"
+    descriptor:
+      object_of_interest: heat_conducting_medium
+      property: http://qudt.org/vocab/quantitykind/TemperatureGradient
+      context: near_equilibrium
+
+assumptions:
+  - "Isotropic, homogeneous medium (k constant in space and direction)"
+  - "Linear (Fourier) regime: flux ∝ gradient, no higher-order terms"
+  - "No radiative or convective transport in the control volume"
+  - "Quasi-static: the gradient is well-defined (not shock-like)"
+
+derivation_from:
+  - "Empirical; Fourier, Théorie analytique de la chaleur, 1822"
+  - "Derivable from kinetic theory: q = -(1/3) n <v> λ c_v dT/dx, where c_v is the molecular heat capacity"
+  - "Structurally identical to Fick's first law (EQ-FICK-DIFFUSION) under the substitution (q,k,T) → (J,D,C) — this is the first KNOWN cross-domain identity the engine must find"
+
+references:
+  - "Incropera, Fundamentals of Heat and Mass Transfer, 7th ed., §2.2"
+  - "Carslaw & Jaeger, Conduction of Heat in Solids, §1.2"
+
+axioms:
+  - differential
+  - linear
+  - constant_coefficients
+  - isotropic
+  - homogeneous
+  - deterministic
+  - classical

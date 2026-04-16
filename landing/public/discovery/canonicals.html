@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Canonicals — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="current">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Phase 12 · Canonical Problems</span>
+<h1>6 <em>canonical</em> problems.</h1>
+<p class="lead">One closed-form problem per equation in the corpus, each with a board-sourced citation chain and a locally-verified numerical answer. The board is asked for the formula and the primary-source references — never for the number. The number comes from a real CAS (sympy + mpmath + python-flint).</p>
+</div>
+<h2>The v5 protocol</h2>
+<p class="prose">Language models recall formulas reliably and cite primary sources cleanly. They do not do precise arithmetic — a pendulum period calculation that requires transcendentals can be off by parts in 10⁵ from run to run on the same prompt. The protocol therefore treats the board as a formula and citation source, and runs the actual math locally with deterministic tools. The board's best-effort <code>value_attempt</code> is still captured in the ledger as capability data on when LLMs can and can't do math, but it is never load-bearing.</p>
+<h2>The four checks</h2>
+<div class="phases">
+<div class="phase"><span class="roman">A</span><h3>Symbolic equivalence</h3><p>The board's formula must collapse to zero against the architect's local formula under a canonicalization pipeline — rational normalization, trig and power simplification, polynomial remainder, and a discriminating random-point evaluation that deliberately avoids branch cuts and singularities.</p></div>
+<div class="phase"><span class="roman">B</span><h3>Property-based sampling</h3><p>Hypothesis-style stratified sampling across orders of magnitude for every declared variable, with boundary cases injected (min, max, zero, unity, near-singularity) and a reproducible seed logged in the ledger. 200 samples in Phase 12; power analysis drives the number toward 10,000 in Phase 13+.</p></div>
+<div class="phase"><span class="roman">C</span><h3>High-precision fragility</h3><p>mpmath at 50 decimal places compared against sympy at 15 digits — this is explicitly labeled a <em>within-sympy</em> fragility check, not an independent cross-CAS check, because mpmath is sympy's own numerical backend.</p></div>
+<div class="phase"><span class="roman">D</span><h3>python-flint interval</h3><p>The genuinely orthogonal numeric engine: Arb-based ball arithmetic that shares no code with sympy. Phase 12 is best-effort with graceful skip; Phase 13+ makes it a hard requirement.</p></div>
+</div>
+<h2>Verified canonical problems</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">EQ-FICK-DIFFUSION</div><div class="card-name">PRB-FICK-001</div><div class="card-math">4e-07 mol / (m**2 * s)</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">2 citation(s)</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-FOURIER-HEAT</div><div class="card-name">PRB-FOURIER-001</div><div class="card-math">80200 W/m**2</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">2 citation(s)</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-HOOKE</div><div class="card-name">PRB-HOOKE-001</div><div class="card-math">10 newton</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">2 citation(s)</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-NEWTON-II</div><div class="card-name">PRB-NEWTON-II-001</div><div class="card-math">2.006409293 second</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">2 citation(s)</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-OHM</div><div class="card-name">PRB-OHM-001</div><div class="card-math">60 volt</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">2 citation(s)</span></div></div>
+<div class="card" style="cursor:default"><div class="card-id">EQ-WORK-ENERGY</div><div class="card-name">PRB-WORK-ENERGY-001</div><div class="card-math">55 joule</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">2 citation(s)</span></div></div>
+</div>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+equation_id: EQ-HOOKE
+description: >
+  Canonical problems for Hooke's law (linear elastic restoring
+  force). Each problem is a closed-form scenario with reference
+  values sourced from the board (formula + citations only) and
+  computed locally via sympy + mpmath per the v5 'board is not
+  a CAS' protocol (§5.2a). No tolerance loosening. No equation
+  modification. If any check fails, the Failure Investigation
+  Protocol (§11h) fires.
+problems:
+  - id: PRB-HOOKE-001
+    name: Linear spring restoring force
+    statement: >
+      An ideal linear spring with spring constant k = 50 N/m is
+      stretched from its natural length by a displacement
+      x = 0.2 m. The spring obeys Hooke's law in the linear-
+      elastic regime: the restoring force is proportional and
+      opposite to the displacement. The spring is massless; no
+      damping. What is the magnitude of the restoring force the
+      spring exerts on the mass at the free end?
+
+      Hooke's law in closed form: F_spring = k · x (magnitude).
+      The canonical form in the corpus is F_spring + k·x = 0
+      (signed, with the restoring force opposing the
+      displacement). The magnitude is F_spring = k·x.
+    # Architect's independent sympy formulation — the magnitude
+    # of the restoring force, F = k * x
+    local_formula: "k * x"
+    canonical_substitutions:
+      k: 50.0
+      x: 0.2
+    variable_ranges:
+      k: [0.1, 10000.0]     # from a soft foam spring to a coil spring in industry
+      x: [0.001, 0.5]       # 1 mm to 50 cm of stretch
+    expected_unit: newton
+    expected_dimension: "[force]"
+    assumptions_required:
+      - "Linear-elastic regime: k is independent of x (no yielding or hardening)"
+      - "No damping: pure elastic, no dissipative term"
+      - "Spring has zero mass (massless idealisation)"
+      - "One-dimensional motion along the spring axis"
+      - "Displacement x is measured from the natural length"
+    pbt:
+      n_samples: 200
+      rel_tolerance: 1e-8
+      seed: 20260415
+    architect_anchor_citations:
+      - "Hooke, Lectures De Potentia Restitutiva (1678)"
+      - "Goldstein, Classical Mechanics, 3rd ed., §6.1 (small oscillations)"
+      - "Landau & Lifshitz, Theory of Elasticity, 3rd ed., §4 (linear elastic regime)"

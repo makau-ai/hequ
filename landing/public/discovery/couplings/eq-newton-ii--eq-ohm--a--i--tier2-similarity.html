@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-NEWTON-II.a ↔ EQ-OHM.I — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="current">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Coupling · Tier2 Similarity</span>
+<h1><em>a</em> ↔ <em>I</em></h1>
+<p class="lead"><span class="badge tier2">Tier II — Similarity</span> &nbsp; <span class="badge empirical">EMPIRICAL</span></p>
+</div>
+<div class="pairing">
+<div class="side left">
+<div class="side-label">Equation A</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-NEWTON-II.html" style="color:inherit; border:none">EQ-NEWTON-II</a></div>
+<div class="side-var">a</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Acceleration</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+</dl>
+</div>
+<div class="connector"><div class="arrow">↔</div></div>
+<div class="side right">
+<div class="side-label">Equation B</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-OHM.html" style="color:inherit; border:none">EQ-OHM</a></div>
+<div class="side-var">I</div>
+<dl class="kv">
+<dt>Object</dt><dd>conductor</dd>
+<dt>Property</dt><dd>ElectricCurrent</dd>
+<dt>Context</dt><dd>steady_state</dd>
+</dl>
+</div>
+</div>
+<h2>Sieve rationale</h2>
+<p class="prose">Structural equation-level identity (sign=+1): the canonical forms of EQ-NEWTON-II and EQ-OHM are syntactically equal under rename, and a maps to I under the discovered bijection</p>
+<h2>Physical constraint filter</h2>
+<div class="check-card passed">
+<div class="check-head">
+<span class="check-name">tellegen pairing</span>
+<span class="badge proved">PASSED</span>
+</div>
+<p class="reasoning">Both variables are bond-graph flows but pint dimensions differ ([length] / [time] ** 2 vs [current]); accepted as a STRUCTURAL flow-analogy (e.g., force ↔ voltage: both occupy the effort slot in their respective bond graphs but are not dimensionally equal). Any downstream composite that needs a numerical identity must supply a transducer coefficient.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">onsager reciprocity</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Onsager reciprocity applies only to pairs of linear transport laws; at least one equation is not a linear PDE.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">energy conservation</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Energy conservation check is narrowly targeted at the Newton+Hooke → SHO composite in Medium m2; other composites require the Phase 7 Lyapunov/Noether machinery (not yet built).</p>
+</div>
+<h2>Emergent properties</h2>
+<h2>AI review board</h2>
+<p class="prose">1 REJECT vote(s); the coupling is demoted to conjectural per §12.2.</p>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">claude-opus-4-6</span>
+<span class="badge proved">APPROVE</span>
+</div>
+<p class="reasoning">This coupling represents a well-known structural analogy between Newton&#x27;s second law (F = ma, so a = F/m) and Ohm&#x27;s law (V = IR, so I = V/R). Both equations share the same algebraic form (response = driving quantity / resistance parameter), and the mapping of acceleration to current is consistent with the standard mechanical–electrical analogy where both serve as &#x27;flow&#x27; variables in their respective bond-graph domains. The transfer function is labeled &#x27;identity,&#x27; which is appropriate at the structural/syntactic level — the sieve correctly identifies this as a rename-level isomorphism. The physical constraint filter appropriately notes that dimensions differ and flags the need for a transducer coefficient in any numerical application, which is honest and correct. The Buckingham π groups are legitimate dimensionless groupings from each equation. No spurious emergent properties are claimed. This is a textbook-quality cross-domain analogy and is suitable for the discovery ledger as a tier-2 structural similarity.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">openai-gpt-5</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The proposed identity mapping a ↔ I is not physically or semantically sound: in bond-graph terms the mechanical flow variable is velocity, not acceleration (which is a time-derivative of flow), whereas current is a flow. Newton’s second law (F = m a = m dv/dt) corresponds to an inertial element (analogous to an inductor), not to a resistive law (V = R I). A valid Ohm-like mechanical analog would be viscous damping F = b v with v ↔ I (mobility analogy), not a ↔ I. The semantic descriptors (Acceleration vs ElectricCurrent) do not represent the same quantity nor a named transform, yet an identity transfer is claimed. The physical-constraint filter’s Tellegen check misclassifies acceleration as a flow and overlooks the dimensional mismatch; accepting it as a “structural flow-analogy” is inconsistent with standard cross-domain analogies. The listed π-groups are merely tautologies of the individual laws, not emergent cross-domain properties.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">gemini-2.5-pro</span>
+<span class="badge proved">APPROVE</span>
+</div>
+<p class="reasoning">This coupling correctly identifies the well-established force-voltage (or mobility) analogy between mechanical and electrical systems. The mapping of acceleration (&#x27;a&#x27;) to electric current (&#x27;I&#x27;) is valid within this framework, as both serve as &#x27;flow&#x27; variables in their respective domains. The semantic descriptors honestly represent the distinct physical quantities, and the physical constraint filter&#x27;s reasoning is sound, correctly classifying this as a structural analogy where dimensional differences are expected. The emergent property analysis is consistent with a direct structural mapping, reinforcing the validity of this Tier 2 similarity.</p>
+</div>
+<a class="back-link" href="/discovery/couplings/index.html">← back to couplings</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

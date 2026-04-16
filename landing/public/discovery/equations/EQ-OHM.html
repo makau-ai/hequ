@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ohm&#x27;s Law — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">EQ-OHM · Electrical Circuits</span>
+<h1>Ohm&#x27;s Law</h1>
+<div class="math-display">-I*R + V = 0</div>
+</div>
+<h2>Variables</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">I</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">current through the conductor</p><div class="card-meta"><span class="mono">ampere</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>conductor</dd><dt>Property</dt><dd>ElectricCurrent</dd><dt>Context</dt><dd>steady_state</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">R</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">resistance (material- and geometry-dependent)</p><div class="card-meta"><span class="mono">ohm</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>resistor</dd><dt>Property</dt><dd>Resistance</dd><dt>Context</dt><dd>steady_state</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">V</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">potential difference across the conductor</p><div class="card-meta"><span class="mono">volt</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>conductor</dd><dt>Property</dt><dd>ElectricPotentialDifference</dd><dt>Context</dt><dd>steady_state</dd></dl></div>
+</div>
+<h2>Axioms</h2>
+<p><span class="badge neutral" style="margin-right:0.3rem">algebraic</span> <span class="badge neutral" style="margin-right:0.3rem">classical</span> <span class="badge neutral" style="margin-right:0.3rem">commutative_factors</span> <span class="badge neutral" style="margin-right:0.3rem">constant_coefficients</span> <span class="badge neutral" style="margin-right:0.3rem">deterministic</span> <span class="badge neutral" style="margin-right:0.3rem">linear</span> <span class="badge neutral" style="margin-right:0.3rem">steady_state</span></p>
+<h2>Assumptions</h2>
+<ul>
+<li>Linear (ohmic) material: R is independent of V, I, and temperature in the operating regime</li>
+<li>Steady state (no significant dV/dt or dI/dt effects)</li>
+<li>Scalar currents / voltages (no anisotropy or tensorial resistivity)</li>
+</ul>
+<h2>Derivation</h2>
+<ul>
+<li>Empirical; Ohm (Die galvanische Kette, 1827)</li>
+<li>Derivable from the Drude model: linear response of free electrons to an applied field under collision-dominated transport</li>
+<li>Microscopically: J = σE with σ = ne²τ/m (τ = mean free time), then V = ∫E·dl and I = ∫J·dA yields V = IR for a uniform conductor</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Jackson, Classical Electrodynamics, 3rd ed., §5.18</li>
+<li>Ashcroft &amp; Mermin, Solid State Physics, Ch. 1</li>
+</ul>
+<a class="back-link" href="/discovery/equations/index.html">← back to corpus</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

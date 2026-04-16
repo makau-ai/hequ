@@ -1,0 +1,75 @@
+id: EQ-ARRHENIUS
+name: Arrhenius Rate Law
+domain: chemical_kinetics
+
+# Implicit form: k - A*exp(-Ea/(R*T)) = 0.
+# Boltzmann-factor scaling of reaction rate with temperature.
+canonical_form: "k_rate - A*exp(-Ea/(R*T))"
+
+variables:
+  k_rate:
+    dimension: "1 / [time]"
+    unit: "1 / second"
+    meaning: "rate constant (first-order reaction; units vary by order)"
+    descriptor:
+      object_of_interest: reaction_mixture
+      property: http://qudt.org/vocab/quantitykind/ReactionRateConstant
+      context: quasi_equilibrium
+  A:
+    dimension: "1 / [time]"
+    unit: "1 / second"
+    meaning: "pre-exponential factor (frequency of reactive collisions)"
+    descriptor:
+      object_of_interest: reaction_mixture
+      property: http://qudt.org/vocab/quantitykind/Frequency
+      context: quasi_equilibrium
+      constraint: pre_exponential_factor
+  Ea:
+    dimension: "[energy] / [substance]"
+    unit: "joule / mole"
+    meaning: "activation energy of the reaction"
+    descriptor:
+      object_of_interest: reaction_mixture
+      property: http://qudt.org/vocab/quantitykind/ActivationEnergy
+      context: quasi_equilibrium
+  R:
+    dimension: "[energy] / ([temperature] * [substance])"
+    unit: "joule / (kelvin * mole)"
+    meaning: "universal gas constant, 8.31446 J/(K·mol)"
+    descriptor:
+      object_of_interest: abstract_quantity
+      property: http://qudt.org/vocab/quantitykind/SpecificHeatCapacity
+      context: quasi_equilibrium
+      constraint: universal_gas_constant
+  T:
+    dimension: "[temperature]"
+    unit: "kelvin"
+    meaning: "absolute temperature"
+    descriptor:
+      object_of_interest: reaction_mixture
+      property: http://qudt.org/vocab/quantitykind/ThermodynamicTemperature
+      context: quasi_equilibrium
+
+assumptions:
+  - "A and Ea are temperature-independent over the measurement range (often fails at very high or low T)"
+  - "Thermal equilibrium: the reactant energy distribution is Boltzmann"
+  - "A single elementary reaction or a composite with an effective Ea"
+  - "Ea is real and positive (endothermic barrier)"
+
+derivation_from:
+  - "Empirical; Arrhenius, Z. Phys. Chem. 4 (1889), 226"
+  - "Derivable from transition-state theory: k = (k_B T / h) exp(-ΔG‡/RT), which gives Arrhenius form with A ≈ (k_B T / h) and Ea ≈ ΔH‡"
+  - "Boltzmann-factor origin: fraction of molecules with energy above Ea is exp(-Ea/RT) in a canonical ensemble"
+
+references:
+  - "Arrhenius, Z. Phys. Chem. 4 (1889), 226"
+  - "Atkins, Physical Chemistry, 11th ed., §19.7"
+  - "Eyring, J. Chem. Phys. 3 (1935), 107 (transition-state theory)"
+
+axioms:
+  - algebraic
+  - nonlinear
+  - constant_coefficients
+  - thermal_equilibrium
+  - deterministic
+  - classical

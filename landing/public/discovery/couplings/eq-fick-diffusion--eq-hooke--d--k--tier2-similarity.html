@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-FICK-DIFFUSION.D ↔ EQ-HOOKE.k — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="current">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Coupling · Tier2 Similarity</span>
+<h1><em>D</em> ↔ <em>k</em></h1>
+<p class="lead"><span class="badge tier2">Tier II — Similarity</span> &nbsp; <span class="badge conjectural">CONJECTURAL</span></p>
+</div>
+<div class="pairing">
+<div class="side left">
+<div class="side-label">Equation A</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-FICK-DIFFUSION.html" style="color:inherit; border:none">EQ-FICK-DIFFUSION</a></div>
+<div class="side-var">D</div>
+<dl class="kv">
+<dt>Object</dt><dd>diffusing_medium</dd>
+<dt>Property</dt><dd>DiffusionCoefficient</dd>
+<dt>Context</dt><dd>dilute</dd>
+</dl>
+</div>
+<div class="connector"><div class="arrow">↔</div></div>
+<div class="side right">
+<div class="side-label">Equation B</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-HOOKE.html" style="color:inherit; border:none">EQ-HOOKE</a></div>
+<div class="side-var">k</div>
+<dl class="kv">
+<dt>Object</dt><dd>spring</dd>
+<dt>Property</dt><dd>Stiffness</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+</dl>
+</div>
+</div>
+<h2>Sieve rationale</h2>
+<p class="prose">Structural equation-level identity (sign=+1): the canonical forms of EQ-FICK-DIFFUSION and EQ-HOOKE are syntactically equal under rename, and D maps to k under the discovered bijection</p>
+<h2>Physical constraint filter</h2>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">tellegen pairing</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">At least one variable is not a bond-graph port variable (role_a=parameter, role_b=parameter); Tellegen pairing is only defined for effort/flow.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">onsager reciprocity</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Onsager reciprocity applies only to pairs of linear transport laws; at least one equation is not a linear PDE.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">energy conservation</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Energy conservation check is narrowly targeted at the Newton+Hooke → SHO composite in Medium m2; other composites require the Phase 7 Lyapunov/Noether machinery (not yet built).</p>
+</div>
+<h2>Emergent properties</h2>
+<h3>Emergent Buckingham Π groups</h3>
+<p style="font-size:0.92rem; color:var(--fg-dim)">Dimensionless combinations that mix parameters from both equations — only appear in the composite system.</p>
+<div class="math-display">D * J^(-1) * dC_dx</div>
+<h2>AI review board</h2>
+<p class="prose">3 REJECT vote(s); the coupling is demoted to conjectural per §12.2.</p>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">claude-opus-4-6</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The proposed coupling maps a diffusion coefficient (dimensions L²/T) to a spring stiffness (dimensions M/T²) via an identity transfer function. These quantities are dimensionally incompatible, physically unrelated, and belong to entirely different phenomenological domains (irreversible transport vs. conservative mechanics). The syntactic similarity between Fick&#x27;s first law (J = -D dC/dx) and Hooke&#x27;s law (F = -kx) is superficial: both are linear proportionality relations, but the operands carry fundamentally different physical meaning. The physical constraint filter passed no checks (all returned not_applicable), which means there is zero physical evidence supporting the coupling—the &#x27;all_not_applicable&#x27; status should not be interpreted as permissive but rather as indicating the absence of any validating physics. The claimed emergent Buckingham pi groups are trivially the dimensionless ratios already implicit in each law individually and do not represent genuine cross-domain insight. This coupling is an artefact of syntactic pattern matching on linear constitutive equations and has no physical justification.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">openai-gpt-5</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">Equating the diffusion coefficient D from Fick’s law with the spring stiffness k from Hooke’s law via an identity map is not physically plausible: they describe unrelated material responses and have incompatible dimensions (L^2/T vs M/T^2). The semantic descriptors clearly denote different properties (DiffusionCoefficient vs Stiffness) with no named transform linking them. The physical-constraint filter did not pass and its dimensional mismatch aligns with basic dimensional analysis. The claimed structural similarity stems only from both being linear proportionalities and does not justify parameter identification; the reported Pi groups are trivial rearrangements of each separate law, not genuine cross-domain emergent properties.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">gemini-2.5-pro</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The proposed coupling is rejected as it is based on a superficial mathematical analogy between two physically unrelated phenomena. It equates the diffusion coefficient (D, a parameter in a dissipative transport law with dimensions L²/T) with a spring constant (k, a parameter in a conservative mechanical law with dimensions M/T²). These quantities are dimensionally inconsistent and semantically distinct, making the &#x27;identity&#x27; transfer function physically meaningless. While the structural similarity is noted, it does not imply any valid cross-domain physical relationship, a conclusion supported by the physical constraint filter&#x27;s inability to apply any validation checks successfully and its noting of the dimensional mismatch.</p>
+</div>
+<a class="back-link" href="/discovery/couplings/index.html">← back to couplings</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

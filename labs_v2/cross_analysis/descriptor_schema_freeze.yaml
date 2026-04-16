@@ -1,0 +1,441 @@
+version: descriptor-schema-freeze/v1
+frozen_at_utc: '2026-04-16T01:13:49.635761+00:00'
+purpose: "Pre-register the I-ADOPT descriptor schema across the entire equation corpus at a specific point in time. Any later\
+  \ claim of novelty from the unity-map or the Blind Discovery Test can cite this record as proof that the descriptors were\
+  \ declared before the search ran \u2014 directly addressing the descriptor-circularity concern raised unanimously by the\
+  \ board in the project meta-analysis (PROJECT_META_ANALYSIS.md)."
+n_equations: 16
+corpus_sha256: 5b1af1679884de3f91cc65ad409a5dfe9749b9fad2fc2356fc5b95e8b4cd3633
+equations:
+- equation_id: EQ-LOTKA-VOLTERRA
+  name: "Lotka\u2013Volterra Predator-Prey Equations"
+  domain: population_dynamics
+  file_path: equations/biology/EQ-LOTKA-VOLTERRA/equation.yaml
+  file_sha256: 9733191aac3c55bdca195b47058cf7638a2c57f6f2f7da1fbf69e39a446f3613
+  variables_frozen:
+    alpha:
+      property: http://hequ.ai/vocab/quantitykind/PopulationGrowthRate
+      object_of_interest: prey_population
+      context: well_mixed
+      constraint: null
+    beta:
+      property: http://hequ.ai/vocab/quantitykind/PredationRate
+      object_of_interest: predator_population
+      context: well_mixed
+      constraint: null
+    x:
+      property: http://hequ.ai/vocab/quantitykind/PopulationCount
+      object_of_interest: prey_population
+      context: well_mixed
+      constraint: null
+    y:
+      property: http://hequ.ai/vocab/quantitykind/PopulationCount
+      object_of_interest: predator_population
+      context: well_mixed
+      constraint: null
+  n_variables: 4
+- equation_id: EQ-FICK-DIFFUSION
+  name: Fick's First Law of Diffusion (1D)
+  domain: mass_transport
+  file_path: equations/chemical/EQ-FICK-DIFFUSION/equation.yaml
+  file_sha256: 372481bace53ae3111e9d8d8d897c8b51fc94f58a2e6aba67a2544dd7b77d576
+  variables_frozen:
+    J:
+      property: http://qudt.org/vocab/quantitykind/MolarFlux
+      object_of_interest: diffusing_medium
+      context: dilute
+      constraint: null
+    D:
+      property: http://qudt.org/vocab/quantitykind/DiffusionCoefficient
+      object_of_interest: diffusing_medium
+      context: dilute
+      constraint: null
+    dC_dx:
+      property: http://qudt.org/vocab/quantitykind/ConcentrationGradient
+      object_of_interest: diffusing_medium
+      context: dilute
+      constraint: null
+  n_variables: 3
+- equation_id: EQ-ARRHENIUS
+  name: Arrhenius Rate Law
+  domain: chemical_kinetics
+  file_path: equations/chemical_kinetics/EQ-ARRHENIUS/equation.yaml
+  file_sha256: 9dc819e05bbfa714f9f50118c1cb02d999a753490b42a455ad87d9a21565c3e1
+  variables_frozen:
+    k_rate:
+      property: http://qudt.org/vocab/quantitykind/ReactionRateConstant
+      object_of_interest: reaction_mixture
+      context: quasi_equilibrium
+      constraint: null
+    A:
+      property: http://qudt.org/vocab/quantitykind/Frequency
+      object_of_interest: reaction_mixture
+      context: quasi_equilibrium
+      constraint: pre_exponential_factor
+    Ea:
+      property: http://qudt.org/vocab/quantitykind/ActivationEnergy
+      object_of_interest: reaction_mixture
+      context: quasi_equilibrium
+      constraint: null
+    R:
+      property: http://qudt.org/vocab/quantitykind/SpecificHeatCapacity
+      object_of_interest: abstract_quantity
+      context: quasi_equilibrium
+      constraint: universal_gas_constant
+    T:
+      property: http://qudt.org/vocab/quantitykind/ThermodynamicTemperature
+      object_of_interest: reaction_mixture
+      context: quasi_equilibrium
+      constraint: null
+  n_variables: 5
+- equation_id: EQ-EULER-LAGRANGE
+  name: "Euler\u2013Lagrange Equation (1D)"
+  domain: variational_mechanics
+  file_path: equations/classical_mechanics/EQ-EULER-LAGRANGE/equation.yaml
+  file_sha256: 19cc522dfff31c0dc1fca2facd31a46a17850efc7d301da3ec10cb1e53253afc
+  variables_frozen:
+    d_dt_dL_dqdot:
+      property: http://hequ.ai/vocab/quantitykind/GeneralizedMomentum
+      object_of_interest: point_particle
+      context: inertial_frame
+      constraint: time_derivative
+    dL_dq:
+      property: http://hequ.ai/vocab/quantitykind/LagrangianPartial
+      object_of_interest: point_particle
+      context: inertial_frame
+      constraint: with_respect_to_coordinate
+  n_variables: 2
+- equation_id: EQ-HOOKE
+  name: Hooke's Law (Linear Elastic Restoring Force)
+  domain: classical_mechanics
+  file_path: equations/classical_mechanics/EQ-HOOKE/equation.yaml
+  file_sha256: 9f9d98685704506a1f48c971406085f1aceb662d589a845972ef2e41c04a587b
+  variables_frozen:
+    F_spring:
+      property: http://qudt.org/vocab/quantitykind/Force
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: net_external
+    k:
+      property: http://qudt.org/vocab/quantitykind/Stiffness
+      object_of_interest: spring
+      context: inertial_frame
+      constraint: null
+    x:
+      property: http://qudt.org/vocab/quantitykind/Position
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: displacement_from_equilibrium
+  n_variables: 3
+- equation_id: EQ-NEWTON-II
+  name: Newton's Second Law
+  domain: classical_mechanics
+  file_path: equations/classical_mechanics/EQ-NEWTON-II/equation.yaml
+  file_sha256: 562deae75c9714e4bf2e2f763882359e7e1f58a0d3dda6c211989c892a9ceabe
+  variables_frozen:
+    F:
+      property: http://qudt.org/vocab/quantitykind/Force
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: net_external
+    m:
+      property: http://qudt.org/vocab/quantitykind/Mass
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: null
+    a:
+      property: http://qudt.org/vocab/quantitykind/Acceleration
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: null
+  n_variables: 3
+- equation_id: EQ-WORK-ENERGY
+  name: "Work\u2013Energy Theorem"
+  domain: classical_mechanics
+  file_path: equations/classical_mechanics/EQ-WORK-ENERGY/equation.yaml
+  file_sha256: bcfc516d4e8f2f36cfcfe7f5087c4ea1c7df062f747685b8a25b4743c6664b73
+  variables_frozen:
+    W:
+      property: http://qudt.org/vocab/quantitykind/Energy
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: net_work
+    m:
+      property: http://qudt.org/vocab/quantitykind/Mass
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: null
+    v_i:
+      property: http://qudt.org/vocab/quantitykind/Speed
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: initial
+    v_f:
+      property: http://qudt.org/vocab/quantitykind/Speed
+      object_of_interest: rigid_body
+      context: inertial_frame
+      constraint: final
+  n_variables: 4
+- equation_id: EQ-OHM
+  name: Ohm's Law
+  domain: electrical_circuits
+  file_path: equations/electrical/EQ-OHM/equation.yaml
+  file_sha256: ea6d352acbfe5df1aeedb953812d44322c0a2451850ceeeb93544b09b21b6266
+  variables_frozen:
+    V:
+      property: http://qudt.org/vocab/quantitykind/ElectricPotentialDifference
+      object_of_interest: conductor
+      context: steady_state
+      constraint: null
+    I:
+      property: http://qudt.org/vocab/quantitykind/ElectricCurrent
+      object_of_interest: conductor
+      context: steady_state
+      constraint: null
+    R:
+      property: http://qudt.org/vocab/quantitykind/Resistance
+      object_of_interest: resistor
+      context: steady_state
+      constraint: null
+  n_variables: 3
+- equation_id: EQ-BLACK-SCHOLES
+  name: "Black\u2013Scholes PDE"
+  domain: quantitative_finance
+  file_path: equations/finance/EQ-BLACK-SCHOLES/equation.yaml
+  file_sha256: 473e3ea2578793339e929de7cec733bc0ab8f2f826e65f9cd0f46f9bb90e4fc1
+  variables_frozen:
+    V:
+      property: http://hequ.ai/vocab/quantitykind/OptionPrice
+      object_of_interest: security
+      context: risk_neutral_measure
+      constraint: null
+    V_t:
+      property: http://hequ.ai/vocab/quantitykind/OptionPrice
+      object_of_interest: security
+      context: risk_neutral_measure
+      constraint: time_derivative
+    V_S:
+      property: http://qudt.org/vocab/quantitykind/DimensionlessRatio
+      object_of_interest: security
+      context: risk_neutral_measure
+      constraint: option_delta
+    V_SS:
+      property: http://hequ.ai/vocab/quantitykind/OptionPrice
+      object_of_interest: security
+      context: risk_neutral_measure
+      constraint: option_gamma
+    S:
+      property: http://hequ.ai/vocab/quantitykind/AssetPrice
+      object_of_interest: security
+      context: risk_neutral_measure
+      constraint: null
+    sigma:
+      property: http://hequ.ai/vocab/quantitykind/Volatility
+      object_of_interest: market
+      context: risk_neutral_measure
+      constraint: null
+    r:
+      property: http://hequ.ai/vocab/quantitykind/RiskFreeRate
+      object_of_interest: market
+      context: risk_neutral_measure
+      constraint: null
+  n_variables: 7
+- equation_id: EQ-NAVIER-STOKES
+  name: "Navier\u2013Stokes Momentum Equation (1D, incompressible)"
+  domain: fluid_dynamics
+  file_path: equations/fluid_dynamics/EQ-NAVIER-STOKES/equation.yaml
+  file_sha256: f5aa485eab59603b81ce051bf7bd567e5a0325e882ee2e48258e397d5a6ab69c
+  variables_frozen:
+    u_t:
+      property: http://qudt.org/vocab/quantitykind/Acceleration
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: local_time_derivative_of_velocity
+    u_x:
+      property: http://qudt.org/vocab/quantitykind/Frequency
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: velocity_gradient
+    u_xx:
+      property: http://qudt.org/vocab/quantitykind/Frequency
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: velocity_laplacian
+    P_x:
+      property: http://qudt.org/vocab/quantitykind/Pressure
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: spatial_gradient
+    u:
+      property: http://qudt.org/vocab/quantitykind/Velocity
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: null
+    rho:
+      property: http://qudt.org/vocab/quantitykind/MassDensity
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: null
+    mu:
+      property: http://qudt.org/vocab/quantitykind/DynamicViscosity
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: null
+    g:
+      property: http://qudt.org/vocab/quantitykind/Acceleration
+      object_of_interest: fluid_parcel
+      context: incompressible
+      constraint: body_force_acceleration
+  n_variables: 8
+- equation_id: EQ-SHANNON-ENTROPY
+  name: Shannon Entropy (binary form)
+  domain: information_theory
+  file_path: equations/information_theory/EQ-SHANNON-ENTROPY/equation.yaml
+  file_sha256: 9e7659bca3c5c63f704be4c74d3c7e4474ddb7bd66fb5a21775013ff22251136
+  variables_frozen:
+    H:
+      property: http://qudt.org/vocab/quantitykind/InformationEntropy
+      object_of_interest: information_channel
+      context: frequentist
+      constraint: bernoulli
+    p:
+      property: http://qudt.org/vocab/quantitykind/Probability
+      object_of_interest: random_variable
+      context: frequentist
+      constraint: bernoulli_success
+  n_variables: 2
+- equation_id: EQ-BAYES
+  name: Bayes' Theorem
+  domain: probability
+  file_path: equations/probability/EQ-BAYES/equation.yaml
+  file_sha256: 3233081f438614ad282e40e6eeec385481e3e70015b2905659c7543bd4682f70
+  variables_frozen:
+    P_A_given_B:
+      property: http://hequ.ai/vocab/quantitykind/PosteriorProbability
+      object_of_interest: bayesian_hypothesis
+      context: bayesian
+      constraint: null
+    P_B_given_A:
+      property: http://hequ.ai/vocab/quantitykind/ConditionalProbability
+      object_of_interest: bayesian_hypothesis
+      context: bayesian
+      constraint: likelihood
+    P_A:
+      property: http://hequ.ai/vocab/quantitykind/PriorProbability
+      object_of_interest: bayesian_hypothesis
+      context: bayesian
+      constraint: null
+    P_B:
+      property: http://qudt.org/vocab/quantitykind/Probability
+      object_of_interest: bayesian_hypothesis
+      context: bayesian
+      constraint: marginal_evidence
+  n_variables: 4
+- equation_id: EQ-SCHRODINGER
+  name: "Schr\xF6dinger Equation (1D, time-dependent, free particle)"
+  domain: quantum_mechanics
+  file_path: equations/quantum_mechanics/EQ-SCHRODINGER/equation.yaml
+  file_sha256: a97504db4abf8e40425e7f74e6d7e379026762af9f6c9893c6cc325c545d880f
+  variables_frozen:
+    psi_t:
+      property: http://hequ.ai/vocab/quantitykind/WaveFunctionTimeDerivative
+      object_of_interest: wavefunction
+      context: time_dependent
+      constraint: null
+    psi_xx:
+      property: http://hequ.ai/vocab/quantitykind/WaveFunctionSecondSpatialDerivative
+      object_of_interest: wavefunction
+      context: time_dependent
+      constraint: null
+    hbar:
+      property: http://hequ.ai/vocab/quantitykind/ReducedPlanckConstant
+      object_of_interest: abstract_quantity
+      context: time_dependent
+      constraint: null
+    m:
+      property: http://qudt.org/vocab/quantitykind/Mass
+      object_of_interest: point_particle
+      context: non_relativistic
+      constraint: null
+  n_variables: 4
+- equation_id: EQ-LORENTZ-FACTOR
+  name: Lorentz Factor (Special Relativity)
+  domain: special_relativity
+  file_path: equations/relativity/EQ-LORENTZ-FACTOR/equation.yaml
+  file_sha256: b406b58c0d4d46baf721fda00619a10f5720c0d11dc04e129dc543922acbb27b
+  variables_frozen:
+    gamma:
+      property: http://hequ.ai/vocab/quantitykind/LorentzFactor
+      object_of_interest: lorentz_observer
+      context: lorentz_frame
+      constraint: null
+    v:
+      property: http://qudt.org/vocab/quantitykind/Speed
+      object_of_interest: lorentz_observer
+      context: lorentz_frame
+      constraint: null
+    c:
+      property: http://hequ.ai/vocab/quantitykind/SpeedOfLight
+      object_of_interest: photon
+      context: lorentz_frame
+      constraint: null
+  n_variables: 3
+- equation_id: EQ-BEER-LAMBERT
+  name: "Beer\u2013Lambert Law"
+  domain: spectroscopy
+  file_path: equations/spectroscopy/EQ-BEER-LAMBERT/equation.yaml
+  file_sha256: d9a642a7a19c406dd349c8ead7c8c4d37a45281209d268f62837b1874627e6e6
+  variables_frozen:
+    A:
+      property: http://qudt.org/vocab/quantitykind/AbsorbanceDecadic
+      object_of_interest: solute
+      context: dilute
+      constraint: at_measurement_wavelength
+    epsilon:
+      property: http://qudt.org/vocab/quantitykind/MolarAbsorptivity
+      object_of_interest: solute
+      context: dilute
+      constraint: null
+    ell:
+      property: http://qudt.org/vocab/quantitykind/Length
+      object_of_interest: solvent
+      context: dilute
+      constraint: optical_path
+    c:
+      property: http://qudt.org/vocab/quantitykind/MolarConcentration
+      object_of_interest: solute
+      context: dilute
+      constraint: null
+  n_variables: 4
+- equation_id: EQ-FOURIER-HEAT
+  name: Fourier's Law of Heat Conduction (1D)
+  domain: thermal_transport
+  file_path: equations/thermal/EQ-FOURIER-HEAT/equation.yaml
+  file_sha256: a784fb19607e760697c3df39ba1c66c40ef19da13bb6e2414ff8e36b8b5b728d
+  variables_frozen:
+    q:
+      property: http://qudt.org/vocab/quantitykind/HeatFluxDensity
+      object_of_interest: heat_conducting_medium
+      context: near_equilibrium
+      constraint: null
+    k:
+      property: http://qudt.org/vocab/quantitykind/ThermalConductivity
+      object_of_interest: heat_conducting_medium
+      context: near_equilibrium
+      constraint: null
+    dT_dx:
+      property: http://qudt.org/vocab/quantitykind/TemperatureGradient
+      object_of_interest: heat_conducting_medium
+      context: near_equilibrium
+      constraint: null
+  n_variables: 3
+pre_registered_claims:
+- Any novelty candidate produced by the unity-map mechanism after this freeze timestamp must refer to the frozen descriptors.
+  If any equation.yaml file's SHA-256 hash changes, that equation is considered de-frozen and a new freeze event must be issued
+  before the novelty claim can be made.
+- The pre-registered falsifiability protocol for the unity-map mechanism (precision >= 0.50, recall >= 0.80 at n >= 30 equations,
+  Cohen's kappa >= 0.80 on a three-annotator ground-truth panel) is binding on this frozen descriptor set and any descriptor
+  set derived from it.
+- No additional physics-textbook equations will be added to the corpus without an explicit novelty-hypothesis justification.
+  New entries must come from communities with minimal physics citation overlap, OR be selected specifically to test a novelty
+  hypothesis articulated in NOVELTY_PATHWAY.md.

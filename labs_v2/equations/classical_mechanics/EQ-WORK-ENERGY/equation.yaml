@@ -1,0 +1,65 @@
+id: EQ-WORK-ENERGY
+name: Work–Energy Theorem
+domain: classical_mechanics
+
+# Implicit form: work done on a body equals the change in its kinetic
+# energy. W - (1/2)*m*(v_f**2 - v_i**2) = 0.
+canonical_form: "W - (1/2)*m*(v_f**2 - v_i**2)"
+
+variables:
+  W:
+    dimension: "[energy]"
+    unit: "joule"
+    meaning: "net work done on the body along its path"
+    descriptor:
+      object_of_interest: rigid_body
+      property: http://qudt.org/vocab/quantitykind/Energy
+      context: inertial_frame
+      constraint: net_work
+  m:
+    dimension: "[mass]"
+    unit: "kilogram"
+    meaning: "inertial mass (constant)"
+    descriptor:
+      object_of_interest: rigid_body
+      property: http://qudt.org/vocab/quantitykind/Mass
+      context: inertial_frame
+  v_i:
+    dimension: "[velocity]"
+    unit: "meter / second"
+    meaning: "initial speed (magnitude)"
+    descriptor:
+      object_of_interest: rigid_body
+      property: http://qudt.org/vocab/quantitykind/Speed
+      context: inertial_frame
+      constraint: initial
+  v_f:
+    dimension: "[velocity]"
+    unit: "meter / second"
+    meaning: "final speed (magnitude)"
+    descriptor:
+      object_of_interest: rigid_body
+      property: http://qudt.org/vocab/quantitykind/Speed
+      context: inertial_frame
+      constraint: final
+
+assumptions:
+  - "m is constant (not variable-mass)"
+  - "Classical regime (|v| << c)"
+  - "W includes all net external work done on the body"
+  - "The body is treated as a point particle"
+
+derivation_from:
+  - "Time integral of Newton's second law along the trajectory: ∫F·dx = ∫m(dv/dt)(dx/dt)dt = ∫m v dv = (1/2)m(v_f²-v_i²)"
+  - "Equivalently, the component of Noether's theorem for time translation, restricted to a trajectory segment"
+
+references:
+  - "Goldstein, Classical Mechanics, 3rd ed., §1.1 Eq. (1.19)"
+  - "Halliday/Resnick/Walker, Fundamentals of Physics, 11th ed., §7-3"
+
+axioms:
+  - algebraic
+  - constant_coefficients
+  - deterministic
+  - classical
+  - non_relativistic

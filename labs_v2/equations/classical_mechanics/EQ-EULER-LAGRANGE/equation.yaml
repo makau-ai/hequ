@@ -1,0 +1,60 @@
+id: EQ-EULER-LAGRANGE
+name: Euler–Lagrange Equation (1D)
+domain: variational_mechanics
+
+# Implicit form of the Euler-Lagrange equation for a 1D Lagrangian
+# L(q, qdot, t). On the solution manifold,
+#   d/dt(∂L/∂qdot) − ∂L/∂q = 0
+# The canonical_form below uses atomic symbols for the partial
+# derivatives (dL_dqdot, dL_dq) and the time derivative
+# (d_dt_dL_dqdot) so Layer 2's structural sieve can manipulate it
+# algebraically. The `canonical_form_derivatives` representation is
+# not provided here — a full functional Lagrangian treatment is
+# Medium milestone 2 work.
+canonical_form: "d_dt_dL_dqdot - dL_dq"
+
+variables:
+  d_dt_dL_dqdot:
+    dimension: "[force]"
+    unit: "newton"
+    meaning: "time derivative of the generalized momentum ∂L/∂q̇"
+    descriptor:
+      object_of_interest: point_particle
+      property: http://hequ.ai/vocab/quantitykind/GeneralizedMomentum
+      context: inertial_frame
+      constraint: time_derivative
+  dL_dq:
+    dimension: "[force]"
+    unit: "newton"
+    meaning: "generalized force ∂L/∂q"
+    descriptor:
+      object_of_interest: point_particle
+      property: http://hequ.ai/vocab/quantitykind/LagrangianPartial
+      context: inertial_frame
+      constraint: with_respect_to_coordinate
+
+assumptions:
+  - "L is twice-differentiable in q, q̇, and t"
+  - "Action S = ∫L dt is stationary at the trajectory"
+  - "Endpoints of the path are fixed (Hamilton's principle)"
+  - "No explicit constraint forces (unconstrained system)"
+
+derivation_from:
+  - "Hamilton's principle: δS = δ∫L dt = 0 on fixed-endpoint variations"
+  - "Integration by parts + endpoint vanishing leaves d/dt(∂L/∂q̇) − ∂L/∂q = 0 as the Euler–Lagrange equation"
+  - "Goldstein, Classical Mechanics, 3rd ed., §2.3"
+
+references:
+  - "Goldstein, Classical Mechanics, 3rd ed., §2.3 Eq. (2.13)"
+  - "Landau & Lifshitz, Mechanics, §2, Eq. (2.6)"
+  - "Lanczos, The Variational Principles of Mechanics, 4th ed., Ch. III"
+
+axioms:
+  - algebraic
+  - variational
+  - stationary_action
+  - linear
+  - classical
+  - non_relativistic
+  - deterministic
+  - conservative_force

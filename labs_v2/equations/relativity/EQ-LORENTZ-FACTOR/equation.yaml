@@ -1,0 +1,62 @@
+id: EQ-LORENTZ-FACTOR
+name: Lorentz Factor (Special Relativity)
+domain: special_relativity
+
+# Definition of the Lorentz factor γ for a body moving at speed v
+# relative to an inertial observer:
+#   γ = 1 / sqrt(1 − v²/c²)
+# Implicit form:
+#   γ² (1 − v²/c²) − 1 = 0
+# which holds identically for any real γ and v with |v| < c.
+# Written with atomic symbols so the structural sieve can
+# algebraically manipulate it.
+canonical_form: "gamma**2 * (1 - v**2/c**2) - 1"
+
+variables:
+  gamma:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "Lorentz factor, γ = 1 / √(1 − v²/c²)"
+    descriptor:
+      object_of_interest: lorentz_observer
+      property: http://hequ.ai/vocab/quantitykind/LorentzFactor
+      context: lorentz_frame
+  v:
+    dimension: "[length] / [time]"
+    unit: "meter / second"
+    meaning: "relative speed of the moving frame"
+    descriptor:
+      object_of_interest: lorentz_observer
+      property: http://qudt.org/vocab/quantitykind/Speed
+      context: lorentz_frame
+  c:
+    dimension: "[length] / [time]"
+    unit: "meter / second"
+    meaning: "speed of light in vacuum (299 792 458 m/s)"
+    descriptor:
+      object_of_interest: photon
+      property: http://hequ.ai/vocab/quantitykind/SpeedOfLight
+      context: lorentz_frame
+
+assumptions:
+  - "|v| < c (subluminal relative motion)"
+  - "Both frames are inertial"
+  - "Spacetime is Minkowski (no gravitational field)"
+  - "v and c are measured in a consistent frame-invariant scheme"
+
+derivation_from:
+  - "Einstein, Ann. der Physik 17 (1905), 891 (on the electrodynamics of moving bodies)"
+  - "Derived from the invariance of the spacetime interval ds² = c²dt² − dx² − dy² − dz²"
+  - "Reduces to γ → 1 in the non-relativistic limit v/c → 0, recovering Newtonian mechanics"
+
+references:
+  - "Einstein, Zur Elektrodynamik bewegter Körper, Ann. Phys. 17 (1905), 891"
+  - "Misner, Thorne & Wheeler, Gravitation (1973), §2.3"
+  - "Rindler, Introduction to Special Relativity, 2nd ed., §1-5"
+
+axioms:
+  - algebraic
+  - nonlinear
+  - constant_coefficients
+  - deterministic
+  - lorentz_invariant

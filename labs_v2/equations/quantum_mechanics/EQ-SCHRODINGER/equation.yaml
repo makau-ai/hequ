@@ -1,0 +1,91 @@
+id: EQ-SCHRODINGER
+name: Schrödinger Equation (1D, time-dependent, free particle)
+domain: quantum_mechanics
+
+# Time-dependent Schrödinger equation for a free 1D particle:
+#   iℏ ∂ψ/∂t = −(ℏ²/2m) ∂²ψ/∂x²
+# Implicit form (brought to one side):
+#   iℏ ∂ψ/∂t + (ℏ²/2m) ∂²ψ/∂x² = 0
+#
+# The algebraic `canonical_form` below uses atomic symbols for
+# the derivatives (psi_t, psi_xx) so Layer 2's structural sieve
+# can manipulate it. The `canonical_form_derivatives` uses real
+# sp.Function/Derivative objects so the CoV sieve can apply the
+# **Wick rotation** substitution t → −iτ, turning the Schrödinger
+# equation into the heat equation (Feynman-Kac). THIS IS A NEW
+# PRE-REGISTERED EXPECTATION for the Medium pipeline: the Wick-
+# rotation sieve should match Schrödinger (V=0) to a heat-equation
+# canonical form under σ = {t → −iτ} modulo a real-coefficient
+# rescaling.
+canonical_form: "I*hbar*psi_t + (hbar**2/(2*m)) * psi_xx"
+
+canonical_form_derivatives:
+  functions:
+    psi: ["x", "t"]
+  expression: >
+    I * hbar * Derivative(psi(x, t), t)
+    + (hbar**2 / (2 * m)) * Derivative(psi(x, t), x, 2)
+
+variables:
+  psi_t:
+    dimension: "1 / ([length] ** 0.5 * [time])"
+    unit: "1 / (meter ** 0.5 * second)"
+    meaning: "partial time derivative of the wavefunction ∂ψ/∂t"
+    descriptor:
+      object_of_interest: wavefunction
+      property: http://hequ.ai/vocab/quantitykind/WaveFunctionTimeDerivative
+      context: time_dependent
+  psi_xx:
+    dimension: "1 / [length] ** 2.5"
+    unit: "1 / meter ** 2.5"
+    meaning: "second spatial derivative ∂²ψ/∂x²"
+    descriptor:
+      object_of_interest: wavefunction
+      property: http://hequ.ai/vocab/quantitykind/WaveFunctionSecondSpatialDerivative
+      context: time_dependent
+  hbar:
+    dimension: "[energy] * [time]"
+    unit: "joule * second"
+    meaning: "reduced Planck constant ℏ ≈ 1.0546e-34 J·s"
+    descriptor:
+      object_of_interest: abstract_quantity
+      property: http://hequ.ai/vocab/quantitykind/ReducedPlanckConstant
+      context: time_dependent
+  m:
+    dimension: "[mass]"
+    unit: "kilogram"
+    meaning: "particle mass"
+    descriptor:
+      object_of_interest: point_particle
+      property: http://qudt.org/vocab/quantitykind/Mass
+      context: non_relativistic
+
+assumptions:
+  - "Free particle (V = 0) or equivalent classical field"
+  - "Non-relativistic kinetic energy (|p| << mc)"
+  - "ψ is a complex scalar field, normalisable over the domain"
+  - "Time evolution is unitary (norm conserved)"
+
+derivation_from:
+  - "Schrödinger, Ann. der Physik 79 (1926), 361 (original derivation via matter waves)"
+  - "Modern derivation: correspondence principle + E = p²/2m + symmetrisation"
+  - "Wick rotation t → −iτ converts the oscillatory kernel to the diffusive kernel of the heat equation (Feynman-Kac 1949)"
+
+references:
+  - "Griffiths & Schroeter, Introduction to Quantum Mechanics, 3rd ed., Ch. 1"
+  - "Sakurai & Napolitano, Modern Quantum Mechanics, 2nd ed., §2.1"
+  - "Feynman & Hibbs, Quantum Mechanics and Path Integrals (1965)"
+
+axioms:
+  - differential
+  - linear
+  - constant_coefficients
+  - homogeneous
+  - isotropic
+  - quantum
+  - unitary
+  - hermitian
+  - linear_superposition
+  - probability_conserving
+  - deterministic
+  - non_relativistic

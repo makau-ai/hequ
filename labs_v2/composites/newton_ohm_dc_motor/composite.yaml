@@ -1,0 +1,149 @@
+composite_id: CMP-NEWTON-OHM-MOTOR-001
+name: DC motor steady-state speed from Newton II + Ohm via a gyrator coupling
+description: >
+  The DC motor is the canonical electromechanical composite: it
+  couples Newton's second law (rotational form, Στ = Iα) and
+  Ohm's law (V = iR for the coil) through a named port-Hamiltonian
+  GYRATOR whose constitutive relations are
+
+      τ_motor = K · i              (motor torque ∝ armature current)
+      V_back  = K · ω              (back-EMF ∝ angular velocity)
+
+  The same constant K appears in both relations (in SI units,
+  N·m/A is dimensionally identical to V·s/rad), which is not a
+  coincidence but a consequence of Onsager/port-Hamiltonian
+  power conservation: the gyrator must satisfy
+  τ_motor · ω = V_back · i identically, and substitution yields
+  (K · i) · ω = (K · ω) · i, i.e., K_t = K_e = K.
+
+  In steady state (rotor inertia drops out because α = 0), the
+  coupled system reduces to two algebraic equations:
+
+      τ_balance: K · i = τ_L             (Newton II, rotational)
+      Kirchhoff:  V_s   = i · R + K · ω  (Ohm + back-EMF loop)
+
+  Solving for ω:
+
+      ω = V_s / K − (τ_L · R) / K²
+
+  This is the textbook DC-motor steady-state speed equation
+  (Fitzgerald §4, Krause §1.3). It makes the motor constant K
+  the single cross-domain transducer coefficient, and it is
+  the first electromechanical composite in the corpus — the
+  second cross-domain composite after the Fourier+Fick Soret
+  entry, and the first that uses a power-conserving gyrator
+  (not a conservative exchange like Soret thermodiffusion).
+
+parents:
+  eq_a: EQ-NEWTON-II
+  eq_a_problem_id: PRB-NEWTON-II-001
+  eq_b: EQ-OHM
+  eq_b_problem_id: PRB-OHM-001
+
+coupling:
+  tier: tier2_structural
+  v_a: tau                          # Newton II (rotational): torque
+  v_b: V                            # Ohm: voltage across the coil
+  descriptor_note: >
+    τ and V are NOT the same quantity; they are the effort
+    variables of their respective physical domains (rotational
+    mechanics and electrical circuits), linked by a gyrator
+    whose constitutive relations cross-couple effort to flow:
+    mechanical effort τ = K · (electrical flow i), and
+    electrical effort V = K · (mechanical flow ω). The motor
+    constant K is the single cross-coefficient.
+  transducer_id: TRANSDUCER-GYRATOR-MOTOR
+  transducer_properties:
+    type: "port_Hamiltonian_gyrator"
+    domains: [rotational_mechanics, electrical_circuits]
+    coefficient_name: "motor / torque constant K"
+    coefficient_dimensions: "[torque] / [current]  ==  [voltage] · [time] / [angle]"
+    constitutive_relations:
+      - "tau_motor = K * i"
+      - "V_back    = K * omega"
+    power_conservation:
+      statement: "tau_motor * omega == V_back * i  identically"
+      check: "(K*i)*omega == (K*omega)*i  ✓"
+    dirac_structure:
+      form: implicit_junction
+      junction_type: MGY           # modulated gyrator (K may depend on rotor position
+                                   # for cogging torque; constant K in this idealised case)
+      skew_symmetric_J: true       # ⟨e, f⟩ = 0 at the port
+    citation:
+      - "Fitzgerald, Kingsley & Umans, Electric Machinery, 7th ed., §4 (DC machines)"
+      - "Krause, Wasynczuk & Sudhoff, Analysis of Electric Machinery, 3rd ed., §1.3"
+      - "Paynter, Analysis and Design of Engineering Systems (1961) — bond-graph origin of the GY element"
+      - "van der Schaft, L2-Gain and Passivity Techniques in Nonlinear Control, 2nd ed., §4.2"
+
+composite_canonical_form: >
+  omega - (V_s / K - tau_L * R / K**2)
+composite_state_vars: [omega, i]
+composite_parameters: [V_s, R, K, tau_L]
+
+canonical_problem:
+  id: CMP-NEWTON-OHM-MOTOR-001-Q1
+  statement: >
+    A brushed DC motor is driven from a 12 V source (V_s = 12.0 V)
+    through an armature coil with resistance R = 0.5 Ω. Its motor
+    constant is K = 0.04 N·m/A (equivalently 0.04 V·s/rad, the
+    same value in SI units by power conservation). The shaft
+    drives a constant mechanical load torque τ_L = 0.1 N·m.
+    The motor has reached steady state, so α = 0 and the
+    rotor inertia drops out of Newton II. Rotor friction,
+    iron losses, and brush drop are neglected; the motor
+    constant is taken as independent of angular position
+    (no cogging).
+
+    Under these assumptions, Newton II (rotational, α = 0)
+    gives τ_motor = τ_L, which via the gyrator relation
+    τ_motor = K·i fixes the armature current i = τ_L / K.
+    Kirchhoff's voltage law around the coil loop gives
+    V_s = i·R + V_back, where the back-EMF V_back = K·ω is
+    the gyrator's electrical-side effort. Solving for ω:
+
+        ω = V_s / K − τ_L · R / K²
+
+    What is the steady-state angular velocity ω in rad/s?
+  local_formula: "V_s / K - tau_L * R / K**2"
+  canonical_substitutions:
+    V_s: 12.0
+    K: 0.04
+    tau_L: 0.1
+    R: 0.5
+  variable_ranges:
+    V_s: [0.1, 1000.0]
+    K: [1.0e-4, 10.0]
+    tau_L: [1.0e-5, 100.0]
+    R: [1.0e-3, 100.0]
+  expected_unit: radian / second
+  expected_dimension: "1 / [time]"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260415
+
+assumptions_required:
+  - "Steady state: α = dω/dt = 0 (rotor inertia drops out of Newton II)"
+  - "Constant motor constant K (no position dependence; no cogging torque)"
+  - "Ideal armature: no iron losses, no brush voltage drop, no armature reaction"
+  - "Linear resistance R (Ohm's law holds on the coil)"
+  - "No rotor mechanical friction or viscous damping at the bearing"
+  - "K_t (torque constant) = K_e (back-EMF constant) — enforced by port-Hamiltonian power conservation in SI units"
+  - "Load torque τ_L is constant and purely reactive (not velocity-dependent)"
+  - "Classical (non-relativistic) circuit and mechanics regimes"
+  - "Newton II rotational form holds: rigid rotor with well-defined moment of inertia I"
+  - "Ohm's law's standard assumptions hold on the armature coil (linear, ohmic, non-superconducting)"
+
+emergent_properties_expected:
+  - "Power conservation across the gyrator: P_mech = τ_L · ω equals (P_in − i²R) exactly"
+  - "Stall condition: if τ_L / K > V_s / R then ω ≤ 0 (motor stalls and runs in reverse or stops)"
+  - "No-load speed: ω_0 = V_s / K when τ_L → 0 (the maximum theoretical speed at the given V_s)"
+  - "Linear speed-torque curve at fixed V_s: ω decreases linearly with τ_L at slope −R/K²"
+  - "The same constant K appears in BOTH the torque relation τ = K·i and the back-EMF relation V_back = K·ω — this identity is a direct consequence of the gyrator being power-conserving"
+  - "Dimensionless figure of merit K² / R (units of W·s²/rad²): the motor's electromechanical tightness; large values → small back-EMF losses per unit speed"
+
+architect_anchor_citations:
+  - "Fitzgerald, A. E., Kingsley, C. & Umans, S. D. (2014) Electric Machinery, 7th ed., McGraw-Hill, §4 (DC machines)"
+  - "Krause, P. C., Wasynczuk, O. & Sudhoff, S. D. (2013) Analysis of Electric Machinery and Drive Systems, 3rd ed., Wiley-IEEE, §1.3"
+  - "Paynter, H. M. (1961) Analysis and Design of Engineering Systems, MIT Press — originator of the bond-graph gyrator (GY) element"
+  - "van der Schaft, A. (2017) L2-Gain and Passivity Techniques in Nonlinear Control, 2nd ed., Springer, §4.2 (port-Hamiltonian gyrators)"

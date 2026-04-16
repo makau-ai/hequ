@@ -1,0 +1,69 @@
+id: EQ-BEER-LAMBERT
+name: Beer–Lambert Law
+domain: spectroscopy
+
+# Implicit form: absorbance is proportional to molar absorptivity,
+# path length, and concentration. A - epsilon*ell*c = 0.
+canonical_form: "A - epsilon*ell*c"
+
+variables:
+  A:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "absorbance, A = log10(I_0 / I)"
+    descriptor:
+      object_of_interest: solute
+      property: http://qudt.org/vocab/quantitykind/AbsorbanceDecadic
+      context: dilute
+      constraint: at_measurement_wavelength
+  epsilon:
+    dimension: "1 / ([substance] / [length] ** 3 * [length])"
+    unit: "liter / (mole * centimeter)"
+    meaning: "molar absorptivity (extinction coefficient) at the measurement wavelength"
+    descriptor:
+      object_of_interest: solute
+      property: http://qudt.org/vocab/quantitykind/MolarAbsorptivity
+      context: dilute
+  ell:
+    dimension: "[length]"
+    unit: "centimeter"
+    meaning: "optical path length through the sample"
+    descriptor:
+      object_of_interest: solvent
+      property: http://qudt.org/vocab/quantitykind/Length
+      context: dilute
+      constraint: optical_path
+  c:
+    dimension: "[substance] / [length] ** 3"
+    unit: "mole / liter"
+    meaning: "concentration of the absorbing species"
+    descriptor:
+      object_of_interest: solute
+      property: http://qudt.org/vocab/quantitykind/MolarConcentration
+      context: dilute
+
+assumptions:
+  - "Dilute solution (c ≲ 10⁻² M); above this, solute–solute interactions distort ε"
+  - "Monochromatic light at a wavelength where ε is well-defined"
+  - "No fluorescence or scattering that would add photons to the detector"
+  - "No concentration-dependent chemical equilibria (e.g., dimerisation) that change the effective absorbing species"
+
+derivation_from:
+  - "Differential form: dI/I = -α c dx (fractional intensity loss proportional to concentration times path increment)"
+  - "Integrating over path length: I = I₀ exp(-α c ℓ), then defining A ≡ log₁₀(I₀/I) = (α/ln 10) c ℓ = ε c ℓ"
+  - "Bouguer (1729), Lambert (1760), Beer (1852) — all three contributed pieces of the law"
+
+references:
+  - "Bouguer, Essai d'optique sur la gradation de la lumière, 1729"
+  - "Lambert, Photometria, 1760"
+  - "Beer, Ann. Phys. Chem. 86 (1852), 78"
+  - "Ingle & Crouch, Spectrochemical Analysis, Prentice-Hall, 1988, §13-3"
+
+axioms:
+  - algebraic
+  - linear
+  - constant_coefficients
+  - commutative_factors
+  - dilute_limit
+  - deterministic
+  - classical

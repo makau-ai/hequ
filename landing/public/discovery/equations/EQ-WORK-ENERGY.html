@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Work–Energy Theorem — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">EQ-WORK-ENERGY · Classical Mechanics</span>
+<h1>Work–Energy Theorem</h1>
+<div class="math-display">W - m*(v_f**2 - v_i**2)/2 = 0</div>
+</div>
+<h2>Variables</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">W</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">net work done on the body along its path</p><div class="card-meta"><span class="mono">joule</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>rigid_body</dd><dt>Property</dt><dd>Energy</dd><dt>Context</dt><dd>inertial_frame</dd><dt>Constraint</dt><dd>net_work</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">m</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">inertial mass (constant)</p><div class="card-meta"><span class="mono">kilogram</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>rigid_body</dd><dt>Property</dt><dd>Mass</dd><dt>Context</dt><dd>inertial_frame</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">v_f</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">final speed (magnitude)</p><div class="card-meta"><span class="mono">meter / second</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>rigid_body</dd><dt>Property</dt><dd>Speed</dd><dt>Context</dt><dd>inertial_frame</dd><dt>Constraint</dt><dd>final</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">v_i</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">initial speed (magnitude)</p><div class="card-meta"><span class="mono">meter / second</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>rigid_body</dd><dt>Property</dt><dd>Speed</dd><dt>Context</dt><dd>inertial_frame</dd><dt>Constraint</dt><dd>initial</dd></dl></div>
+</div>
+<h2>Axioms</h2>
+<p><span class="badge neutral" style="margin-right:0.3rem">algebraic</span> <span class="badge neutral" style="margin-right:0.3rem">classical</span> <span class="badge neutral" style="margin-right:0.3rem">constant_coefficients</span> <span class="badge neutral" style="margin-right:0.3rem">deterministic</span> <span class="badge neutral" style="margin-right:0.3rem">non_relativistic</span></p>
+<h2>Assumptions</h2>
+<ul>
+<li>m is constant (not variable-mass)</li>
+<li>Classical regime (|v| &lt;&lt; c)</li>
+<li>W includes all net external work done on the body</li>
+<li>The body is treated as a point particle</li>
+</ul>
+<h2>Derivation</h2>
+<ul>
+<li>Time integral of Newton&#x27;s second law along the trajectory: ∫F·dx = ∫m(dv/dt)(dx/dt)dt = ∫m v dv = (1/2)m(v_f²-v_i²)</li>
+<li>Equivalently, the component of Noether&#x27;s theorem for time translation, restricted to a trajectory segment</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Goldstein, Classical Mechanics, 3rd ed., §1.1 Eq. (1.19)</li>
+<li>Halliday/Resnick/Walker, Fundamentals of Physics, 11th ed., §7-3</li>
+</ul>
+<a class="back-link" href="/discovery/equations/index.html">← back to corpus</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-FICK-DIFFUSION.J ↔ EQ-HOOKE.F_spring — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="current">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Coupling · Tier2 Similarity</span>
+<h1><em>J</em> ↔ <em>F_spring</em></h1>
+<p class="lead"><span class="badge tier2">Tier II — Similarity</span> &nbsp; <span class="badge rejected">REJECTED</span></p>
+</div>
+<div class="pairing">
+<div class="side left">
+<div class="side-label">Equation A</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-FICK-DIFFUSION.html" style="color:inherit; border:none">EQ-FICK-DIFFUSION</a></div>
+<div class="side-var">J</div>
+<dl class="kv">
+<dt>Object</dt><dd>diffusing_medium</dd>
+<dt>Property</dt><dd>MolarFlux</dd>
+<dt>Context</dt><dd>dilute</dd>
+</dl>
+</div>
+<div class="connector"><div class="arrow">↔</div></div>
+<div class="side right">
+<div class="side-label">Equation B</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-HOOKE.html" style="color:inherit; border:none">EQ-HOOKE</a></div>
+<div class="side-var">F_spring</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Force</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+<dt>Constraint</dt><dd>net_external</dd>
+</dl>
+</div>
+</div>
+<h2>Sieve rationale</h2>
+<p class="prose">Structural equation-level identity (sign=+1): the canonical forms of EQ-FICK-DIFFUSION and EQ-HOOKE are syntactically equal under rename, and J maps to F_spring under the discovered bijection</p>
+<h2>Physical constraint filter</h2>
+<div class="check-card failed">
+<div class="check-head">
+<span class="check-name">tellegen pairing</span>
+<span class="badge rejected">FAILED</span>
+</div>
+<p class="reasoning">Effort (flow) cannot be identified with flow (effort) across the coupling — they are bond-graph duals, not the same quantity.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">onsager reciprocity</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Onsager reciprocity applies only to pairs of linear transport laws; at least one equation is not a linear PDE.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">energy conservation</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Energy conservation check is narrowly targeted at the Newton+Hooke → SHO composite in Medium m2; other composites require the Phase 7 Lyapunov/Noether machinery (not yet built).</p>
+</div>
+<h2>Emergent properties</h2>
+<h3>Emergent Buckingham Π groups</h3>
+<p style="font-size:0.92rem; color:var(--fg-dim)">Dimensionless combinations that mix parameters from both equations — only appear in the composite system.</p>
+<div class="math-display">D * J^(-1) * dC_dx</div>
+<h2>AI review board</h2>
+<p class="prose">3 REJECT vote(s); the coupling is demoted to conjectural per §12.2.</p>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">claude-opus-4-6</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The coupling identifies molar flux (J, a flow variable with dimensions [substance]/[length]²/[time]) with spring force (F_spring, an effort variable with dimensions [mass]·[length]/[time]²) via an identity transfer function. These are dimensionally incompatible and represent fundamentally different physical quantities — one is a transport flux in a diffusive medium, the other is a restoring force on a rigid body. The physical constraint filter correctly flags this as a failed Tellegen pairing: these are bond-graph duals (flow vs. effort), not equivalent quantities. The syntactic similarity between Fick&#x27;s first law (J = -D·dC/dx) and Hooke&#x27;s law (F = -k·x) is a superficial algebraic resemblance (both are linear proportionalities with a negative sign), not a genuine physical coupling. The emergent Buckingham π groups are trivially the dimensionless forms of each equation individually and reveal no new physics from the proposed coupling. This is a classic artefact of structural pattern-matching without physical grounding.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">openai-gpt-5</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The proposed identity coupling maps molar flux (a flow variable with dimensions [substance]/[L]^2[T]) to mechanical force (an effort variable with dimensions [M][L]/[T]^2), violating dimensional consistency and effort–flow role matching; the semantic descriptors do not denote the same quantity nor a recognized transform. The physical-constraint filter’s tellegen_pairing failure is correct and aligns with standard bond-graph analogies (J ↔ flow, F ↔ effort). The claimed structural identity is a superficial algebraic resemblance (y = −Kx) that does not confer physical equivalence, and the listed π-groups are trivial restatements of each equation rather than genuine cross-domain emergent properties.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">gemini-2.5-pro</span>
+<span class="badge rejected">REJECT</span>
+</div>
+<p class="reasoning">The proposed coupling is physically implausible as it equates Molar Flux with mechanical Force, quantities that are dimensionally, conceptually, and semantically distinct. This identification is based on a superficial syntactic similarity between the two equations and is correctly flagged as invalid by the physical constraint filter, which notes the dimensional mismatch and the fundamental error of equating a &#x27;flow&#x27; variable (flux) with an &#x27;effort&#x27; variable (force). No genuine emergent properties are generated; the coupling is a physically meaningless algebraic artifact.</p>
+</div>
+<a class="back-link" href="/discovery/couplings/index.html">← back to couplings</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

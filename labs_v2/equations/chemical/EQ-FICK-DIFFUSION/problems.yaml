@@ -1,0 +1,49 @@
+equation_id: EQ-FICK-DIFFUSION
+description: >
+  Canonical problems for Fick's first law of diffusion.
+  Sourced under v5 'board is not a CAS' protocol.
+problems:
+  - id: PRB-FICK-001
+    name: Steady molar flux across a dilute solute gradient
+    statement: >
+      A dilute solute diffuses through a stagnant solvent along
+      the x-axis. The diffusion coefficient is D = 1.0e-9 m²/s
+      (typical value for a small molecule in water at 25 °C).
+      The solute concentration varies linearly from C_high =
+      10.0 mol/m³ at x=0 to C_low = 2.0 mol/m³ at x=L where
+      L = 0.02 m. Assume steady state, one-dimensional diffusion,
+      no bulk flow (pure diffusive transport), and dilute-
+      solution Fickian regime.
+
+      Fick's first law gives a constant concentration gradient
+      dC/dx = -(C_high - C_low)/L and a molar flux magnitude of
+      J = D·(C_high - C_low)/L. What is the magnitude of J in
+      mol/(m²·s)?
+    local_formula: "D * (C_high - C_low) / L"
+    canonical_substitutions:
+      D: 1.0e-9
+      C_high: 10.0
+      C_low: 2.0
+      L: 0.02
+    variable_ranges:
+      D: [1.0e-12, 1.0e-4]        # diffusivity range from crystals to gases
+      C_high: [0.01, 1000.0]      # dilute through moderately concentrated
+      C_low: [0.0, 0.01]          # kept well below C_high
+      L: [1.0e-4, 1.0]            # 0.1 mm to 1 m
+    expected_unit: mole / (meter**2 * second)
+    expected_dimension: "[substance] / ([length]**2 * [time])"
+    assumptions_required:
+      - "Dilute solute: no solute–solute interactions distort D"
+      - "Isotropic solvent (D independent of direction)"
+      - "No bulk flow (pure diffusive transport; no advection)"
+      - "Fickian regime: Gaussian displacement statistics"
+      - "Steady state (linear concentration profile)"
+      - "One-dimensional diffusion along x"
+    pbt:
+      n_samples: 200
+      rel_tolerance: 1e-8
+      seed: 20260415
+    architect_anchor_citations:
+      - "Fick, Über Diffusion, Annalen der Physik (1855)"
+      - "Crank, The Mathematics of Diffusion, 2nd ed., §1.1"
+      - "Cussler, Diffusion: Mass Transfer in Fluid Systems, 3rd ed., Ch 1"

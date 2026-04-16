@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Navier–Stokes Momentum Equation (1D, incompressible) — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">EQ-NAVIER-STOKES · Fluid Dynamics</span>
+<h1>Navier–Stokes Momentum Equation (1D, incompressible)</h1>
+<div class="math-display">P_x - g*rho - mu*u_xx + rho*u*u_x + rho*u_t = 0</div>
+</div>
+<h2>Derivative form</h2>
+<div class="math-display">P_x - g*rho - mu*Derivative(u(x, t), (x, 2)) + rho*u(x, t)*Derivative(u(x, t), x) + rho*Derivative(u(x, t), t) = 0</div>
+<h2>Variables</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">P_x</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">pressure gradient along flow</p><div class="card-meta"><span class="mono">pascal / meter</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>Pressure</dd><dt>Context</dt><dd>incompressible</dd><dt>Constraint</dt><dd>spatial_gradient</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">g</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">gravitational acceleration</p><div class="card-meta"><span class="mono">meter / second ** 2</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>Acceleration</dd><dt>Context</dt><dd>incompressible</dd><dt>Constraint</dt><dd>body_force_acceleration</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">mu</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">dynamic viscosity</p><div class="card-meta"><span class="mono">pascal * second</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>DynamicViscosity</dd><dt>Context</dt><dd>incompressible</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">rho</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">fluid density (constant for incompressible flow)</p><div class="card-meta"><span class="mono">kilogram / meter ** 3</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>MassDensity</dd><dt>Context</dt><dd>incompressible</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">u</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">local fluid velocity</p><div class="card-meta"><span class="mono">meter / second</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>Velocity</dd><dt>Context</dt><dd>incompressible</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">u_t</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">partial time derivative of velocity</p><div class="card-meta"><span class="mono">meter / second ** 2</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>Acceleration</dd><dt>Context</dt><dd>incompressible</dd><dt>Constraint</dt><dd>local_time_derivative_of_velocity</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">u_x</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">partial spatial derivative of velocity (rate of strain along flow)</p><div class="card-meta"><span class="mono">1 / second</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>Frequency</dd><dt>Context</dt><dd>incompressible</dd><dt>Constraint</dt><dd>velocity_gradient</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">u_xx</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">second spatial derivative of velocity</p><div class="card-meta"><span class="mono">1 / (meter * second)</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>fluid_parcel</dd><dt>Property</dt><dd>Frequency</dd><dt>Context</dt><dd>incompressible</dd><dt>Constraint</dt><dd>velocity_laplacian</dd></dl></div>
+</div>
+<h2>Axioms</h2>
+<p><span class="badge neutral" style="margin-right:0.3rem">classical</span> <span class="badge neutral" style="margin-right:0.3rem">constant_coefficients</span> <span class="badge neutral" style="margin-right:0.3rem">deterministic</span> <span class="badge neutral" style="margin-right:0.3rem">differential</span> <span class="badge neutral" style="margin-right:0.3rem">galilean_invariant</span> <span class="badge neutral" style="margin-right:0.3rem">homogeneous</span> <span class="badge neutral" style="margin-right:0.3rem">incompressible</span> <span class="badge neutral" style="margin-right:0.3rem">isotropic</span> <span class="badge neutral" style="margin-right:0.3rem">non_relativistic</span> <span class="badge neutral" style="margin-right:0.3rem">nonlinear</span> <span class="badge neutral" style="margin-right:0.3rem">viscous</span></p>
+<h2>Assumptions</h2>
+<ul>
+<li>Incompressible flow (ρ constant; ∇·v = 0)</li>
+<li>Newtonian fluid (linear stress-strain-rate relation)</li>
+<li>Constant dynamic viscosity μ</li>
+<li>No thermal coupling (isothermal)</li>
+<li>Gravity is the only body force</li>
+</ul>
+<h2>Derivation</h2>
+<ul>
+<li>Navier (1823) and Stokes (1845) via continuum mechanics + Newton&#x27;s second law applied to a fluid element</li>
+<li>Conservation of mass + momentum with the Newtonian stress tensor τ_ij = −P δ_ij + μ(∂_i u_j + ∂_j u_i)</li>
+<li>Reduces to the heat equation ρ u_t = μ u_xx when the convective term u·u_x is negligible (low Reynolds number or small perturbation)</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Batchelor, An Introduction to Fluid Dynamics, §3.1</li>
+<li>Landau &amp; Lifshitz, Fluid Mechanics, 2nd ed., §15</li>
+<li>Kundu &amp; Cohen, Fluid Mechanics, 6th ed., Ch. 4</li>
+</ul>
+<a class="back-link" href="/discovery/equations/index.html">← back to corpus</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

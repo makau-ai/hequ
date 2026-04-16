@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-HOOKE.F_spring ↔ EQ-NEWTON-II.F — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="current">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Coupling · Tier1 Equivalence</span>
+<h1><em>F_spring</em> ↔ <em>F</em></h1>
+<p class="lead"><span class="badge tier1">Tier I — Equivalence</span> &nbsp; <span class="badge proved">PROVED</span></p>
+</div>
+<div class="pairing">
+<div class="side left">
+<div class="side-label">Equation A</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-HOOKE.html" style="color:inherit; border:none">EQ-HOOKE</a></div>
+<div class="side-var">F_spring</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Force</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+<dt>Constraint</dt><dd>net_external</dd>
+</dl>
+</div>
+<div class="connector"><div class="arrow">↔</div></div>
+<div class="side right">
+<div class="side-label">Equation B</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-NEWTON-II.html" style="color:inherit; border:none">EQ-NEWTON-II</a></div>
+<div class="side-var">F</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Force</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+<dt>Constraint</dt><dd>net_external</dd>
+</dl>
+</div>
+</div>
+<h2>Sieve rationale</h2>
+<p class="prose">Identical tier1 key (object=rigid_body, property=Force, context=inertial_frame, constraint=net_external)</p>
+<h2>Physical constraint filter</h2>
+<div class="check-card passed">
+<div class="check-head">
+<span class="check-name">tellegen pairing</span>
+<span class="badge proved">PASSED</span>
+</div>
+<p class="reasoning">Both variables are bond-graph efforts with equal pint dimensions ([mass] * [length] / [time] ** 2); this is a direct effort-identification across the coupling interface.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">onsager reciprocity</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Onsager reciprocity applies only to pairs of linear transport laws; at least one equation is not a linear PDE.</p>
+</div>
+<div class="check-card passed">
+<div class="check-head">
+<span class="check-name">energy conservation</span>
+<span class="badge proved">PASSED</span>
+</div>
+<p class="reasoning">Newton+Hooke coupling admits the conserved energy E = (1/2) m v² + (1/2) k x²; dE/dt = 0 on trajectories of the composite SHO system.</p>
+</div>
+<h2>Emergent properties</h2>
+<h3>Conserved quantities</h3>
+<div class="math-display">(1/2) * m * v**2 + (1/2) * k * x**2</div>
+<h3>Steady states</h3>
+<div class="math-display">(x=0, v=0)</div>
+<h3>Linear stability</h3>
+<div class="panel tight">
+<dl class="kv">
+<dt>Class</dt><dd>center</dd>
+<dt>Eigenvalues</dt><dd>-I*sqrt(k)/sqrt(m), I*sqrt(k)/sqrt(m)</dd>
+</dl>
+<p class="reasoning" style="margin-top:0.6rem; font-family:var(--serif); font-style:italic">Linear center: oscillations neither grow nor decay, amplitude is set by initial conditions. This is the simple harmonic oscillator, which is the canonical marginally-stable dynamical system.</p>
+</div>
+<h3>Emergent Buckingham Π groups</h3>
+<p style="font-size:0.92rem; color:var(--fg-dim)">Dimensionless combinations that mix parameters from both equations — only appear in the composite system.</p>
+<div class="math-display">F_spring^(-1) * k * x</div>
+<div class="math-display">F_spring^(-1) * F</div>
+<div class="math-display">F_spring^(-1) * a * m</div>
+<a class="back-link" href="/discovery/couplings/index.html">← back to couplings</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

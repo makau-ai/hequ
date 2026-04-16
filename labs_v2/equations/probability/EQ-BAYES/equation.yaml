@@ -1,0 +1,65 @@
+id: EQ-BAYES
+name: Bayes' Theorem
+domain: probability
+
+# Implicit form: P(A|B) * P(B) - P(B|A) * P(A) = 0.
+# This is the symmetric form, true by definition of conditional
+# probability.
+canonical_form: "P_A_given_B * P_B - P_B_given_A * P_A"
+
+variables:
+  P_A_given_B:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "posterior probability of hypothesis A given evidence B"
+    descriptor:
+      object_of_interest: bayesian_hypothesis
+      property: http://hequ.ai/vocab/quantitykind/PosteriorProbability
+      context: bayesian
+  P_B_given_A:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "likelihood: probability of evidence B given hypothesis A"
+    descriptor:
+      object_of_interest: bayesian_hypothesis
+      property: http://hequ.ai/vocab/quantitykind/ConditionalProbability
+      context: bayesian
+      constraint: likelihood
+  P_A:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "prior probability of hypothesis A"
+    descriptor:
+      object_of_interest: bayesian_hypothesis
+      property: http://hequ.ai/vocab/quantitykind/PriorProbability
+      context: bayesian
+  P_B:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "marginal probability of evidence B (normalising constant)"
+    descriptor:
+      object_of_interest: bayesian_hypothesis
+      property: http://qudt.org/vocab/quantitykind/Probability
+      context: bayesian
+      constraint: marginal_evidence
+
+assumptions:
+  - "P(B) > 0 (the evidence has nonzero prior probability, so conditioning is well-defined)"
+  - "All probabilities lie in [0,1] and form a coherent probability measure"
+  - "A and B are events in a shared sample space"
+
+derivation_from:
+  - "Definition of conditional probability: P(A∩B) = P(A|B)P(B) = P(B|A)P(A)"
+  - "Bayes, An Essay towards solving a Problem in the Doctrine of Chances, Phil. Trans. 53 (1763)"
+  - "Laplace rediscovered and generalised to continuous densities"
+
+references:
+  - "Jaynes, Probability Theory: The Logic of Science, §1.8"
+  - "Bishop, Pattern Recognition and Machine Learning, §1.2.3"
+
+axioms:
+  - algebraic
+  - linear
+  - commutative_factors
+  - dimensionless
+  - deterministic

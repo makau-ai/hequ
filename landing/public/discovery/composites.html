@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Composites — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="current">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Phase 13 · Composites</span>
+<h1>3 <em>composite</em> systems verified.</h1>
+<p class="lead">A composite is two parent equations plus a coupling that produce a new physical system. The parents must each have passed Phase 12 canonical verification. The coupling is either a tier-1 equivalence (same variable in both parents under the same I-ADOPT descriptor) or a tier-2 structural analogy with a named port-Hamiltonian transducer. The composite's own canonical problem is then verified under the same four-check pipeline as any single-equation canonical.</p>
+</div>
+<h2>How a composite is built</h2>
+<p class="prose">Given two canonically-verified parents and a coupling, the engine substitutes variables according to the transducer and generates the composite equation of motion. A canonical problem for the composite is authored — typically a real physical scenario with a closed-form textbook answer (the simple harmonic oscillator period, the DC motor back-EMF torque curve, the Soret thermodiffusion coefficient). That problem goes through the same four-check verification as any Phase 12 canonical.</p>
+<p>The composite's ledger entry carries its parents, the coupling kind, the transducer identity, the reference value, and every check result — full provenance, append-only, hash-chained.</p>
+<h2>Verified composites</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">CMP-FOURIER-FICK-SORET-001</div><div class="card-name">EQ-FOURIER-HEAT <span style="color:var(--accent);font-style:italic">+</span> EQ-FICK-DIFFUSION</div><div class="card-math">99.00498337 mol/m**3</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">Tier2 Structural</span></div><div class="card-meta" style="margin-top:0.3rem; color: var(--fg-dim); font-size:0.72rem">dT_dx ↔ dC_dx</div></div>
+<div class="card" style="cursor:default"><div class="card-id">CMP-NEWTON-HOOKE-SHO-001</div><div class="card-name">EQ-NEWTON-II <span style="color:var(--accent);font-style:italic">+</span> EQ-HOOKE</div><div class="card-math">0.6283185307 s</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">Tier1 Equivalence</span></div><div class="card-meta" style="margin-top:0.3rem; color: var(--fg-dim); font-size:0.72rem">F ↔ F_spring</div></div>
+<div class="card" style="cursor:default"><div class="card-id">CMP-NEWTON-WORKENERGY-001</div><div class="card-name">EQ-NEWTON-II <span style="color:var(--accent);font-style:italic">+</span> EQ-WORK-ENERGY</div><div class="card-math">55 joule</div><div class="card-meta"><span class="badge empirical">VERIFIED</span> <span style="color:var(--fg-dim);font-size:0.75rem">Tier1 Equivalence</span></div><div class="card-meta" style="margin-top:0.3rem; color: var(--fg-dim); font-size:0.72rem">m ↔ m</div></div>
+</div>
+<h2>Phase 13 roadmap</h2>
+<ul>
+<li>Newton II + Hooke → simple harmonic oscillator period &nbsp;<span class="badge empirical">verified</span></li>
+<li>Newton II + Work-Energy → work done by constant force &nbsp;<span class="badge empirical">verified</span></li>
+<li>Fourier + Fick → Soret thermodiffusion &nbsp;<span class="badge conjectural">queued</span> <span style="color:var(--fg-dim);font-size:0.72rem">(first cross-domain; needs Soret transducer)</span></li>
+<li>Newton II + Ohm → DC motor back-EMF torque curve &nbsp;<span class="badge conjectural">queued</span> <span style="color:var(--fg-dim);font-size:0.72rem">(electromechanical; needs motor-constant transducer)</span></li>
+<li>Arrhenius + Fick → reaction-diffusion wavefront speed &nbsp;<span class="badge conjectural">queued</span> <span style="color:var(--fg-dim);font-size:0.72rem">(needs Arrhenius canonical first)</span></li>
+</ul>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

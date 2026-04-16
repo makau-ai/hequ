@@ -1,0 +1,143 @@
+composite_id: CMP-ARRHENIUS-FICK-001
+name: Damköhler regime classifier from Arrhenius + Fick composition
+description: >
+  The Arrhenius rate law gives a temperature-dependent reaction
+  rate constant k(T), and Fick's law gives a diffusion coefficient
+  D and length scale L that together determine a characteristic
+  diffusion time τ_D = L²/D. The ratio of reaction rate to
+  diffusive transport rate is the **Damköhler number**
+
+      Da = k · L² / D = k · τ_D
+
+  which classifies the regime of every reaction-diffusion system:
+  Da ≫ 1 → diffusion-limited (reactants consumed faster than they
+  can be brought to the reaction zone); Da ≪ 1 → reaction-limited
+  (diffusion is fast, reaction controls the overall rate); Da ∼ 1
+  → coupled regime where both kinetics and transport matter.
+
+  The composite is a **tier-2 structural coupling** in which the
+  two parents share no variable with an identical I-ADOPT
+  descriptor tuple. Arrhenius's k and Fick's D/L belong to
+  different physical domains (kinetics vs mass transport), and
+  they are combined through a named dimensionless cross-coefficient
+  (Da) rather than through a port-Hamiltonian junction. This
+  makes the Damköhler number itself the transducer: a single
+  scalar derived from the two parent equations that determines
+  the composite's emergent behavior.
+
+  Unlike the Fourier+Fick Soret composite, which uses an Onsager
+  cross-coefficient s_T that is a material property, the
+  Damköhler transducer is a **computed** combination of three
+  independently measured quantities: Da(A, E_a, T, L, D). This
+  makes Da cheaper to measure (no direct calibration experiment)
+  but noisier (compound uncertainties). It is the first composite
+  in the corpus where the transducer itself is not a physical
+  constant but a compound dimensionless group.
+
+parents:
+  eq_a: EQ-ARRHENIUS
+  eq_a_problem_id: PRB-ARRHENIUS-001
+  eq_b: EQ-FICK-DIFFUSION
+  eq_b_problem_id: PRB-FICK-001
+
+coupling:
+  tier: tier2_structural
+  v_a: k                                # Arrhenius: rate constant k(T)
+  v_b: D                                # Fick: diffusion coefficient
+  descriptor_note: >
+    k and D are NOT the same quantity and are not linked by an
+    identity. They combine with a length scale L (from the Fick
+    boundary value problem) to form the dimensionless Damköhler
+    number Da = k·L²/D, which is the composite's single
+    emergent cross-coefficient.
+  transducer_id: TRANSDUCER-DAMKOHLER
+  transducer_properties:
+    type: "dimensionless_group_from_rate_and_transport"
+    domains: [chemical_kinetics, mass_transport]
+    coefficient_name: "Damköhler number Da"
+    coefficient_dimensions: "dimensionless"
+    constitutive_relation: "Da = k · L² / D"
+    interpretation:
+      - "Da ≫ 1 → diffusion-limited regime (mass transport bottleneck)"
+      - "Da ≪ 1 → reaction-limited regime (kinetics bottleneck)"
+      - "Da ≈ 1 → strongly coupled reaction-diffusion (boundary layer thickness ~ √(D/k))"
+    historical_note: >
+      Gerhard Damköhler (1908-1944) introduced this dimensionless
+      group in his 1936 analysis of reactor scaling, showing that
+      reaction-diffusion systems scale via three dimensionless
+      numbers that now bear his name (Da I, II, III, IV).
+    citation:
+      - "Damköhler, G. (1936). Einflüsse der Strömung, Diffusion und des Wärmeüberganges auf die Leistung von Reaktionsöfen. Z. Elektrochem. 42, 846."
+      - "Bird, Stewart & Lightfoot, Transport Phenomena, 2nd ed., §22.4"
+      - "Fogler, Elements of Chemical Reaction Engineering, 5th ed., Ch 12"
+      - "Villermaux, Génie de la Réaction Chimique (1993), Ch 8"
+
+composite_canonical_form: >
+  Da - (A * exp(-E_a / (R * T)) * L**2 / D)
+composite_state_vars: [Da]
+composite_parameters: [A, E_a, R, T, L, D]
+
+canonical_problem:
+  id: CMP-ARRHENIUS-FICK-001-Q1
+  statement: >
+    A unimolecular reaction runs inside a spherical catalyst
+    pellet of characteristic length L = 0.001 m (1 mm radius)
+    in aqueous solution. The reactant has diffusivity D = 1.0e-9
+    m²/s (typical small-molecule value at 25 °C). The reaction's
+    Arrhenius pre-exponential factor is A = 1.0e13 s⁻¹, its
+    activation energy is E_a = 75000 J/mol (75 kJ/mol), and the
+    system is held at T = 298.15 K (25 °C). The gas constant
+    is R = 8.314472 J/(mol·K).
+
+    Compute the Damköhler number Da = k · L² / D of this
+    reaction-diffusion system, where k = A · exp(−E_a/(R·T))
+    is the Arrhenius rate constant at the operating temperature.
+    State whether the system is in the reaction-limited
+    (Da ≪ 1), diffusion-limited (Da ≫ 1), or coupled (Da ∼ 1)
+    regime.
+  local_formula: "A * exp(-E_a / (R * T)) * L**2 / D"
+  canonical_substitutions:
+    A: 1.0e13
+    E_a: 75000.0
+    R: 8.314472
+    T: 298.15
+    L: 0.001
+    D: 1.0e-9
+  variable_ranges:
+    A: [1.0e6, 1.0e15]           # slow enzymatic to fast unimolecular
+    E_a: [10000.0, 300000.0]     # 10 to 300 kJ/mol
+    R: [8.314472, 8.314472]      # fundamental constant
+    T: [250.0, 1000.0]           # practical chemistry window
+    L: [1.0e-6, 1.0]             # 1 μm to 1 m characteristic length
+    D: [1.0e-12, 1.0e-4]         # crystal to gas diffusivity
+  expected_unit: dimensionless
+  expected_dimension: "[]"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260415
+
+assumptions_required:
+  - "Thermally-equilibrated Arrhenius regime (Boltzmann distribution)"
+  - "Fickian diffusion (Gaussian displacement statistics, no anomalous transport)"
+  - "Isotropic D and constant D over the reaction volume"
+  - "Constant temperature over the reaction volume (isothermal reactor)"
+  - "Dilute solute regime (no solute-solute interactions modifying D)"
+  - "Single characteristic length L captures the geometry (spherical symmetry or equivalent)"
+  - "Pseudo-first-order kinetics: the reaction rate is linear in the reactant of interest"
+  - "No catalyst or enzyme modifying A or E_a"
+  - "No pressure-dependent fall-off in the kinetics (high-pressure limit)"
+  - "Classical regime: no quantum tunneling correction (T > 200 K)"
+
+emergent_properties_expected:
+  - "Regime classification: Da ≫ 1 → diffusion-limited; Da ≪ 1 → reaction-limited; Da ≈ 1 → coupled"
+  - "Characteristic reaction-diffusion length ℓ_RD = √(D/k), which equals L / √(Da)"
+  - "Effectiveness factor η for a first-order reaction in a sphere: η = (3/Da)·(√Da · coth(√Da) − 1), bounded in (0, 1]"
+  - "Temperature sensitivity: d(ln Da)/dT = E_a / (R·T²) — the composite inherits the Arrhenius temperature law exactly"
+  - "Scaling exponent: Da ∝ L², so halving the pellet size reduces Da by a factor of 4 (the basis for crushing catalyst pellets to access the reaction-limited regime)"
+
+architect_anchor_citations:
+  - "Damköhler, G. (1936). Einflüsse der Strömung, Diffusion und des Wärmeüberganges auf die Leistung von Reaktionsöfen. Z. Elektrochem. 42, 846."
+  - "Bird, R. B., Stewart, W. E. & Lightfoot, E. N. (2007) Transport Phenomena, 2nd ed., Wiley, §22.4"
+  - "Fogler, H. S. (2016) Elements of Chemical Reaction Engineering, 5th ed., Pearson, Ch 12 (reaction + diffusion in porous catalysts)"
+  - "Levenspiel, O. (1999) Chemical Reaction Engineering, 3rd ed., Wiley, Ch 18"

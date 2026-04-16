@@ -1,0 +1,68 @@
+id: EQ-FICK-DIFFUSION
+name: Fick's First Law of Diffusion (1D)
+domain: mass_transport
+
+# Dual representations (see EQ-FOURIER-HEAT for the pattern):
+# `canonical_form` is the algebraic version the structural sieve
+# uses; `canonical_form_derivatives` is the real PDE form with
+# C as a function of position, consumed by the Medium-scope
+# change-of-variables sieve.
+canonical_form: "J + D*dC_dx"
+
+canonical_form_derivatives:
+  functions:
+    C: ["x"]
+  expression: "J + D * Derivative(C(x), x)"
+
+variables:
+  J:
+    dimension: "[substance] / ([length] ** 2 * [time])"
+    unit: "mole / (meter ** 2 * second)"
+    meaning: "molar flux (amount per area per time) in the +x direction"
+    descriptor:
+      object_of_interest: diffusing_medium
+      property: http://qudt.org/vocab/quantitykind/MolarFlux
+      context: dilute
+  D:
+    dimension: "[length] ** 2 / [time]"
+    unit: "meter ** 2 / second"
+    meaning: "diffusion coefficient of the solute in the solvent"
+    descriptor:
+      object_of_interest: diffusing_medium
+      property: http://qudt.org/vocab/quantitykind/DiffusionCoefficient
+      context: dilute
+  dC_dx:
+    dimension: "[substance] / [length] ** 4"
+    unit: "mole / meter ** 4"
+    meaning: "concentration gradient in the +x direction (atomic alias for ∂C/∂x)"
+    descriptor:
+      object_of_interest: diffusing_medium
+      property: http://qudt.org/vocab/quantitykind/ConcentrationGradient
+      context: dilute
+
+assumptions:
+  - "Dilute solute: no solute–solute interactions distort D"
+  - "Isotropic solvent (D independent of direction)"
+  - "No bulk flow (pure diffusive transport; no advection)"
+  - "Fickian regime: Gaussian displacement statistics (not anomalous diffusion)"
+
+derivation_from:
+  - "Empirical; Fick, Über Diffusion, Annalen der Physik, 1855"
+  - "Derivable from the random walk: for a Brownian particle with step variance σ² per time τ, D = σ²/(2τ) (Einstein 1905)"
+  - "Microscopically: the chemical-potential gradient ∇μ drives the flux, and for dilute ideal solutions μ = μ₀ + RT ln C, so J ∝ -∇μ ∝ -∇C"
+  - "STRUCTURAL IDENTITY: substitute (q,k,T) → (J,D,C) into Fourier's law and this equation emerges verbatim"
+
+references:
+  - "Fick, Ann. Phys. 170 (1855), 59-86"
+  - "Crank, The Mathematics of Diffusion, 2nd ed., §1.1"
+  - "Einstein, Ann. Phys. 17 (1905), 549 (Brownian motion)"
+
+axioms:
+  - differential
+  - linear
+  - constant_coefficients
+  - isotropic
+  - homogeneous
+  - dilute_limit
+  - deterministic
+  - classical

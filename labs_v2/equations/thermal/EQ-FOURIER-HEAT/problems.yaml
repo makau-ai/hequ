@@ -1,0 +1,52 @@
+equation_id: EQ-FOURIER-HEAT
+description: >
+  Canonical problems for Fourier's law of heat conduction.
+  Sourced under v5 'board is not a CAS' protocol: board
+  provides formula + citations, local CAS computes the
+  authoritative numerical value.
+problems:
+  - id: PRB-FOURIER-001
+    name: Steady heat flux through a copper rod
+    statement: >
+      A uniform copper rod has thermal conductivity k = 401
+      W/(m·K). One end is held at T_hot = 373.15 K (boiling
+      water) and the other end is held at T_cold = 273.15 K
+      (ice point). The rod is L = 0.5 m long. Assume steady
+      state, perfect thermal contact at the baths, no radial
+      heat loss (the rod is perfectly insulated along its
+      lateral surface), and one-dimensional conduction along
+      the rod axis.
+
+      Under these conditions Fourier's law gives a constant
+      temperature gradient dT/dx = -(T_hot - T_cold) / L, and
+      the heat flux magnitude is q = k·(T_hot - T_cold)/L.
+      What is the magnitude of the heat flux q in W/m² along
+      the rod?
+    local_formula: "k * (T_hot - T_cold) / L"
+    canonical_substitutions:
+      k: 401.0
+      T_hot: 373.15
+      T_cold: 273.15
+      L: 0.5
+    variable_ranges:
+      k: [0.01, 500.0]            # from insulators (k≈0.03) to copper (k≈401)
+      T_hot: [300.0, 1500.0]
+      T_cold: [77.0, 299.0]       # above absolute zero, below T_hot
+      L: [0.01, 10.0]             # 1 cm to 10 m rod
+    expected_unit: watt / meter**2
+    expected_dimension: "[mass] / [time]**3"    # W/m² = kg/s³
+    assumptions_required:
+      - "Isotropic, homogeneous medium (k constant in space and direction)"
+      - "Linear (Fourier) regime: flux ∝ gradient"
+      - "Steady state (no time-dependent temperature profile)"
+      - "One-dimensional conduction along the rod axis"
+      - "No radial heat loss (insulated lateral surface)"
+      - "Both ends at fixed temperature baths with perfect thermal contact"
+    pbt:
+      n_samples: 200
+      rel_tolerance: 1e-8
+      seed: 20260415
+    architect_anchor_citations:
+      - "Fourier, Théorie analytique de la chaleur (1822)"
+      - "Incropera et al., Fundamentals of Heat and Mass Transfer, 7th ed., §2.2"
+      - "Carslaw & Jaeger, Conduction of Heat in Solids, §1.2"

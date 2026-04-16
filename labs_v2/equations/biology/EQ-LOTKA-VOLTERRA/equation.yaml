@@ -1,0 +1,77 @@
+id: EQ-LOTKA-VOLTERRA
+name: Lotka–Volterra Predator-Prey Equations
+domain: population_dynamics
+
+# Lotka-Volterra predator-prey system (ODE form), reduced to the
+# prey equation's steady-state residual:
+#   dx/dt = α x − β x y
+#   dy/dt = δ x y − γ y
+# At the interior fixed point (x*, y*) = (γ/δ, α/β), both derivatives
+# vanish. The canonical_form below encodes the prey balance:
+#   alpha*x - beta*x*y = 0
+# which is the prey-side steady-state condition. This is nonlinear in
+# the product xy and is the archetype of population-balance nonlinear
+# dynamics. It will axiom-contradict with linear equations.
+canonical_form: "alpha*x - beta*x*y"
+
+variables:
+  alpha:
+    dimension: "1 / [time]"
+    unit: "1 / year"
+    meaning: "prey intrinsic growth rate"
+    descriptor:
+      object_of_interest: prey_population
+      property: http://hequ.ai/vocab/quantitykind/PopulationGrowthRate
+      context: well_mixed
+  beta:
+    dimension: "1 / ([time] * [substance])"
+    unit: "1 / (year * mole)"
+    meaning: "predation rate coefficient"
+    descriptor:
+      object_of_interest: predator_population
+      property: http://hequ.ai/vocab/quantitykind/PredationRate
+      context: well_mixed
+  x:
+    dimension: "[substance]"
+    unit: "mole"
+    meaning: "prey population (using mole as generic count unit until biology-specific dim added)"
+    descriptor:
+      object_of_interest: prey_population
+      property: http://hequ.ai/vocab/quantitykind/PopulationCount
+      context: well_mixed
+  y:
+    dimension: "[substance]"
+    unit: "mole"
+    meaning: "predator population"
+    descriptor:
+      object_of_interest: predator_population
+      property: http://hequ.ai/vocab/quantitykind/PopulationCount
+      context: well_mixed
+
+assumptions:
+  - "Well-mixed, no spatial structure"
+  - "Prey grow exponentially in absence of predators (unbounded food)"
+  - "Predator mortality is linear in predator count"
+  - "Predation rate is bilinear in prey × predator (mass-action)"
+  - "No carrying capacity (logistic effects ignored)"
+
+derivation_from:
+  - "Lotka, J. Phys. Chem. 14 (1910), 271 (autocatalytic reactions)"
+  - "Volterra, Nature 118 (1926), 558 (fish populations in the Adriatic)"
+  - "Mass-action law applied to prey-predator encounters"
+  - "Has a conserved quantity V = δx − γ ln x + βy − α ln y (first integral)"
+
+references:
+  - "Murray, Mathematical Biology I, 3rd ed., §3.1"
+  - "Strogatz, Nonlinear Dynamics and Chaos, 2nd ed., §6.5"
+  - "Hirsch, Smale & Devaney, Differential Equations, Dynamical Systems, §12"
+
+axioms:
+  - algebraic
+  - nonlinear
+  - dynamical
+  - deterministic
+  - classical
+  - conservative_count
+  - galilean_invariant
+  - bounded_growth

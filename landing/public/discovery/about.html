@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="current">About</a></nav>
+  </div>
+</header>
+<main class="container narrow">
+<div class="page-intro">
+<span class="overline">About</span>
+<h1>An honest <em>coupling</em> assistant.</h1>
+<p class="lead">hequ is an experiment in systematic cross-domain equation discovery. This site is its public surface: a read-only render of every equation, every coupling hypothesis, every AI review board vote, and the append-only ledger that anchors all of it.</p>
+</div>
+<h2>The framing</h2>
+<p class="prose">The sieve is an <b>AI-assisted coupling assistant, not a coupling oracle</b>. Every historical attempt at fully automated discovery of cross-domain scientific relationships has failed or scoped down. hequ generates ranked candidates with explanations; an AI review board of three core members (Claude Opus 4.6, OpenAI GPT-5, Gemini 2.5 Pro) — with Grok-4 as optional fourth seat on high-stakes governance rounds — accepts or rejects each candidate before it enters the ledger as PROVED. This framing is binding — nothing is labeled a "discovery" without a recorded vote, and every round logs whether it seated 3 or 4 reviewers.</p>
+<p>The full review protocol, from canonical problem unit tests through live sensor grounding to the four-phase academic review board, is documented on the <a href="/discovery/methodology.html">methodology</a> page.</p>
+<h2>Provenance</h2>
+<ul>
+<li>Every equation is parsed from a YAML source with pint-typed variables and an I-ADOPT compositional descriptor (object, property, context, constraint).</li>
+<li>Every canonical form is simplified by sympy before matching.</li>
+<li>The Layer 5 coupling sieve applies a two-gate prefilter (pint dimensions + explicit domain-adjacency matrix), a six-way bond-graph role classifier, and a structural bijection rescorer.</li>
+<li>The physical-constraint filter runs Tellegen pairing, Onsager reciprocity, and SHO-style energy conservation.</li>
+<li>The emergent-properties analysis computes symbolic steady states, linear stability, Buckingham Π groups, and conserved quantities.</li>
+<li>The AI review board votes independently per model; the ledger records each vote verbatim with verdict, reasoning, and timestamp.</li>
+</ul>
+<h2>What this site is not</h2>
+<ul>
+<li>A published scientific paper. Every finding is a candidate pending continued review.</li>
+<li>A substitute for domain expertise. The AI review board is a sanity check, not a peer review.</li>
+<li>A benchmark against SINDy / AI Feynman / PySR — those tools work within a single domain, not cross-domain.</li>
+</ul>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

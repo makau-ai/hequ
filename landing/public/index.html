@@ -1,0 +1,1027 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#5FB3B3">
+<meta name="theme-color" content="#0a0e1a">
+<title>hequ.ai — Unity of Equations</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300&family=Rajdhani:wght@300;400;500;600&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+/*
+  Brand palette (brand design board v1 editor synthesis,
+  openai-gpt-5 baseline palette, refined with claude-opus
+  amendments: dot inherits EQU teal, no micro-scale jank on QU,
+  tightened letter-spacing).
+
+  Semantic intent:
+    H   (#D4A853, warm amber)     — Human
+    EQU (#5FB3B3, teal)           — Equation
+    QU  (#B8FFF1, luminous aqua)  — Quantum (highlighted within EQU)
+    .AI (#E9E1C9, light parchment)— Artificial Intelligence
+    dot (#5FB3B3)                 — inherits EQU teal to bind 'hequ' as word-unit
+*/
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: #06050e;
+  overflow: hidden;
+  width: 100vw;
+  height: 100vh;
+  font-family: 'Space Grotesk', 'Rajdhani', sans-serif;
+}
+
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 1;
+}
+
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+}
+
+.title-group {
+  text-align: center;
+  animation: fadeInUp 2.5s ease-out 1s both;
+}
+
+.brand {
+  font-family: 'Space Grotesk', 'Rajdhani', sans-serif;
+  font-weight: 700;
+  font-size: clamp(52px, 8vw, 108px);
+  /* tightened from 0.15em to 0.06em per board synthesis —
+     sharper color boundaries let the QU-within-EQU signal read */
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  /* single subtle glow layer, down from the v3 double-shadow */
+  text-shadow: 0 0 14px rgba(212, 168, 83, 0.12);
+  line-height: 1;
+  display: inline-block;
+  color: #E9E1C9;  /* fallback; per-segment spans override */
+}
+/* Four-segment semantic encoding of the H / EQU / QU / .AI acronym. */
+.brand .seg-h   { color: #D4A853; }             /* H: warm amber — Human */
+.brand .seg-equ {                               /* EQU: teal — Equation.
+                                                   Native text-decoration
+                                                   underline with skip-ink
+                                                   disabled so the line
+                                                   passes THROUGH the Q
+                                                   descender, integrating
+                                                   visually with the Q
+                                                   tail. */
+  color: #5FB3B3;
+  text-decoration: underline;
+  text-decoration-color: #5FB3B3;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.09em;
+  text-decoration-skip-ink: auto;
+}
+.brand .seg-qu  {                               /* QU: luminous aqua highlight
+                                                   WITHIN the EQU word-unit */
+  color: #B8FFF1;
+  text-shadow: 0 0 18px rgba(184, 255, 241, 0.25);
+}
+.brand .seg-u {                                 /* The U is the final glyph
+                                                   of the EQU word. Killing
+                                                   letter-spacing on this
+                                                   span removes the trailing
+                                                   0.06em space that would
+                                                   otherwise extend the
+                                                   underline past U. */
+  letter-spacing: 0;
+}
+.brand .seg-dot { color: #5FB3B3; }             /* dot binds into EQU teal */
+.brand .seg-ai  { color: #E9E1C9; }             /* .AI: light parchment */
+
+/* Accessibility override: when the user requests higher contrast,
+   strip the glow and thicken the underline so the QU signal
+   still reads without relying on color + shadow alone. */
+@media (prefers-contrast: more) {
+  .brand {
+    text-shadow: none;
+  }
+  .brand .seg-equ {
+    text-decoration-thickness: 0.14em;
+  }
+  .brand .seg-qu {
+    text-shadow: none;
+  }
+}
+/* Reduced-motion: disable the micro-animation if the user
+   declared reduced-motion preference. */
+@media (prefers-reduced-motion: reduce) {
+  .title-group { animation: none !important; }
+  .enter-link  { animation: none !important; }
+}
+
+.tagline {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(16px, 2.5vw, 28px);
+  color: rgba(200, 180, 150, 0.7);
+  margin-top: 8px;
+  letter-spacing: 0.08em;
+}
+
+.subtitle {
+  font-family: 'Rajdhani', sans-serif;
+  font-weight: 300;
+  font-size: clamp(11px, 1.4vw, 16px);
+  color: rgba(160, 145, 120, 0.5);
+  margin-top: 20px;
+  letter-spacing: 0.3em;
+  text-transform: uppercase;
+}
+
+/* Etymology was removed from the primary hero stack per brand
+   board synthesis (reviewers: it's redundant once the four-color
+   logo encodes the acronym; competes with CTA for attention).
+   It now lives as a small "about the name" affordance below the
+   tagline, still on the first fold but visually demoted. */
+.about-name {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-style: italic;
+  font-size: clamp(11px, 1.1vw, 14px);
+  color: rgba(200, 180, 150, 0.42);
+  margin-top: 14px;
+  letter-spacing: 0.03em;
+  animation: fadeInUp 2.5s ease-out 1.8s both;
+}
+.about-name a {
+  color: inherit;
+  text-decoration: none;
+  border-bottom: 1px solid rgba(200, 180, 150, 0.22);
+  padding-bottom: 1px;
+  transition: color 0.3s ease, border-color 0.3s ease;
+  pointer-events: auto;
+}
+.about-name a:hover,
+.about-name a:focus-visible {
+  color: rgba(240, 224, 184, 0.82);
+  border-color: rgba(212, 168, 83, 0.55);
+}
+/* Tooltip revealed on hover/focus of the "about the name" link */
+.about-name .etymology-tooltip {
+  display: block;
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  transition: max-height 0.35s ease, opacity 0.35s ease, margin-top 0.35s ease;
+  font-style: normal;
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 12px;
+  letter-spacing: 0.04em;
+  color: rgba(200, 180, 150, 0.62);
+  margin-top: 0;
+}
+.about-name:hover .etymology-tooltip,
+.about-name:focus-within .etymology-tooltip {
+  max-height: 60px;
+  opacity: 1;
+  margin-top: 6px;
+}
+
+.discipline-ring {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  z-index: 5;
+  pointer-events: none;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.8; }
+}
+
+/* CTA hardened per brand board synthesis:
+    - opacity → 0.95 for WCAG 2.2 AA text contrast on dark bg
+    - border contrast → rgba(212, 168, 83, 0.7)
+    - font-size floor 14px; min touch target 48×48 px (SC 2.5.8)
+    - letter-spacing tightened 0.25em → 0.12em (claude opus: "0.25em
+      makes the text feel like it's dissolving")
+    - focus-visible outline for keyboard navigation
+*/
+.enter-link {
+  position: fixed;
+  bottom: 6vh;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 20;
+  font-family: 'Space Grotesk', sans-serif;
+  font-weight: 500;
+  font-size: clamp(14px, 1.5vw, 18px);
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: rgba(240, 224, 184, 0.95);
+  text-decoration: none;
+  padding: 1em 2.1em;
+  min-height: 48px;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55em;
+  border: 1px solid rgba(212, 168, 83, 0.7);
+  background: rgba(6, 5, 14, 0.55);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, transform 0.3s ease;
+  animation: fadeInUp 2.5s ease-out 2.2s both;
+}
+.enter-link .arrow {
+  display: inline-block;
+  transition: transform 0.3s ease;
+}
+.enter-link:hover,
+.enter-link:focus-visible {
+  color: #B8FFF1;                            /* QU aqua — pulls eye toward the discovery concept */
+  background: rgba(95, 179, 179, 0.12);      /* EQU teal wash */
+  border-color: rgba(184, 255, 241, 0.8);
+  transform: translateX(-50%) translateY(-2px);
+  outline: none;
+}
+.enter-link:hover .arrow,
+.enter-link:focus-visible .arrow {
+  transform: translateX(4px);
+}
+.enter-link:focus-visible {
+  box-shadow: 0 0 0 3px rgba(184, 255, 241, 0.4);
+}
+</style>
+</head>
+<body>
+
+<canvas id="cosmos"></canvas>
+
+<div class="overlay">
+  <div class="title-group">
+    <h1 class="brand" aria-label="hequ dot A I"><span class="seg-h">H</span><span class="seg-equ">E<span class="seg-qu">Q<span class="seg-u">U</span></span></span><span class="seg-dot">.</span><span class="seg-ai">AI</span></h1>
+    <div class="tagline">analyzing equations for unity</div>
+    <div class="subtitle">The critical equations &middot; A select thread</div>
+    <div class="about-name">
+      <a href="#" tabindex="0" aria-describedby="etymology-text">about the name
+        <span class="etymology-tooltip" id="etymology-text">
+          <span style="color:#D4A853">H</span>uman &middot;
+          <span style="color:#5FB3B3">EQU</span>ation &middot;
+          <span style="color:#B8FFF1">QU</span>antum &middot;
+          <span style="color:#E9E1C9">.A</span>rtificial <span style="color:#E9E1C9">I</span>ntelligence
+        </span>
+      </a>
+    </div>
+  </div>
+</div>
+
+<a class="enter-link" href="/discovery">Enter the discovery engine <span class="arrow" aria-hidden="true">&rarr;</span></a>
+
+<script>
+const canvas = document.getElementById('cosmos');
+const ctx = canvas.getContext('2d');
+let W, H, cx, cy, t = 0;
+
+function resize() {
+  W = canvas.width = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  cx = W / 2;
+  cy = H / 2;
+}
+resize();
+window.addEventListener('resize', resize);
+
+const GOLD = [212, 168, 83];
+const GOLD_LIGHT = [240, 224, 184];
+const DEEP_BLUE = [20, 15, 60];
+const TEAL = [30, 180, 160];
+const VIOLET = [120, 80, 180];
+
+function rgba(c, a) { return `rgba(${c[0]},${c[1]},${c[2]},${a})`; }
+
+// Stars
+const stars = Array.from({length: 300}, () => ({
+  x: Math.random(), y: Math.random(),
+  r: Math.random() * 1.2 + 0.3,
+  twinkle: Math.random() * Math.PI * 2,
+  speed: Math.random() * 0.5 + 0.3
+}));
+
+// Particles orbiting center
+const particles = Array.from({length: 200}, () => {
+  const orbit = Math.random() * Math.min(W, H) * 0.42 + 30;
+  return {
+    orbit,
+    angle: Math.random() * Math.PI * 2,
+    speed: (0.0002 + Math.random() * 0.0008) * (Math.random() < 0.5 ? 1 : -1),
+    size: Math.random() * 2 + 0.5,
+    color: Math.random() < 0.6 ? GOLD : Math.random() < 0.5 ? TEAL : VIOLET,
+    alpha: Math.random() * 0.5 + 0.2,
+    drift: Math.random() * 10 - 5
+  };
+});
+
+// Sacred geometry: Flower of Life circles
+function drawFlowerOfLife(cx, cy, R, alpha) {
+  ctx.strokeStyle = rgba(GOLD, alpha);
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, 0, Math.PI * 2);
+  ctx.stroke();
+  for (let i = 0; i < 6; i++) {
+    const a = (Math.PI / 3) * i;
+    ctx.beginPath();
+    ctx.arc(cx + R * Math.cos(a), cy + R * Math.sin(a), R, 0, Math.PI * 2);
+    ctx.stroke();
+  }
+}
+
+// Metatron's Cube vertices
+function metatronVertices(cx, cy, R) {
+  const pts = [[cx, cy]];
+  for (let ring = 1; ring <= 2; ring++) {
+    for (let i = 0; i < 6; i++) {
+      const a = (Math.PI / 3) * i + (ring === 2 ? Math.PI / 6 : 0);
+      pts.push([cx + R * ring * 0.5 * Math.cos(a), cy + R * ring * 0.5 * Math.sin(a)]);
+    }
+  }
+  return pts;
+}
+
+// Equation labels for orbits
+const equations = [
+  { text: "F = ma", orbit: 0.12 },
+  { text: "E = mc²", orbit: 0.16 },
+  { text: "∇·E = ρ/ε₀", orbit: 0.20 },
+  { text: "iℏ∂ψ/∂t = Ĥψ", orbit: 0.24 },
+  { text: "G_μν = 8πGT_μν", orbit: 0.28 },
+  { text: "S = k_B ln Ω", orbit: 0.32 },
+  { text: "ΔG = ΔH − TΔS", orbit: 0.15 },
+  { text: "v = V_max[S]/(K_m+[S])", orbit: 0.36 },
+  { text: "dN/dt = rN(1−N/K)", orbit: 0.19 },
+  { text: "H = −Σp log p", orbit: 0.40 },
+  { text: "∂V/∂t + ½σ²S²∂²V/∂S² = rV", orbit: 0.23 },
+  { text: "e^(iπ) + 1 = 0", orbit: 0.10 },
+  { text: "P(A|B) = P(B|A)P(A)/P(B)", orbit: 0.34 },
+  { text: "ρ(Dv/Dt) = −∇P + μ∇²v", orbit: 0.38 },
+  { text: "pH = pKₐ + log([A⁻]/[HA])", orbit: 0.27 },
+  { text: "Δv = vₑ ln(m₀/mf)", orbit: 0.42 },
+  { text: "f(r) ∝ r⁻ˢ", orbit: 0.18 },
+  { text: "σ_y = σ₀ + kd⁻¹/²", orbit: 0.35 },
+];
+
+const eqState = equations.map((eq, i) => ({
+  ...eq,
+  angle: (Math.PI * 2 / equations.length) * i + Math.random() * 0.5,
+  speed: 0.00015 + Math.random() * 0.0003,
+  dir: i % 2 === 0 ? 1 : -1,
+  alpha: 0
+}));
+
+// Discipline labels on outer ring
+const disciplines = [
+  "Physics", "Chemistry", "Biology", "Mathematics",
+  "Engineering", "Computer Science", "Economics",
+  "Medicine", "Materials Science", "Aerospace",
+  "Linguistics", "Political Science", "Environmental Science",
+  "Social Sciences"
+];
+
+// Concentric sacred rings
+function drawSacredRings(time) {
+  const minDim = Math.min(W, H);
+  const baseR = minDim * 0.04;
+
+  // Inner flower of life (rotating)
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(time * 0.00005);
+  drawFlowerOfLife(0, 0, baseR, 0.12 + 0.04 * Math.sin(time * 0.0008));
+  ctx.restore();
+
+  // Second layer
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(-time * 0.00003);
+  drawFlowerOfLife(0, 0, baseR * 2.2, 0.08 + 0.03 * Math.sin(time * 0.0006));
+  ctx.restore();
+
+  // Third layer
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(time * 0.00002);
+  drawFlowerOfLife(0, 0, baseR * 3.8, 0.05 + 0.02 * Math.sin(time * 0.0005));
+  ctx.restore();
+
+  // Metatron's cube connections
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(time * 0.00004);
+  const metR = baseR * 5;
+  const verts = metatronVertices(0, 0, metR);
+  ctx.strokeStyle = rgba(GOLD, 0.04 + 0.02 * Math.sin(time * 0.0007));
+  ctx.lineWidth = 0.3;
+  for (let i = 0; i < verts.length; i++) {
+    for (let j = i + 1; j < verts.length; j++) {
+      ctx.beginPath();
+      ctx.moveTo(verts[i][0], verts[i][1]);
+      ctx.lineTo(verts[j][0], verts[j][1]);
+      ctx.stroke();
+    }
+  }
+  ctx.restore();
+
+  // Orbital rings (thin golden circles)
+  const rings = [0.08, 0.13, 0.19, 0.25, 0.32, 0.40, 0.48];
+  rings.forEach((r, i) => {
+    const radius = minDim * r;
+    const alpha = 0.03 + 0.015 * Math.sin(time * 0.0004 + i);
+    ctx.strokeStyle = rgba(GOLD, alpha);
+    ctx.lineWidth = 0.4;
+    ctx.beginPath();
+    ctx.arc(cx, cy, radius, 0, Math.PI * 2);
+    ctx.stroke();
+  });
+
+  // Golden ratio spiral (subtle)
+  ctx.strokeStyle = rgba(GOLD_LIGHT, 0.04);
+  ctx.lineWidth = 0.6;
+  ctx.beginPath();
+  const phi = 1.618033988749;
+  for (let a = 0; a < Math.PI * 10; a += 0.02) {
+    const r = 3 * Math.pow(phi, a / (Math.PI * 2));
+    if (r > minDim * 0.5) break;
+    const px = cx + r * Math.cos(a + time * 0.00003);
+    const py = cy + r * Math.sin(a + time * 0.00003);
+    if (a === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Reverse spiral
+  ctx.strokeStyle = rgba(GOLD_LIGHT, 0.03);
+  ctx.beginPath();
+  for (let a = 0; a < Math.PI * 10; a += 0.02) {
+    const r = 3 * Math.pow(phi, a / (Math.PI * 2));
+    if (r > minDim * 0.5) break;
+    const px = cx + r * Math.cos(-a - time * 0.00002);
+    const py = cy + r * Math.sin(-a - time * 0.00002);
+    if (a === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+}
+
+// Central glow (layered circles, no blur filter)
+function drawCentralGlow(time) {
+  const layers = [
+    { r: 120, a: 0.015 }, { r: 80, a: 0.03 }, { r: 50, a: 0.05 },
+    { r: 30, a: 0.08 }, { r: 15, a: 0.15 }, { r: 6, a: 0.4 },
+    { r: 3, a: 0.8 }
+  ];
+  const pulse = 1 + 0.08 * Math.sin(time * 0.001);
+  layers.forEach(l => {
+    ctx.fillStyle = rgba(GOLD, l.a * pulse);
+    ctx.beginPath();
+    ctx.arc(cx, cy, l.r * pulse, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Cross rays
+  for (let i = 0; i < 12; i++) {
+    const angle = (Math.PI / 6) * i + time * 0.00005;
+    const len = 60 + 30 * Math.sin(time * 0.0008 + i);
+    ctx.strokeStyle = rgba(GOLD_LIGHT, 0.03 + 0.015 * Math.sin(time * 0.001 + i));
+    ctx.lineWidth = 0.5;
+    ctx.beginPath();
+    ctx.moveTo(cx + 8 * Math.cos(angle), cy + 8 * Math.sin(angle));
+    ctx.lineTo(cx + len * Math.cos(angle), cy + len * Math.sin(angle));
+    ctx.stroke();
+  }
+}
+
+// Draw orbiting equations
+function drawEquations(time) {
+  const minDim = Math.min(W, H);
+  ctx.font = '300 13px "Rajdhani", sans-serif';
+  ctx.textAlign = 'center';
+
+  eqState.forEach((eq, i) => {
+    eq.angle += eq.speed * eq.dir;
+    const radius = minDim * eq.orbit;
+    const x = cx + radius * Math.cos(eq.angle);
+    const y = cy + radius * Math.sin(eq.angle);
+
+    // Fade in
+    eq.alpha = Math.min(eq.alpha + 0.003, 0.35 + 0.1 * Math.sin(time * 0.0005 + i));
+
+    // Subtle connecting line to center
+    ctx.strokeStyle = rgba(GOLD, eq.alpha * 0.08);
+    ctx.lineWidth = 0.3;
+    ctx.beginPath();
+    ctx.moveTo(cx, cy);
+    ctx.lineTo(x, y);
+    ctx.stroke();
+
+    // Equation text
+    ctx.fillStyle = rgba(GOLD_LIGHT, eq.alpha);
+    ctx.fillText(eq.text, x, y);
+
+    // Small dot at equation position
+    ctx.fillStyle = rgba(GOLD, eq.alpha * 1.5);
+    ctx.beginPath();
+    ctx.arc(x, y - 8, 1.5, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+// Draw discipline labels on outer ring
+function drawDisciplines(time) {
+  const minDim = Math.min(W, H);
+  const radius = minDim * 0.46;
+  ctx.font = '300 11px "Rajdhani", sans-serif';
+  ctx.textAlign = 'center';
+
+  disciplines.forEach((d, i) => {
+    const angle = (Math.PI * 2 / disciplines.length) * i - Math.PI / 2 + time * 0.00002;
+    const x = cx + radius * Math.cos(angle);
+    const y = cy + radius * Math.sin(angle);
+    const alpha = 0.2 + 0.1 * Math.sin(time * 0.0006 + i * 0.5);
+    ctx.fillStyle = rgba([180, 160, 130], alpha);
+    ctx.fillText(d.toUpperCase(), x, y);
+  });
+}
+
+// Hequ horse constellation — a subtle homage to the Chinese Hequ
+// (河曲) breed, one of the three ancient Chinese horse lineages,
+// bred for a thousand years in the Yellow River bend of the
+// Gansu-Qinghai plateau. The stars are slightly brighter than the
+// background twinkle field so the silhouette reads when you look
+// for it but doesn't compete with the logo. The whole constellation
+// drifts slowly across the sky like a real constellation wheeling
+// with the hour angle — a gentle sinusoidal float in (x, y) plus
+// a tiny rotation, so it's always moving but never leaves the
+// upper-left sky.
+// ---------------------------------------------------------------
+// Symbolic constellations representing humanity's shared imagery.
+// Each is a fixed cluster of slightly-brighter stars connected by
+// faint lines in the shape of a recognizable figure; individual
+// stars twinkle on their own phase so the constellations feel
+// alive without drifting.
+// ---------------------------------------------------------------
+
+// Horse — the companion of human civilization across every
+// continent that could sustain one. Named here 河曲 (Hequ,
+// Chinese: "river bend") for the ancient breed of the Yellow
+// River plateau, one of the three foundational Chinese horse
+// lineages. Other names for the horse across human languages:
+//   Latin     Equus          Greek      Ἵππος (Hippos)
+//   Sanskrit  अश्व (Aśva)     Arabic     حصان (Ḥiṣān) / فرس
+//   Hebrew    סוס (Sus)      Mongol     Морь (Mor')
+//   Japanese  馬 (Uma)       Korean     말 (Mal)
+//   Spanish   Caballo        French     Cheval
+//   Lakota    Šúŋkawakȟáŋ    Celtic     Epona (the horse goddess)
+const HORSE_POINTS = [
+  { name: "muzzle",         x: 0.00, y: 0.22 },
+  { name: "head",           x: 0.08, y: 0.16 },
+  { name: "neck_crest",     x: 0.16, y: 0.05 },
+  { name: "withers",        x: 0.24, y: 0.09 },
+  { name: "back",           x: 0.40, y: 0.12 },
+  { name: "hip",            x: 0.52, y: 0.14 },
+  { name: "tail_base",      x: 0.58, y: 0.18 },
+  { name: "tail_tip",       x: 0.66, y: 0.30 },
+  { name: "chest",          x: 0.14, y: 0.28 },
+  { name: "front_shoulder", x: 0.24, y: 0.24 },
+  { name: "front_knee",     x: 0.25, y: 0.42 },
+  { name: "front_hoof",     x: 0.26, y: 0.56 },
+  { name: "belly",          x: 0.38, y: 0.30 },
+  { name: "rear_hip",       x: 0.50, y: 0.28 },
+  { name: "rear_knee",      x: 0.52, y: 0.44 },
+  { name: "rear_hoof",      x: 0.54, y: 0.57 },
+];
+const HORSE_EDGES = [
+  ["muzzle", "head"], ["head", "neck_crest"], ["neck_crest", "withers"],
+  ["withers", "back"], ["back", "hip"], ["hip", "tail_base"],
+  ["tail_base", "tail_tip"], ["head", "chest"], ["chest", "front_shoulder"],
+  ["front_shoulder", "front_knee"], ["front_knee", "front_hoof"],
+  ["chest", "belly"], ["belly", "rear_hip"], ["rear_hip", "rear_knee"],
+  ["rear_knee", "rear_hoof"], ["hip", "rear_hip"],
+];
+
+// Tree of Life — the single most cross-cultural human symbol.
+// Roots + trunk + branching canopy = the same thesis as
+// cross-domain equation coupling: interconnection between
+// worlds. Named across the traditions that hold it sacred:
+//   Norse        Yggdrasil
+//   Celtic       Crann Bethadh
+//   Hebrew       עץ החיים (Etz Chaim)
+//   Arabic       شجرة الحياة (Shajarat al-Hayāt)
+//   Sanskrit     कल्पवृक्ष (Kalpavṛkṣa, the wish-fulfilling tree)
+//   Chinese      扶桑 (Fúsāng, the solar mulberry)
+//   Persian      Gaokerena (the Avestan tree of all seeds)
+//   Mayan        Wacah Chan (the ceiba world-axis)
+//   Egyptian     Iusaaset, the Ished (persea) tree of knowledge
+//   Buddhist     बोधि (Bodhi, the tree of awakening)
+//   Japanese     生命の木 (Seimei no Ki)
+//   Yoruba       Igi Irókò
+// And the root-words behind the parts of the figure:
+//   root    Latin radix · Greek ῥίζα (rhiza) · Sanskrit मूल (mūla)
+//   trunk   Latin truncus · Arabic جذع (jidh')
+//   branch  Latin ramus · Greek κλάδος (klados)
+//   leaf    Latin folium · Chinese 葉 (yè) · Japanese 葉 (ha)
+const TREE_POINTS = [
+  { name: "root_l",        x: 0.15, y: 0.95 },
+  { name: "root_c",        x: 0.50, y: 0.98 },
+  { name: "root_r",        x: 0.85, y: 0.95 },
+  { name: "trunk_base",    x: 0.50, y: 0.80 },
+  { name: "trunk_mid",     x: 0.50, y: 0.55 },
+  { name: "canopy_l",      x: 0.18, y: 0.38 },
+  { name: "canopy_r",      x: 0.82, y: 0.38 },
+  { name: "branch_ul",     x: 0.30, y: 0.15 },
+  { name: "branch_ur",     x: 0.70, y: 0.15 },
+  { name: "crown",         x: 0.50, y: 0.02 },
+];
+const TREE_EDGES = [
+  ["root_l", "trunk_base"], ["root_c", "trunk_base"], ["root_r", "trunk_base"],
+  ["trunk_base", "trunk_mid"],
+  ["trunk_mid", "canopy_l"], ["trunk_mid", "canopy_r"],
+  ["canopy_l", "branch_ul"], ["canopy_r", "branch_ur"],
+  ["branch_ul", "crown"], ["branch_ur", "crown"],
+  ["trunk_mid", "crown"],
+];
+
+// Owl — wisdom and science. Athena/Minerva's companion; the
+// bird on the Greek drachma; the archetype of the watcher
+// who sees in the dark. Two large forward-facing eyes, a
+// beak, and folded wings. Named across cultures:
+//   Greek        γλαῦξ (glaux, Athena's owl)
+//   Latin        strix · bubo
+//   Sanskrit     उलूक (ulūka)
+//   Arabic       بومة (būma)
+//   Hebrew       יַנְשׁוּף (yanshuf)
+//   Chinese      貓頭鷹 (māotóuyīng)
+//   Japanese     梟 (fukurō)
+//   Korean       부엉이 (bueong-i)
+//   Hindi        उल्लू (ullū)
+//   Russian      сова (sova)
+//   Spanish      búho · lechuza
+//   French       hibou · chouette
+//   Ainu         Kotan Kor Kamuy (the village-guardian god)
+//   Yoruba       Òwìwí
+// Root-words for the figure's parts:
+//   eye      Latin oculus · Greek ὀφθαλμός (ophthalmos)
+//            · Sanskrit नेत्र (netra)
+//   beak     Latin rostrum · Greek ῥύγχος (rhynchos)
+//   wing     Latin ala · Greek πτέρυξ (pteryx)
+//            · Sanskrit पक्ष (pakṣa)
+//   wisdom   Latin sapientia · Greek σοφία (sophia)
+//            · Sanskrit प्रज्ञा (prajñā)
+//            · Arabic حكمة (ḥikma)
+//            · Hebrew חכמה (chochmah)
+const OWL_POINTS = [
+  { name: "head_top",      x: 0.50, y: 0.05 },
+  { name: "head_l",        x: 0.12, y: 0.26 },
+  { name: "head_r",        x: 0.88, y: 0.26 },
+  { name: "eye_l",         x: 0.32, y: 0.30 },
+  { name: "eye_r",         x: 0.68, y: 0.30 },
+  { name: "beak",          x: 0.50, y: 0.44 },
+  { name: "chin",          x: 0.50, y: 0.56 },
+  { name: "wing_l_top",    x: 0.12, y: 0.58 },
+  { name: "wing_l_bot",    x: 0.26, y: 0.92 },
+  { name: "wing_r_top",    x: 0.88, y: 0.58 },
+  { name: "wing_r_bot",    x: 0.74, y: 0.92 },
+  { name: "talons",        x: 0.50, y: 0.97 },
+];
+const OWL_EDGES = [
+  ["head_top", "head_l"], ["head_top", "head_r"],
+  ["head_l", "eye_l"], ["head_r", "eye_r"],
+  ["eye_l", "beak"], ["eye_r", "beak"],
+  ["beak", "chin"],
+  ["chin", "wing_l_top"], ["chin", "wing_r_top"],
+  ["wing_l_top", "wing_l_bot"], ["wing_r_top", "wing_r_bot"],
+  ["wing_l_bot", "talons"], ["wing_r_bot", "talons"],
+];
+
+// Human figure — the observer. The simplest and most universal
+// self-portrait in human culture, from cave paintings (~40kya
+// in Sulawesi and El Castillo) to modern iconography. A stick
+// silhouette: the mind that unifies what the other
+// constellations represent. Named across the languages that
+// named themselves:
+//   Latin        Homo
+//   Greek        Ἄνθρωπος (Anthropos)
+//   Sanskrit     मानव (Mānava) · पुरुष (Puruṣa, cosmic person)
+//   Arabic       إنسان (Insān)
+//   Hebrew       אדם (Adam, "from the earth")
+//   Persian      انسان (Ensān)
+//   Chinese      人 (Rén)
+//   Japanese     人間 (Ningen)
+//   Korean       사람 (Saram)
+//   Swahili      Mtu       Zulu       umuntu
+//   Yoruba       Èniyàn    Igbo       Mmadụ
+//   Quechua      Runa      Nahuatl    Tlācatl
+//   Māori        Tangata   Hawaiian   Kanaka
+// Root-words for the figure's parts:
+//   head     Latin caput · Greek κεφαλή (kephalē)
+//            · Sanskrit शिरस् (śiras)
+//            · Arabic رأس (raʾs)
+//            · Chinese 頭 (tóu)
+//   hand     Latin manus · Greek χείρ (cheir)
+//            · Sanskrit हस्त (hasta)
+//            · Arabic يد (yad)
+//            · Chinese 手 (shǒu)
+//   foot     Latin pes · Greek πούς (pous)
+//            · Sanskrit पाद (pāda)
+//            · Chinese 足 (zú)
+//   heart    Latin cor · Greek καρδία (kardia)
+//            · Sanskrit हृदय (hṛdaya)
+//            · Arabic قلب (qalb)
+//            · Chinese 心 (xīn)
+//   mind     Latin mens · Greek νοῦς (nous)
+//            · Sanskrit मनस् (manas)
+//            · Chinese 心 (xīn) — the same character as heart
+const HUMAN_POINTS = [
+  { name: "head",          x: 0.50, y: 0.08 },
+  { name: "neck",          x: 0.50, y: 0.22 },
+  { name: "shoulder_l",    x: 0.30, y: 0.28 },
+  { name: "shoulder_r",    x: 0.70, y: 0.28 },
+  { name: "hand_l",        x: 0.08, y: 0.50 },
+  { name: "hand_r",        x: 0.92, y: 0.50 },
+  { name: "hip",           x: 0.50, y: 0.58 },
+  { name: "foot_l",        x: 0.28, y: 0.96 },
+  { name: "foot_r",        x: 0.72, y: 0.96 },
+];
+const HUMAN_EDGES = [
+  ["head", "neck"],
+  ["neck", "shoulder_l"], ["neck", "shoulder_r"],
+  ["shoulder_l", "hand_l"], ["shoulder_r", "hand_r"],
+  ["neck", "hip"],
+  ["hip", "foot_l"], ["hip", "foot_r"],
+];
+
+// Eagle — vision, freedom, dominion of the sky. Roman standard,
+// Native American sacred messenger, symbol of keen sight and
+// aspiration across many cultures. Named across the languages
+// that elevated it:
+//   Latin        Aquila (the star-carrier of Zeus's lightning)
+//   Greek        ἀετός (aetos)
+//   Sanskrit     गरुड (Garuḍa, Vishnu's divine mount)
+//   Arabic       نسر (Nasr) · عُقاب (ʿUqāb)
+//   Hebrew       נֶשֶׁר (Nesher)
+//   Chinese      鷹 (Yīng)
+//   Japanese     鷲 (Washi)
+//   Korean       독수리 (Doksuri)
+//   Russian      Орёл (Oryol)
+//   Spanish      Águila     French     Aigle
+//   Lakota       Waŋblí (the sacred messenger)
+//   Māori        Pouākai    Quechua    Anka
+// Root-words for the figure's parts:
+//   wing     Latin ala · Sanskrit पक्ष (pakṣa)
+//            · Arabic جناح (janāḥ)
+//   feather  Latin penna · Greek πτερόν (pteron)
+//            · Chinese 羽 (yǔ)
+//   sky      Latin caelum · Greek οὐρανός (ouranos)
+//            · Sanskrit आकाश (ākāśa)
+//            · Chinese 天 (tiān)
+//            · Arabic سماء (samāʾ)
+//   flight   Latin volatus · Greek πτῆσις (ptēsis)
+//            · Sanskrit उड्डयन (uḍḍayana)
+const EAGLE_POINTS = [
+  { name: "beak",           x: 0.50, y: 0.18 },
+  { name: "head",           x: 0.50, y: 0.30 },
+  { name: "body",           x: 0.50, y: 0.50 },
+  { name: "tail_base",      x: 0.50, y: 0.66 },
+  { name: "tail_tip",       x: 0.50, y: 0.88 },
+  // Left wing (bird's left = viewer's left)
+  { name: "l_wing_inner",   x: 0.40, y: 0.48 },
+  { name: "l_wing_elbow",   x: 0.22, y: 0.38 },
+  { name: "l_wing_wrist",   x: 0.10, y: 0.46 },
+  { name: "l_wing_tip",     x: 0.00, y: 0.62 },
+  // Right wing
+  { name: "r_wing_inner",   x: 0.60, y: 0.48 },
+  { name: "r_wing_elbow",   x: 0.78, y: 0.38 },
+  { name: "r_wing_wrist",   x: 0.90, y: 0.46 },
+  { name: "r_wing_tip",     x: 1.00, y: 0.62 },
+];
+const EAGLE_EDGES = [
+  ["beak", "head"], ["head", "body"],
+  ["body", "tail_base"], ["tail_base", "tail_tip"],
+  ["body", "l_wing_inner"], ["l_wing_inner", "l_wing_elbow"],
+  ["l_wing_elbow", "l_wing_wrist"], ["l_wing_wrist", "l_wing_tip"],
+  ["body", "r_wing_inner"], ["r_wing_inner", "r_wing_elbow"],
+  ["r_wing_elbow", "r_wing_wrist"], ["r_wing_wrist", "r_wing_tip"],
+];
+
+// Shared drawing primitive for a named constellation.
+// phase is a per-constellation offset so twinkles don't sync up.
+function drawConstellation(points, edges, ox, oy, scale, time, phase) {
+  const nameToIdx = {};
+  points.forEach((p, i) => { nameToIdx[p.name] = i; });
+  // Center the figure on its bounding box (already roughly 0..1 in x, y)
+  const screenPts = points.map((p) => [
+    ox + (p.x - 0.5) * scale,
+    oy + (p.y - 0.5) * scale,
+  ]);
+
+  // Faint connecting lines
+  ctx.strokeStyle = rgba(GOLD_LIGHT, 0.09);
+  ctx.lineWidth = 0.5;
+  edges.forEach(([a, b]) => {
+    const pa = screenPts[nameToIdx[a]];
+    const pb = screenPts[nameToIdx[b]];
+    ctx.beginPath();
+    ctx.moveTo(pa[0], pa[1]);
+    ctx.lineTo(pb[0], pb[1]);
+    ctx.stroke();
+  });
+
+  // Stars — slightly brighter than background twinkle field,
+  // each on its own pulse phase so they breathe independently.
+  screenPts.forEach((pt, i) => {
+    const twinkle = 0.55 + 0.25 * Math.sin(time * 0.0015 + i * 0.9 + phase);
+    ctx.fillStyle = rgba(GOLD_LIGHT, twinkle * 0.9);
+    ctx.beginPath();
+    ctx.arc(pt[0], pt[1], 1.7, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.fillStyle = rgba(GOLD, twinkle * 0.25);
+    ctx.beginPath();
+    ctx.arc(pt[0], pt[1], 3.2, 0, Math.PI * 2);
+    ctx.fill();
+  });
+}
+
+function drawHequConstellation(time) {
+  const minDim = Math.min(W, H);
+  drawConstellation(
+    HORSE_POINTS, HORSE_EDGES,
+    cx - minDim * 0.32,     // upper-left sky
+    cy - minDim * 0.26,
+    minDim * 0.22,
+    time, 0.0
+  );
+}
+
+function drawEagleConstellation(time) {
+  const minDim = Math.min(W, H);
+  drawConstellation(
+    EAGLE_POINTS, EAGLE_EDGES,
+    cx + minDim * 0.32,     // upper-right sky, mirror of the horse
+    cy - minDim * 0.24,
+    minDim * 0.26,          // wingspan is wide; slightly larger
+    time, 1.7
+  );
+}
+
+function drawTreeConstellation(time) {
+  const minDim = Math.min(W, H);
+  drawConstellation(
+    TREE_POINTS, TREE_EDGES,
+    cx - minDim * 0.34,     // lower-left sky
+    cy + minDim * 0.24,
+    minDim * 0.20,
+    time, 3.2
+  );
+}
+
+function drawOwlConstellation(time) {
+  const minDim = Math.min(W, H);
+  drawConstellation(
+    OWL_POINTS, OWL_EDGES,
+    cx + minDim * 0.34,     // lower-right sky
+    cy + minDim * 0.24,
+    minDim * 0.17,
+    time, 4.8
+  );
+}
+
+function drawHumanConstellation(time) {
+  const minDim = Math.min(W, H);
+  drawConstellation(
+    HUMAN_POINTS, HUMAN_EDGES,
+    cx - minDim * 0.46,     // far-left, the observer
+    cy + minDim * 0.02,
+    minDim * 0.17,
+    time, 6.1
+  );
+}
+
+// Main render loop
+function render(timestamp) {
+  t = timestamp || 0;
+
+  // Clear with deep background
+  ctx.fillStyle = '#06050e';
+  ctx.fillRect(0, 0, W, H);
+
+  // Subtle radial vignette (layered rects with decreasing alpha)
+  const vg = ctx.createRadialGradient(cx, cy, 0, cx, cy, Math.max(W, H) * 0.7);
+  vg.addColorStop(0, 'rgba(15, 12, 35, 0.0)');
+  vg.addColorStop(0.5, 'rgba(10, 8, 25, 0.3)');
+  vg.addColorStop(1, 'rgba(4, 3, 10, 0.7)');
+  ctx.fillStyle = vg;
+  ctx.fillRect(0, 0, W, H);
+
+  // Stars
+  stars.forEach(s => {
+    const twinkle = 0.3 + 0.7 * Math.abs(Math.sin(t * 0.001 * s.speed + s.twinkle));
+    ctx.fillStyle = rgba([220, 210, 190], twinkle * 0.6);
+    ctx.beginPath();
+    ctx.arc(s.x * W, s.y * H, s.r * twinkle, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Symbolic constellations: fixed silhouettes in the hero sky,
+  // each a shared-imagery figure across human cultures.
+  drawHequConstellation(t);    // 河曲 horse    — upper-left
+  drawEagleConstellation(t);   // eagle        — upper-right
+  drawTreeConstellation(t);    // tree of life — lower-left
+  drawOwlConstellation(t);     // owl          — lower-right
+
+  // Sacred geometry
+  drawSacredRings(t);
+
+  // Particles
+  particles.forEach(p => {
+    p.angle += p.speed;
+    const wobble = Math.sin(t * 0.001 + p.angle * 3) * p.drift;
+    const x = cx + (p.orbit + wobble) * Math.cos(p.angle);
+    const y = cy + (p.orbit + wobble) * Math.sin(p.angle);
+    const pulseA = p.alpha * (0.6 + 0.4 * Math.sin(t * 0.002 + p.angle));
+    ctx.fillStyle = rgba(p.color, pulseA);
+    ctx.beginPath();
+    ctx.arc(x, y, p.size, 0, Math.PI * 2);
+    ctx.fill();
+  });
+
+  // Orbiting equations
+  drawEquations(t);
+
+  // Central glow
+  drawCentralGlow(t);
+
+  // Discipline labels
+  drawDisciplines(t);
+
+  // Outer decorative hexagon (very subtle)
+  const hexR = Math.min(W, H) * 0.43;
+  ctx.strokeStyle = rgba(GOLD, 0.04);
+  ctx.lineWidth = 0.5;
+  ctx.beginPath();
+  for (let i = 0; i <= 6; i++) {
+    const a = (Math.PI / 3) * i - Math.PI / 6 + t * 0.00001;
+    const px = cx + hexR * Math.cos(a);
+    const py = cy + hexR * Math.sin(a);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Inner triangle
+  const triR = Math.min(W, H) * 0.22;
+  ctx.strokeStyle = rgba(GOLD, 0.03);
+  ctx.lineWidth = 0.4;
+  ctx.beginPath();
+  for (let i = 0; i <= 3; i++) {
+    const a = (Math.PI * 2 / 3) * i - Math.PI / 2 - t * 0.00002;
+    const px = cx + triR * Math.cos(a);
+    const py = cy + triR * Math.sin(a);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  // Inverted triangle
+  ctx.beginPath();
+  for (let i = 0; i <= 3; i++) {
+    const a = (Math.PI * 2 / 3) * i + Math.PI / 2 + t * 0.00002;
+    const px = cx + triR * Math.cos(a);
+    const py = cy + triR * Math.sin(a);
+    if (i === 0) ctx.moveTo(px, py);
+    else ctx.lineTo(px, py);
+  }
+  ctx.stroke();
+
+  requestAnimationFrame(render);
+}
+
+requestAnimationFrame(render);
+</script>
+</body>
+</html>

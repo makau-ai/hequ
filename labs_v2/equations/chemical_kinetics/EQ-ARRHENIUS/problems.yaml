@@ -1,0 +1,55 @@
+equation_id: EQ-ARRHENIUS
+description: >
+  Canonical problems for the Arrhenius rate law. Sourced under
+  the v5 'board is not a CAS' protocol: the board provides
+  formula and citations, local sympy computes the authoritative
+  numerical value.
+problems:
+  - id: PRB-ARRHENIUS-001
+    name: Unimolecular gas-phase rate constant at room temperature
+    statement: >
+      A unimolecular gas-phase reaction has a pre-exponential
+      (frequency) factor A = 1.0e13 s⁻¹ — a typical order of
+      magnitude for simple unimolecular processes where A is
+      close to the molecular vibrational frequency. The
+      activation energy is E_a = 75000 J/mol (75 kJ/mol, a
+      representative value for bond-cleaving processes at
+      modest barriers). The temperature is T = 298.15 K
+      (25 °C). The universal gas constant is R = 8.314472
+      J/(mol·K) (CODATA 2018).
+
+      Under the Arrhenius rate law
+
+          k(T) = A · exp(−E_a / (R · T))
+
+      with the assumptions below, compute the rate constant
+      k at this temperature, in s⁻¹.
+    local_formula: "A * exp(-E_a / (R * T))"
+    canonical_substitutions:
+      A: 1.0e13
+      E_a: 75000.0
+      R: 8.314472
+      T: 298.15
+    variable_ranges:
+      A: [1.0e6, 1.0e15]           # from slow enzymatic to fast unimolecular
+      E_a: [10000.0, 300000.0]     # 10 kJ/mol (weak) to 300 kJ/mol (strong bond)
+      R: [8.314472, 8.314472]      # fundamental constant — no variation
+      T: [200.0, 2000.0]           # from cryogenic to high-temp combustion
+    expected_unit: 1 / second
+    expected_dimension: "1 / [time]"
+    assumptions_required:
+      - "Thermally equilibrated reactant distribution (Boltzmann)"
+      - "Single elementary step (no mechanism chaining)"
+      - "Temperature is well-defined and uniform over the reaction volume"
+      - "E_a is independent of temperature (weakly-temperature-dependent on pre-exponential is absorbed into A)"
+      - "Classical regime: no tunneling correction below ~200 K"
+      - "No catalyst, no enzyme, no pressure-dependent fall-off (gas phase, high-pressure limit)"
+      - "Reaction is not diffusion-limited (reactants are well-mixed on the timescale of k⁻¹)"
+    pbt:
+      n_samples: 200
+      rel_tolerance: 1e-10
+      seed: 20260415
+    architect_anchor_citations:
+      - "Arrhenius, S. (1889). Über die Reaktionsgeschwindigkeit bei der Inversion von Rohrzucker durch Säuren. Z. Phys. Chem. 4, 226."
+      - "Atkins & de Paula, Physical Chemistry, 11th ed., §17B"
+      - "Steinfeld, Francisco & Hase, Chemical Kinetics and Dynamics, 2nd ed., §2.3"

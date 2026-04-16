@@ -1,0 +1,191 @@
+composite_id: CMP-DARCY-RADPRESS-001
+name: Photon-pressure-driven seepage from Darcy + radiation momentum deposition
+description: >
+  THE FIRST NOVELTY CANDIDATE IN THE HEQU.AI CORPUS.
+
+  Darcy's law for porous-media flow accepts a body force per unit
+  volume f in its momentum balance:
+
+      u = (k / μ) · (f − ∇p)
+
+  where u is the seepage (superficial) velocity, k is permeability,
+  and μ is dynamic viscosity. The standard body force is gravity
+  (f = ρg). This composite replaces the body force with RADIATION
+  PRESSURE from absorbed photon flux:
+
+      f = α · I / c
+
+  where α is the linear absorption coefficient (1/m) of the pore
+  fluid, I is beam intensity (W/m²), and c is the speed of light.
+  This is legitimate radiation pressure — photon momentum transfer
+  to the absorbing medium at rate dp/dt = αI/c per unit volume —
+  not photophoresis (which is a thermal-gradient radiometric force
+  on individual particles, a completely different mechanism).
+
+  In a horizontal geometry with ∇p ≈ 0 (no external pressure gradient),
+  the composite gives a photon-pressure-driven seepage velocity:
+
+      u = (k · α · I) / (μ · c)
+
+  LITERATURE SEARCH RESULT (2026-04-16, five queries across Web /
+  arXiv / Google Scholar): ZERO direct hits on this specific
+  coupling. The acoustic analog (sound-wave momentum → pore-fluid
+  streaming) exists in the published literature (J. Fluid Mech.);
+  the optical analog (photon momentum → pore-fluid seepage) does
+  not appear to exist in any indexed source. See:
+  NOV_PARAM_OVERLAP_03_literature_search.md for full search record.
+
+  Novelty grade: specialist-literature-novel to genuinely-novel.
+  The coupling is physically plausible (absorption-driven body force
+  is standard radiation-pressure physics; Darcy's equation accepts
+  any body force; the only question is whether anyone has formalized
+  the combination and computed u(I)). The answer from the literature
+  search is: apparently not.
+
+  DESCRIPTOR SCHEMA FROZEN before this composite was proposed:
+  corpus_sha256 = 5b1af1679884de3f91cc65ad409a5dfe9749b9fad2fc2356fc5b95e8b4cd3633
+  (frozen 2026-04-16T01:13:49 UTC, ledger record kind
+  descriptor_schema_freeze). No retroactive descriptor tuning.
+
+parents:
+  eq_a: EQ-FICK-DIFFUSION
+  eq_a_problem_id: PRB-FICK-001
+  eq_b: EQ-FOURIER-HEAT
+  eq_b_problem_id: PRB-FOURIER-001
+  note: >
+    The parents listed here are the closest existing corpus entries
+    for Darcy's law (Fick diffusion as the mass-transport analog)
+    and radiation pressure (Fourier heat as the energy-transport
+    analog). A dedicated EQ-DARCY and EQ-RADIATION-PRESSURE would
+    be added to the corpus to make the coupling formally precise.
+    For this novelty-candidate Phase 13 run, the composite is
+    self-contained: both parents' physics are encoded directly in
+    the canonical problem statement and local formula.
+
+coupling:
+  tier: tier2_structural
+  v_a: u                                 # Darcy: seepage velocity
+  v_b: f                                 # Radiation: body force per unit volume
+  descriptor_note: >
+    u (seepage velocity) and f (radiation body force) are NOT the
+    same quantity. They are coupled through Darcy's constitutive
+    relation u = (k/μ)·f, where k/μ (hydraulic mobility) is the
+    cross-coefficient that converts a body force into a seepage
+    velocity. This is structurally similar to an Ohmic conductor
+    (V = IR → I = V/R, mobility = 1/R), but the domains are
+    different (radiation → hydraulic, not electrical → mechanical).
+  transducer_id: TRANSDUCER-DARCY-MOBILITY
+  transducer_properties:
+    type: "constitutive_mobility"
+    domains: [radiation_transport, porous_media_hydraulics]
+    coefficient_name: "Darcy hydraulic mobility k/μ"
+    coefficient_dimensions: "[length]**2 / ([pressure] · [time])"
+    constitutive_relation: "u = (k / mu) * (alpha * I / c)"
+    body_force_source: "radiation pressure from absorbed photon flux"
+    body_force_formula: "f = alpha * I / c"
+    body_force_dimensions: "[force] / [volume] = [pressure] / [length]"
+    citation:
+      - "Darcy, H. (1856). Les fontaines publiques de la ville de Dijon. Victor Dalmont, Paris."
+      - "Nichols, E. F. & Hull, G. F. (1903). The pressure due to radiation. Phys. Rev. 17, 26. (first quantitative measurement of radiation pressure)"
+      - "Ashkin, A. (1970). Acceleration and trapping of particles by radiation pressure. Phys. Rev. Lett. 24, 156. (radiation pressure on particles — predecessor to optical tweezers)"
+      - "Bird, R. B., Stewart, W. E. & Lightfoot, E. N. (2007) Transport Phenomena, 2nd ed., §4.1 (Darcy body-force formulation)"
+
+composite_canonical_form: >
+  u - k * alpha * I / (mu * c)
+composite_state_vars: [u]
+composite_parameters: [k, alpha, I, mu, c]
+
+canonical_problem:
+  id: CMP-DARCY-RADPRESS-001-Q1
+  statement: >
+    A dyed aqueous solution saturates a horizontal porous sample
+    of fine sand (permeability k = 1.0e-12 m²). The pore fluid
+    has dynamic viscosity μ = 1.0e-3 Pa·s (water at 25°C) and
+    a linear absorption coefficient α = 1.0e3 m⁻¹ (a strongly
+    absorbing dye such as India ink at appropriate dilution).
+    A collimated laser beam of intensity I = 1.0e9 W/m² (an
+    intense but achievable focused pulsed beam averaged over the
+    pulse duty cycle) illuminates the sample horizontally.
+
+    No external pressure gradient is applied (∇p = 0). The
+    sample is horizontal, so gravitational body force is
+    perpendicular to the beam axis and does not drive axial
+    flow. Thermal buoyancy from absorption heating is neglected
+    (horizontal geometry eliminates the gravitational component
+    of buoyancy along the beam axis; radial heating is a
+    higher-order correction).
+
+    Under these conditions, the absorbed photon flux deposits
+    momentum in the pore fluid at a rate f = α·I/c per unit
+    volume (radiation pressure). Darcy's law converts this
+    body force into a seepage velocity:
+
+        u = (k · α · I) / (μ · c)
+
+    What is the photon-pressure-driven seepage velocity u,
+    in m/s?
+  local_formula: "k * alpha * I / (mu * c)"
+  canonical_substitutions:
+    k: 1.0e-12
+    alpha: 1.0e3
+    I: 1.0e9
+    mu: 1.0e-3
+    c: 3.0e8
+  variable_ranges:
+    k: [1.0e-16, 1.0e-8]       # tight clay to coarse gravel
+    alpha: [1.0, 1.0e5]         # weak to strong absorber
+    I: [1.0e3, 1.0e12]          # sunlight to ultra-high-intensity laser
+    mu: [1.0e-5, 1.0]           # gas to viscous liquid
+    c: [3.0e8, 3.0e8]           # fundamental constant
+  expected_unit: meter / second
+  expected_dimension: "[length] / [time]"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260416
+
+assumptions_required:
+  - "Horizontal geometry: gravity perpendicular to beam axis (no gravity-driven axial flow)"
+  - "No external pressure gradient (∇p = 0)"
+  - "Linear absorption: Beer-Lambert regime (αI does not saturate; no bleaching)"
+  - "Darcy regime: Re_pore << 1 (viscous-dominated flow, no Forchheimer inertial term)"
+  - "Momentum transfer is purely from photon flux, not from thermal effects (no photophoresis, no Marangoni, no natural convection along beam axis)"
+  - "Steady-state illumination (or time-averaged over pulse duty cycle)"
+  - "Incompressible pore fluid"
+  - "Rigid porous matrix (no poroelastic deformation from radiation pressure)"
+  - "The pore fluid is the absorber, not the solid matrix (dye is dissolved in the liquid phase)"
+  - "Beam cross-section covers the sample uniformly (no edge effects)"
+
+emergent_properties_expected:
+  - "Linear u ∝ I scaling — the seepage velocity is directly proportional to beam intensity, with no threshold or nonlinearity"
+  - "Dimensionless group Π = αIL/(ρgc): when Π << 1, gravity dominates and horizontal geometry is required; when Π >> 1, radiation pressure dominates gravity"
+  - "Critical intensity to balance gravity vertically: I* = ρgc/α ≈ 2.94e9 W/m² at the stated α — above this, radiation pressure alone could drive upward seepage against gravity"
+  - "The seepage velocity is independent of pore-fluid density ρ (unlike gravity-driven Darcy flow where u ∝ ρg); this is a distinguishing experimental signature"
+  - "The composite inherits Darcy's permeability scaling: u ∝ k, so halving the grain size (k ∝ d²) reduces u by a factor of 4 — the same scaling as gravity-driven seepage but with a different driving force"
+  - "The acoustic analog (sound-wave momentum → pore-fluid streaming) is the published precedent; this optical version is the same physics with electromagnetic waves replacing acoustic ones"
+
+novelty_metadata:
+  generation_source: "Board novelty-generation brief v1, reviewer openai-gpt-5, candidate NOV-PARAM-OVERLAP-03"
+  mechanism: B_parameter_regime_overlap
+  literature_search_record: "cross_analysis/NOV_PARAM_OVERLAP_03_literature_search.md"
+  literature_search_date: "2026-04-16"
+  literature_search_queries: 5
+  literature_search_direct_hits: 0
+  novelty_grade: "specialist-literature-novel to genuinely-novel"
+  descriptor_schema_frozen_before_proposal: true
+  descriptor_schema_corpus_sha256: "5b1af1679884de3f91cc65ad409a5dfe9749b9fad2fc2356fc5b95e8b4cd3633"
+  rediscovery_risk: 3
+  disconfirmation_path: >
+    In a dyed, horizontally oriented porous sample, measure
+    steady volumetric flux vs beam intensity. Failure of linear
+    u ∝ I scaling (after correcting for heating/buoyancy and
+    ensuring absorption occurs in the pore fluid, not the solid
+    matrix) falsifies the body-force coupling or its dominance
+    envelope.
+
+architect_anchor_citations:
+  - "Darcy, H. (1856). Les fontaines publiques de la ville de Dijon. Victor Dalmont, Paris."
+  - "Nichols, E. F. & Hull, G. F. (1903). The pressure due to radiation. Phys. Rev. 17, 26."
+  - "Ashkin, A. (1970). Acceleration and trapping of particles by radiation pressure. Phys. Rev. Lett. 24, 156."
+  - "Bird, R. B., Stewart, W. E. & Lightfoot, E. N. (2007) Transport Phenomena, 2nd ed., Wiley, §4.1"
+  - "Acoustic flow in porous media (the acoustic analog), Journal of Fluid Mechanics — the published precedent for wave-momentum-driven pore flow"

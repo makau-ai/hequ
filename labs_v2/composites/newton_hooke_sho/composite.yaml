@@ -1,0 +1,99 @@
+composite_id: CMP-NEWTON-HOOKE-SHO-001
+name: Simple harmonic oscillator via Newton II + Hooke composition
+description: >
+  The simple harmonic oscillator is the canonical composite of
+  Newton's second law (F = m·a) and Hooke's law (F_spring =
+  -k·x). Substituting Hooke's restoring force into Newton II's
+  net-force slot produces the equation of motion
+  m·d²x/dt² = -k·x, whose solutions are sinusoidal with
+  angular frequency ω = √(k/m) and period T = 2π·√(m/k).
+
+  This is the minimum-viable Phase 13 composite: both parent
+  equations are in the same domain (classical mechanics), the
+  coupling is a tier-1 equivalence (force = force, identity
+  transfer function, no named transducer needed beyond the
+  direct substitution), and the reference value is a closed-
+  form expression with a well-known textbook answer.
+
+parents:
+  eq_a: EQ-NEWTON-II
+  eq_a_problem_id: PRB-NEWTON-II-001    # pendulum is the Newton II canonical
+  eq_b: EQ-HOOKE
+  eq_b_problem_id: PRB-HOOKE-001        # spring force is the Hooke canonical
+
+# The coupling under review: what variables are identified across
+# the two equations, and via what transducer. For Newton+Hooke
+# the coupling is TIER-1 EQUIVALENCE — no transducer coefficient
+# is needed because the two equations' force variables are
+# identically the restoring force on the same point mass.
+coupling:
+  tier: tier1_equivalence
+  v_a: F                                 # Newton II: net force
+  v_b: F_spring                          # Hooke: restoring force
+  descriptor_match:
+    object_of_interest: rigid_body
+    property: "http://qudt.org/vocab/quantitykind/Force"
+    context: inertial_frame
+    constraint: net_external
+  transducer_id: TIER1_IDENTITY          # no coefficient required; direct identity
+
+# The composite equation of motion, derived by substituting
+# F_spring (Hooke) into F (Newton II):
+#   Newton II:   F − m·a = 0
+#   Hooke:       F_spring + k·x = 0, so F_spring = −k·x
+#   Substitute:  (−k·x) − m·a = 0  →  m·a + k·x = 0
+#   With a = d²x/dt²:  m·ẍ + k·x = 0
+composite_canonical_form: "m * d2x_dt2 + k * x"
+composite_state_vars: [x, v]             # x = displacement, v = dx/dt
+composite_parameters: [m, k]
+
+# The canonical problem this composite instantiates. A
+# mass-spring oscillator with m = 0.5 kg and k = 50 N/m,
+# released from rest at x = 0.1 m. Find the period of
+# oscillation.
+canonical_problem:
+  id: CMP-NEWTON-HOOKE-SHO-001-Q1
+  statement: >
+    A point mass m = 0.5 kg is attached to an ideal linear
+    spring with spring constant k = 50 N/m. The spring is
+    massless, frictionless, and operates in its linear-elastic
+    regime. The mass is displaced to x_0 = 0.1 m from
+    equilibrium and released from rest. Under what assumptions
+    derive the period of oscillation T, and compute it.
+  # Architect's local formula for the period
+  local_formula: "2 * pi * sqrt(m / k)"
+  canonical_substitutions:
+    m: 0.5
+    k: 50.0
+  variable_ranges:
+    m: [0.001, 1000.0]
+    k: [0.01, 1.0e6]
+  expected_unit: second
+  expected_dimension: "[time]"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260415
+
+assumptions_required:
+  - "Both parent equations' assumptions hold simultaneously"
+  - "Small oscillation amplitude (Hooke linear regime)"
+  - "Constant mass (no rocket / variable-mass effects)"
+  - "Inertial frame"
+  - "|v| << c (classical, non-relativistic)"
+  - "No damping, no external driving force"
+  - "Point mass"
+  - "Spring is massless"
+
+# Expected emergent properties the composite should produce
+# beyond either parent equation alone.
+emergent_properties_expected:
+  - "Conserved quantity: total mechanical energy E = (1/2)·m·v² + (1/2)·k·x²"
+  - "Linear stability: origin (x=0, v=0) is a neutral center"
+  - "Dimensionless group: ω·T = 2π (angular frequency × period = 2π, a universal invariant)"
+  - "Emergent timescale: T = 2π·√(m/k) relating mass and spring constant via the square-root law"
+
+architect_anchor_citations:
+  - "Goldstein, Classical Mechanics, 3rd ed., §1.1 (Newton II) and §6.1 (SHO normal modes)"
+  - "Kleppner & Kolenkow, Introduction to Mechanics, 2nd ed., Ch 11 §11.2 (simple harmonic motion)"
+  - "Feynman Lectures Vol I, Ch 21 (harmonic oscillator) and Ch 22 (resonance)"

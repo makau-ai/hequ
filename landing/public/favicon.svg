@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="hequ.ai">
+  <title>hequ.ai</title>
+  <!-- Dark navy tile matching the hero's cosmos backdrop -->
+  <rect width="64" height="64" rx="12" ry="12" fill="#0a0e1a"/>
+
+  <!-- Four-segment ring: each quadrant carries one of the brand colors
+       in the same order the logo reads: H (amber, top-right) →
+       EQU (teal, bottom-right) → QU (aqua, bottom-left) →
+       .AI (parchment, top-left). The ring is the favicon's primary
+       identity: a four-domain discovery engine drawn as one unbroken
+       loop. -->
+  <g fill="none" stroke-width="7" stroke-linecap="round">
+    <!-- H — top-right arc, warm amber -->
+    <path d="M 32 7 A 25 25 0 0 1 57 32" stroke="#D4A853"/>
+    <!-- EQU — bottom-right arc, teal -->
+    <path d="M 57 32 A 25 25 0 0 1 32 57" stroke="#5FB3B3"/>
+    <!-- QU — bottom-left arc, luminous aqua -->
+    <path d="M 32 57 A 25 25 0 0 1 7 32" stroke="#B8FFF1"/>
+    <!-- .AI — top-left arc, parchment -->
+    <path d="M 7 32 A 25 25 0 0 1 32 7" stroke="#E9E1C9"/>
+  </g>
+
+  <!-- Central equivalence mark (≡), in aqua — three stacked bars,
+       a nod to mathematical identity and to the "three core reviewers
+       + optional fourth seat" structure of the board. At 16×16 this
+       reads as a single bright focal point; at 32×32+ it resolves
+       into three bars. -->
+  <g fill="#B8FFF1">
+    <rect x="20" y="24" width="24" height="3" rx="1.5"/>
+    <rect x="20" y="30.5" width="24" height="3" rx="1.5"/>
+    <rect x="20" y="37" width="24" height="3" rx="1.5"/>
+  </g>
+
+  <!-- Subtle glow on the aqua bars to mirror the hero's QU highlight -->
+  <g fill="#B8FFF1" opacity="0.18" filter="none">
+    <rect x="20" y="24" width="24" height="3" rx="1.5"/>
+    <rect x="20" y="30.5" width="24" height="3" rx="1.5"/>
+    <rect x="20" y="37" width="24" height="3" rx="1.5"/>
+  </g>
+</svg>

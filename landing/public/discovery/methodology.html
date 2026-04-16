@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Methodology — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="current">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Methodology</span>
+<h1>How a <em>coupling</em> earns its place.</h1>
+<p class="lead">The engine does not trust itself. It does not trust any single model. It does not trust a clever algebraic match. Every claim must survive four independent levels of evidence and a four-phase peer review modelled directly on academic practice.</p>
+</div>
+<h2>The thesis</h2>
+<p class="prose">The difference between a coincidence and a genuine cross-domain coupling is <b>executable realization</b>. A real coupling admits a physical system in which both equations hold simultaneously, on the same substrate, and produce the same measurable answer. Newton plus Hooke is real because mass–spring oscillators exist in laboratories and the engine can simulate one and compare against a measured period. Newton plus Shannon entropy is not real because no laboratory object obeys both equations at once. Every prior attempt at cross-domain discovery — SINDy, AI Feynman, PySR, SemGen, DARPA SKEMA — argued about symbols and ignored execution. This engine runs experiments.</p>
+<h2>Evidence hierarchy</h2>
+<p>Every coupling hypothesis accumulates evidence at four levels, each stricter than the last. Confidence is multiplicative — any level failing drags the whole down.</p>
+<div class="phases">
+<div class="phase"><span class="roman">L1</span><h3>Canonical problem</h3><p>Each equation in the corpus has a real problem with a known reference value. The equation passes L1 only if the problem's pytest unit test executes and the computed answer matches the reference within declared tolerance.</p></div>
+<div class="phase"><span class="roman">L2</span><h3>Composite notebook</h3><p>When two equations are coupled, a real Jupyter notebook solves the composite system numerically and asserts against a board-sourced reference value. The notebook runs in a sandboxed container with no internet, a pinned image SHA, and a content-hashed ledger entry. No hidden human-in-the-loop.</p></div>
+<div class="phase"><span class="roman">L3</span><h3>Literature citation</h3><p>At least two of the three AI reviewers must produce independent primary-source citations to the coupling from established textbooks or peer-reviewed papers. Shared-source or paraphrased citations do not count — DOI-level independence is required.</p></div>
+<div class="phase"><span class="roman">L4</span><h3>Live sensor agreement</h3><p>The strongest level. A real physical sensor (phone IMU, weather station, smart meter, market feed, or quantum computer) produces measurements that match the composite prediction within a declared noise envelope, with Bayesian posterior updates over a rolling window.</p></div>
+</div>
+<h2>Promotion thresholds</h2>
+<p>Labels are strictly monotonic in rigor. A coupling only reaches the higher tiers by passing more evidence levels and a stricter consensus gate.</p>
+<table>
+<tr><th>Label</th><th>Confidence</th><th>Required levels</th><th>Board gate</th></tr>
+<tr><td><span class="badge conjectural">CONJECTURAL</span></td><td>C &lt; 0.30</td><td>any</td><td>—</td></tr>
+<tr><td><span class="badge empirical">EMPIRICAL</span></td><td>C ≥ 0.30</td><td>L1 + L2</td><td>≥ 2 of 3 approve</td></tr>
+<tr><td><span class="badge proved">PROVED</span></td><td>C ≥ 0.60</td><td>L1 + L2 + L3</td><td>unanimous approve</td></tr>
+<tr><td><span class="badge tier1">GROUNDED</span></td><td>C ≥ 0.85</td><td>L1 + L2 + L3 + L4</td><td>unanimous + live sensor</td></tr>
+</table>
+<p>A sidebar class <code>DUALITY</code> applies to mathematical isomorphisms such as Wick rotation or log-price substitution. These cannot be promoted past EMPIRICAL on symbolic evidence alone — they need independent physical sensor agreement from both domains. Mathematical equivalence is not a physical coupling.</p>
+<h2>The four-phase review protocol</h2>
+<p class="prose">Every coupling, and every architectural decision, is reviewed by a board that mirrors real academic peer review. The protocol runs in four explicit phases and produces a binding editorial decision. The <b>three core reviewers</b> are Claude Opus 4.6, OpenAI GPT-5, and Gemini 2.5 Pro, each assigned a specialist persona matched to the topic under review. <b>Grok-4 (xAI) is enrolled as an optional fourth seat</b> that is included on high-stakes governance rounds — architecture design reviews, scope-frozen discharge rounds, brand board reviews — and omitted on operational lookups such as canonical-problem reference sourcing. Whether a given round ran as a 3-seat or 4-seat board is recorded in its ledger entry.</p>
+<div class="phases">
+<div class="phase"><span class="roman">A</span><h3>Independent draft</h3><p>Each reviewer receives the submission in complete isolation. No cross-contamination. Every reply begins with a conflict-of-interest self-declaration (did this reviewer encounter the specific formulation during training?), then a five-dimension rubric score, then a draft verdict with strengths and concerns.</p></div>
+<div class="phase"><span class="roman">B</span><h3>Informed vote</h3><p>The three Phase A drafts are consolidated into a board briefing document showing each reviewer what the others said. Each reviewer then produces a final updated verdict, explicitly responding to peer concerns — agreeing, disagreeing, or updating their position. This is the phase that breaks correlated blind spots.</p></div>
+<div class="phase"><span class="roman">C</span><h3>Editor synthesis</h3><p>A fourth distinct model call reads all the Phase B verdicts and writes the binding editorial decision. The editor weights reasoning quality, not vote count, and can override a naive tally when one reviewer's argument is visibly stronger. Reviewer disagreement on fundamentals is explicitly flagged in the ledger.</p></div>
+<div class="phase"><span class="roman">D</span><h3>Bounded rebuttal</h3><p>If the editor returns MODIFY with specific required changes, the submitter is allowed one revision cycle to address them, and the board runs again on the revision. A maximum of two rebuttal cycles are allowed before the decision becomes final. This mirrors the author-response phase standard at CS conferences.</p></div>
+</div>
+<h2>The rubric</h2>
+<p>Every reviewer produces a structured five-dimension score on a 1–5 integer scale. For coupling hypotheses the dimensions are:</p>
+<ul>
+<li><b>Physical plausibility</b> — does this coupling describe real physics?</li>
+<li><b>Dimensional consistency</b> — are the transducer dimensions honest?</li>
+<li><b>Literature grounding</b> — is there independent primary-source support?</li>
+<li><b>Falsifiability</b> — can the composite be executed and compared against a reference?</li>
+<li><b>Novelty / emergent insight</b> — does the coupling produce a new dimensionless group or conserved quantity that neither equation exposes alone?</li>
+</ul>
+<p>Rubric totals are computed by the editor as weighted sums. Two reviewers scoring a coupling 5 across the board carry more weight in the editor's decision than a single reviewer scoring 1s without reasoning.</p>
+<h2>Conflict of interest</h2>
+<p>At the start of every Phase A reply, each reviewer declares whether it encountered the specific formulation during training. A declared COI does not disqualify the reviewer — all four models share some training on foundational physics literature — but the declaration is logged. If every reviewer seated in the round declares training exposure to an exact formulation, the coupling is flagged with <code>HIGH_COI_CORRELATION_RISK</code> and cannot be promoted past EMPIRICAL without independent experimental evidence at L4.</p>
+<h2>Three-way verification of board-sourced references</h2>
+<p>Reference values for canonical problems come from the board, not from the architect. The board is asked for <code>{formula_symbolic, substitutions, value, citation}</code> and the architect then runs three independent checks locally before accepting the value:</p>
+<ol style="margin-left:1.4rem">
+<li><b>Symbolic equivalence</b> — <code>sp.simplify(board_formula − local_formula) == 0</code>. A stronger guarantee than any single-point numeric check.</li>
+<li><b>Property-based randomized sampling</b> — 50 unit-consistent parameter draws, all must satisfy the board's claimed relationship within tolerance.</li>
+<li><b>Cross-CAS high precision</b> — <code>mpmath</code> at 50 decimal places vs sympy single-precision. Disagreement at &gt; 10 decimal places flags the formula as numerically fragile.</li>
+</ol>
+<p>All three must pass. A single-point agreement alone is insufficient. This breaks the circularity risk — the architect's local code is an independent check that does not depend on any model's training data.</p>
+<h2>The append-only ledger</h2>
+<p>Every hypothesis, every rejection, every board vote, every sensor reading, every composite execution result is recorded in an append-only JSONL file with a SHA-256 hash chain. Nothing is deleted. The ledger is the single source of truth for what the engine has ever tried and what happened. A future audit can re-derive every promotion decision from its raw evidence.</p>
+<h2>Sandboxed notebook execution</h2>
+<p>Every auto-generated composite notebook runs inside a Docker container with pinned image SHA, frozen pip requirements with hashes, no network access, read-only root filesystem, an ephemeral 64 MB tmpfs workspace, non-root UID, memory and CPU cgroup limits, and a per-cell execution timeout. The container's SHA and the notebook's content hash are both logged in the ledger, so the execution environment is reproducible and tamper-evident.</p>
+<h2>Academic analogs</h2>
+<p>The four-phase protocol is not invented — it mirrors standard peer review. For the record, the closest academic correspondences:</p>
+<ul>
+<li><b>Phase A independent drafts</b> — standard practice at Nature, Science, NeurIPS, ICML, ICLR, PRL.</li>
+<li><b>Phase B informed response</b> — CS conference rebuttal rounds (NeurIPS, ICML, ICLR, CVPR).</li>
+<li><b>Phase C editor synthesis</b> — handling editors at journals, area chairs at conferences.</li>
+<li><b>Phase D bounded rebuttal</b> — author response phase, limited to one or two cycles.</li>
+<li><b>COI self-declaration</b> — mandatory at every legitimate venue.</li>
+<li><b>Specialist reviewer assignment</b> — universal editorial practice.</li>
+<li><b>Scoring rubrics</b> — standard at CS conferences; emerging at journals.</li>
+<li><b>Pre-registration of hypotheses</b> — Nosek et al. 2018, the preregistration revolution.</li>
+</ul>
+<h2>v5 rules added after Round 2 discharge</h2>
+<p class="prose">The board's discharge round produced four additional binding rules beyond the v4 FCS fixes, each closing a specific structural loophole the engine hit in practice:</p>
+<div class="phases">
+<div class="phase"><span class="roman">v5·1</span><h3>Board is not a CAS</h3><p>The first Phase 12 canonical run caught a language-model arithmetic error: correct formula, correct citations, imprecise decimal. <b>Never ask the board for a precision-critical numerical value.</b> Query for formula and citations; compute the number locally with sympy + mpmath + python-flint. The board's <code>value_attempt</code> is logged as capability data but never load-bearing.</p></div>
+<div class="phase"><span class="roman">v5·2</span><h3>All must respond</h3><p>Non-response from any board member (HTTP error, timeout, parse failure) counts as <b>dissent</b>, not neutral. Rounds cannot approve with partial quorum. Every model call has 5-retry exponential backoff (2→4→8→16→32 s). Persistent non-response escalates to the user with a Decision Matrix of retry / proceed-with-acknowledged-dissent / wait-for-vendor.</p></div>
+<div class="phase"><span class="roman">v5·3</span><h3>Scope-frozen discharge</h3><p>After Round 1 produces the Frozen Concern Set, Round 2+ reviewers can only score each FCS item as addressed / partially / not-addressed — they cannot raise new concerns. Process violations are logged and escalated to the user as the only authority that can reopen the FCS. This breaks the infinite-review-drift that would otherwise keep the architecture perpetually in flight.</p></div>
+<div class="phase"><span class="roman">v5·4</span><h3>No corner cuts on failure</h3><p>On any verification failure, the Failure Investigation Protocol (§11h) fires: state audit, assumption audit, literature RAG, board failure review, ledger entry. Tolerance loosening is forbidden. Equation modifications require explicit user approval on a board <code>equation_inadequate</code> verdict. The default hypothesis when theory and experiment disagree is that the experiment is incomplete — not that the theory is wrong.</p></div>
+</div>
+<h2>The Nobel-prize bar</h2>
+<p class="prose">The engine's output standard is <b>external academic peer review</b>, not internal board agreement. Every <code>PROVED</code> or <code>GROUNDED</code> coupling must pass an academic readiness checklist before promotion:</p>
+<ul>
+<li>Quantitative prediction with declared uncertainty</li>
+<li>Systematic error analysis</li>
+<li>Independent replication pathway with listed equipment and parameter ranges</li>
+<li>Priority / novelty search with ≥10 primary-source citations (not just the 3 the RAG finds)</li>
+<li>Honest limitations section — longer than the strengths section by default</li>
+<li>Multiple-testing correction across the adversarial pre-registration set</li>
+<li>Prior-work engagement including adversarial citations</li>
+<li>Hall-of-mirrors check — the claim must be re-state-able outside our framework (portable to Mathematica or Modelica)</li>
+</ul>
+<p>A coupling missing any checklist item stays at <code>EMPIRICAL</code> regardless of board consensus. Internal board agreement is necessary but not sufficient.</p>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

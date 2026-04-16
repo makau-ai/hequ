@@ -1,0 +1,105 @@
+id: EQ-BLACK-SCHOLES
+name: Black–Scholes PDE
+domain: quantitative_finance
+
+# Dual representations. `canonical_form` uses atomic V_t, V_S, V_SS
+# for compatibility with the Layer 2 structural sieve.
+# `canonical_form_derivatives` is the real PDE with V as a function
+# of (S, t) — consumed by the Medium-scope change-of-variables sieve
+# that will discover the Black-Scholes ↔ heat-equation identity via
+# x = log(S), tau = T - t, u = exp(r*tau)*V.
+canonical_form: "V_t + (1/2)*sigma**2*S**2*V_SS + r*S*V_S - r*V"
+
+canonical_form_derivatives:
+  functions:
+    V: ["S", "t"]
+  expression: >
+    Derivative(V(S, t), t)
+    + (1/2) * sigma**2 * S**2 * Derivative(V(S, t), S, 2)
+    + r * S * Derivative(V(S, t), S)
+    - r * V(S, t)
+
+variables:
+  V:
+    dimension: "[currency]"
+    unit: "dollar"
+    meaning: "option value"
+    descriptor:
+      object_of_interest: security
+      property: http://hequ.ai/vocab/quantitykind/OptionPrice
+      context: risk_neutral_measure
+  V_t:
+    dimension: "[currency] / [time]"
+    unit: "dollar / second"
+    meaning: "partial derivative of V with respect to time"
+    descriptor:
+      object_of_interest: security
+      property: http://hequ.ai/vocab/quantitykind/OptionPrice
+      context: risk_neutral_measure
+      constraint: time_derivative
+  V_S:
+    dimension: "[]"
+    unit: "dimensionless"
+    meaning: "partial derivative of V with respect to underlying price S (delta)"
+    descriptor:
+      object_of_interest: security
+      property: http://qudt.org/vocab/quantitykind/DimensionlessRatio
+      context: risk_neutral_measure
+      constraint: option_delta
+  V_SS:
+    dimension: "1 / [currency]"
+    unit: "1 / dollar"
+    meaning: "second partial derivative of V with respect to S (gamma)"
+    descriptor:
+      object_of_interest: security
+      property: http://hequ.ai/vocab/quantitykind/OptionPrice
+      context: risk_neutral_measure
+      constraint: option_gamma
+  S:
+    dimension: "[currency]"
+    unit: "dollar"
+    meaning: "current price of the underlying asset"
+    descriptor:
+      object_of_interest: security
+      property: http://hequ.ai/vocab/quantitykind/AssetPrice
+      context: risk_neutral_measure
+  sigma:
+    dimension: "1 / [time] ** 0.5"
+    unit: "1 / second ** 0.5"
+    meaning: "volatility of the underlying (annualised)"
+    descriptor:
+      object_of_interest: market
+      property: http://hequ.ai/vocab/quantitykind/Volatility
+      context: risk_neutral_measure
+  r:
+    dimension: "1 / [time]"
+    unit: "1 / second"
+    meaning: "risk-free interest rate (continuous compounding)"
+    descriptor:
+      object_of_interest: market
+      property: http://hequ.ai/vocab/quantitykind/RiskFreeRate
+      context: risk_neutral_measure
+
+assumptions:
+  - "Geometric Brownian motion: dS = μS dt + σS dW for the underlying"
+  - "Constant (or deterministic) volatility and risk-free rate over the option lifetime"
+  - "No dividends, no transaction costs, no arbitrage"
+  - "European option (no early exercise); American options need free-boundary treatment"
+  - "Continuous trading, perfect liquidity, fractional shares allowed"
+
+derivation_from:
+  - "Black & Scholes, J. Political Economy 81 (1973), 637 — hedging argument plus Ito's lemma"
+  - "Merton, Bell J. Econ. 4 (1973), 141 — reformulated in terms of self-financing replicating portfolio"
+  - "Under x = log(S), tau = T - t, the PDE becomes a constant-coefficient convection-diffusion equation; a further exponential substitution yields the classical heat equation"
+
+references:
+  - "Black & Scholes, J. Polit. Econ. 81 (1973), 637"
+  - "Hull, Options, Futures, and Other Derivatives, 11th ed., Ch. 15"
+  - "Wilmott, Paul Wilmott on Quantitative Finance, Ch. 5"
+
+axioms:
+  - differential
+  - linear
+  - constant_coefficients
+  - stochastic_derivation
+  - classical

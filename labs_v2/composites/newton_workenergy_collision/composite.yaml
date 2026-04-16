@@ -1,0 +1,92 @@
+composite_id: CMP-NEWTON-WORKENERGY-001
+name: Work done by a constant force derived from Newton II + Work-Energy theorem
+description: >
+  Newton's second law (F = m·a) and the work-energy theorem
+  (W = (1/2)·m·(v_f² - v_i²)) are linked by the mass variable
+  and by kinematics. This composite tests that when a constant
+  net force F acts on a point mass m through a displacement d,
+  the work done equals the change in kinetic energy predicted
+  by the work-energy theorem — a consistency check across both
+  equations simultaneously.
+
+  Given F = m·a and d = (1/2)·a·t² + v_i·t, and v_f = v_i + a·t,
+  we can eliminate t to get v_f² = v_i² + 2·a·d. Then
+  W = F·d = m·a·d = (1/2)·m·(v_f² − v_i²). The composite
+  reference value for W can be computed either from F·d or
+  from (1/2)·m·(v_f² − v_i²); both give the same answer when
+  the mass, force, initial velocity, and displacement are
+  consistent.
+
+  This is a tier-1 equivalence coupling on the mass variable m.
+  Both parent equations use m as an inertial-mass property of
+  the same rigid body in the same inertial frame (identical
+  I-ADOPT descriptor key). No named transducer is needed.
+
+parents:
+  eq_a: EQ-NEWTON-II
+  eq_a_problem_id: PRB-NEWTON-II-001
+  eq_b: EQ-WORK-ENERGY
+  eq_b_problem_id: PRB-WORK-ENERGY-001
+
+coupling:
+  tier: tier1_equivalence
+  v_a: m
+  v_b: m
+  descriptor_match:
+    object_of_interest: rigid_body
+    property: "http://qudt.org/vocab/quantitykind/Mass"
+    context: inertial_frame
+    constraint: null
+  transducer_id: TIER1_IDENTITY
+
+# The composite equation: W = F·d = m·a·d, combined with
+# kinematics v_f² = v_i² + 2·a·d, gives
+#   W = (1/2)·m·(v_f² − v_i²)
+composite_canonical_form: "F * d - (1/2) * m * (v_f**2 - v_i**2)"
+
+canonical_problem:
+  id: CMP-NEWTON-WORKENERGY-001-Q1
+  statement: >
+    A point mass m = 2.0 kg is pushed along a frictionless
+    horizontal surface by a constant net force F = 10.0 N
+    through a displacement d = 5.5 m. The frame is inertial,
+    the motion is classical (|v| << c), air drag is neglected,
+    and the mass is constant. The force is parallel to the
+    displacement (aligned).
+
+    By the work-energy theorem combined with Newton II
+    kinematics, the work done equals W = F·d. What is W in
+    joules? Equivalently, express W using Newton II and
+    work-energy together: starting from rest (v_i = 0), after
+    a displacement d under constant force F, the final speed
+    v_f satisfies (1/2)·m·v_f² = F·d, so W = F·d = 55 J.
+  local_formula: "F * d"
+  canonical_substitutions:
+    F: 10.0
+    d: 5.5
+  variable_ranges:
+    F: [0.001, 1.0e6]
+    d: [0.001, 1.0e4]
+  expected_unit: joule
+  expected_dimension: "[mass] * [length]**2 / [time]**2"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260415
+
+assumptions_required:
+  - "Constant net force (no time variation)"
+  - "Frictionless surface (no dissipation)"
+  - "Force parallel to displacement (no angle to resolve)"
+  - "Constant mass"
+  - "Classical regime (|v| << c)"
+  - "Inertial frame"
+
+emergent_properties_expected:
+  - "Energy conservation across Newton II + Work-Energy: W (F·d) = ΔKE ((1/2)·m·(v_f² − v_i²))"
+  - "The mass m appears in both equations and is dimensionally the same inertial quantity (tier-1 equivalence)"
+
+architect_anchor_citations:
+  - "Goldstein, Classical Mechanics, 3rd ed., §1.1 Eq. (1.19)"
+  - "Kleppner & Kolenkow, Introduction to Mechanics, 2nd ed., Ch 5"
+  - "Halliday/Resnick/Walker, Fundamentals of Physics, 11th ed., §7-3"

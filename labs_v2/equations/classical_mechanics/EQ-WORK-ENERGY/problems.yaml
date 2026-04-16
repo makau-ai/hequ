@@ -1,0 +1,44 @@
+equation_id: EQ-WORK-ENERGY
+description: >
+  Canonical problems for the work-energy theorem,
+  W = (1/2)·m·(v_f² − v_i²). Sourced under v5 'board is not
+  a CAS' protocol.
+problems:
+  - id: PRB-WORK-ENERGY-001
+    name: Net work on an accelerating body (elastic 1D)
+    statement: >
+      A point mass of m = 2.0 kg moves along a straight line
+      with no friction and no air drag. Its initial speed is
+      v_i = 3.0 m/s and its final speed is v_f = 8.0 m/s
+      (same direction as the initial motion). The frame is
+      inertial, the motion is classical (|v| << c), and the
+      mass is constant in time.
+
+      By the work-energy theorem, the net work done on the
+      body along its path is W = (1/2)·m·(v_f² − v_i²). What
+      is the net work in joules?
+    local_formula: "(1/2) * m * (v_f**2 - v_i**2)"
+    canonical_substitutions:
+      m: 2.0
+      v_i: 3.0
+      v_f: 8.0
+    variable_ranges:
+      m: [0.001, 1000.0]          # 1 g to 1 tonne
+      v_i: [0.0, 1000.0]
+      v_f: [1.0, 2000.0]          # must exceed v_i for positive work in this problem
+    expected_unit: joule
+    expected_dimension: "[mass] * [length]**2 / [time]**2"
+    assumptions_required:
+      - "m is constant in time (not variable-mass)"
+      - "Classical regime (|v| << c)"
+      - "W includes all net external work"
+      - "Point particle"
+      - "v_f ≥ v_i in this problem (positive work)"
+    pbt:
+      n_samples: 200
+      rel_tolerance: 1e-10        # closed-form, tight is fine
+      seed: 20260415
+    architect_anchor_citations:
+      - "Goldstein, Classical Mechanics, 3rd ed., §1.1 Eq. (1.19)"
+      - "Halliday/Resnick/Walker, Fundamentals of Physics, 11th ed., §7-3"
+      - "Kleppner & Kolenkow, Introduction to Mechanics, 2nd ed., Ch 5"

@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EQ-NEWTON-II.m ↔ EQ-WORK-ENERGY.m — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="current">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">Coupling · Tier1 Equivalence</span>
+<h1><em>m</em> ↔ <em>m</em></h1>
+<p class="lead"><span class="badge tier1">Tier I — Equivalence</span> &nbsp; <span class="badge conjectural">CONJECTURAL</span></p>
+</div>
+<div class="pairing">
+<div class="side left">
+<div class="side-label">Equation A</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-NEWTON-II.html" style="color:inherit; border:none">EQ-NEWTON-II</a></div>
+<div class="side-var">m</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Mass</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+</dl>
+</div>
+<div class="connector"><div class="arrow">↔</div></div>
+<div class="side right">
+<div class="side-label">Equation B</div>
+<div class="side-eq-id"><a href="/discovery/equations/EQ-WORK-ENERGY.html" style="color:inherit; border:none">EQ-WORK-ENERGY</a></div>
+<div class="side-var">m</div>
+<dl class="kv">
+<dt>Object</dt><dd>rigid_body</dd>
+<dt>Property</dt><dd>Mass</dd>
+<dt>Context</dt><dd>inertial_frame</dd>
+</dl>
+</div>
+</div>
+<h2>Sieve rationale</h2>
+<p class="prose">Identical tier1 key (object=rigid_body, property=Mass, context=inertial_frame, constraint=None)</p>
+<h2>Physical constraint filter</h2>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">tellegen pairing</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">At least one variable is not a bond-graph port variable (role_a=parameter, role_b=parameter); Tellegen pairing is only defined for effort/flow.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">onsager reciprocity</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Onsager reciprocity applies only to pairs of linear transport laws; at least one equation is not a linear PDE.</p>
+</div>
+<div class="check-card not_applicable">
+<div class="check-head">
+<span class="check-name">energy conservation</span>
+<span class="badge neutral">not applicable</span>
+</div>
+<p class="reasoning">Energy conservation check is narrowly targeted at the Newton+Hooke → SHO composite in Medium m2; other composites require the Phase 7 Lyapunov/Noether machinery (not yet built).</p>
+</div>
+<h2>Emergent properties</h2>
+<h3>Emergent Buckingham Π groups</h3>
+<p style="font-size:0.92rem; color:var(--fg-dim)">Dimensionless combinations that mix parameters from both equations — only appear in the composite system.</p>
+<div class="math-display">F^(1/2) * a^(-1/2) * W^(-1/2) * v_f</div>
+<div class="math-display">F^(1/2) * a^(-1/2) * W^(-1/2) * v_i</div>
+<h2>AI review board</h2>
+<p class="prose">Unanimous APPROVE from the AI review board.</p>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">claude-opus-4-6</span>
+<span class="badge proved">APPROVE</span>
+</div>
+<p class="reasoning">The coupling identifies the inertial mass parameter m in Newton&#x27;s second law (F = ma) with the same inertial mass m appearing in the work-energy theorem (W = ½mv_f² − ½mv_i²). Both semantic descriptors specify the identical QUDT quantity kind (Mass), the same object of interest (rigid body), the same context (inertial frame), and no additional constraints, connected via an identity transfer function. This is a textbook-level tier-1 equivalence: the work-energy theorem is derived directly from Newton&#x27;s second law by integrating F·ds along a path, so the mass parameter is literally the same physical quantity in both equations. The physical-constraint filter returning all not_applicable is expected, since mass is a scalar parameter rather than a bond-graph port variable, and neither equation is a linear transport law. The emergent Buckingham π groups are dimensionally consistent: F⁻¹·a·m is trivially unity by F=ma, while the groups involving v_f and v_i reflect the nondimensionalization of velocities against (F/a)^(1/2) · W^(-1/2), which is physically sensible. No spurious emergent properties are claimed. This is a well-justified, physically correct coupling.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">openai-gpt-5</span>
+<span class="badge proved">APPROVE</span>
+</div>
+<p class="reasoning">The variables represent the same physical quantity (the rigid body’s inertial mass) in both Newton’s second law and the work–energy theorem within an inertial frame, so an identity mapping at tier-1 equivalence is appropriate. The physical-constraint checks are correctly marked not applicable because mass is a parameter, not an effort/flow variable, and this does not indicate any inconsistency. The listed dimensionless groups are reasonable (duplication aside) and do not suggest spurious emergent behavior. Overall, the coupling is physically plausible and semantically sound.</p>
+</div>
+<div class="reviewer-card">
+<div class="reviewer-head">
+<span class="reviewer-name">gemini-2.5-pro</span>
+<span class="badge proved">APPROVE</span>
+</div>
+<p class="reasoning">The proposed coupling is physically fundamental, as the work-energy theorem is a direct integral consequence of Newton&#x27;s second law. The inertial mass &#x27;m&#x27; is definitionally identical in both equations when applied to the same rigid body. The semantic descriptors correctly and identically capture this context. The physical constraint filter&#x27;s inability to provide a positive verdict is a reflection of its current limited scope, not a flaw in the proposed coupling, as this relationship does not fit the specific forms (e.g., transport laws, bond graph ports) that the available automated checks are designed to analyze.</p>
+</div>
+<a class="back-link" href="/discovery/couplings/index.html">← back to couplings</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

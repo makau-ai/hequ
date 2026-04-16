@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shannon Entropy (binary form) — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">EQ-SHANNON-ENTROPY · Information Theory</span>
+<h1>Shannon Entropy (binary form)</h1>
+<div class="math-display">H + p*log(p) + (1 - p)*log(1 - p) = 0</div>
+</div>
+<h2>Variables</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">H</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">entropy of a Bernoulli(p) random variable in nats (will be converted to bits externally if needed)</p><div class="card-meta"><span class="mono">dimensionless</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>information_channel</dd><dt>Property</dt><dd>InformationEntropy</dd><dt>Context</dt><dd>frequentist</dd><dt>Constraint</dt><dd>bernoulli</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">p</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">probability of outcome 1 (Bernoulli success probability)</p><div class="card-meta"><span class="mono">dimensionless</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>random_variable</dd><dt>Property</dt><dd>Probability</dd><dt>Context</dt><dd>frequentist</dd><dt>Constraint</dt><dd>bernoulli_success</dd></dl></div>
+</div>
+<h2>Axioms</h2>
+<p><span class="badge neutral" style="margin-right:0.3rem">algebraic</span> <span class="badge neutral" style="margin-right:0.3rem">concave</span> <span class="badge neutral" style="margin-right:0.3rem">deterministic</span> <span class="badge neutral" style="margin-right:0.3rem">dimensionless</span> <span class="badge neutral" style="margin-right:0.3rem">nonlinear</span></p>
+<h2>Assumptions</h2>
+<ul>
+<li>p ∈ (0, 1): boundary cases p=0 and p=1 are limits, not values of the expression</li>
+<li>Natural logarithm; convert to bits by dividing by ln(2) if the application expects binary units</li>
+<li>Bernoulli case only; the general formula is H = -Σ p_i log p_i</li>
+</ul>
+<h2>Derivation</h2>
+<ul>
+<li>Shannon, Bell System Technical Journal 27 (1948), Appendix 2 Theorem 2</li>
+<li>Derived axiomatically: H is the unique (up to a multiplicative constant) functional that is (i) continuous in p, (ii) monotonic in n for the uniform distribution, (iii) additive under conditional decomposition (the grouping axiom)</li>
+<li>STRUCTURAL IDENTITY: identical functional to Boltzmann/Gibbs thermodynamic entropy S = -k_B Σ p_i ln p_i — the only difference is k_B (J/K) vs dimensionless. The sieve should catch this.</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Shannon, BSTJ 27 (1948), 379-423, 623-656</li>
+<li>Cover &amp; Thomas, Elements of Information Theory, 2nd ed., §2.1</li>
+<li>Jaynes, Information Theory and Statistical Mechanics, Phys. Rev. 106 (1957), 620</li>
+</ul>
+<a class="back-link" href="/discovery/equations/index.html">← back to corpus</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>

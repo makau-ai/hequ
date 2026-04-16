@@ -1,0 +1,57 @@
+id: EQ-OHM
+name: Ohm's Law
+domain: electrical_circuits
+
+# Implicit form: V - I*R = 0. This is the same algebraic shape as
+# Newton II (F - m*a = 0) — one of the first cross-domain analogies
+# the unification sieves should find.
+canonical_form: "V - I*R"
+
+variables:
+  V:
+    dimension: "[electric_potential]"
+    unit: "volt"
+    meaning: "potential difference across the conductor"
+    descriptor:
+      object_of_interest: conductor
+      property: http://qudt.org/vocab/quantitykind/ElectricPotentialDifference
+      context: steady_state
+  I:
+    dimension: "[current]"
+    unit: "ampere"
+    meaning: "current through the conductor"
+    descriptor:
+      object_of_interest: conductor
+      property: http://qudt.org/vocab/quantitykind/ElectricCurrent
+      context: steady_state
+  R:
+    dimension: "[electrical_resistance]"
+    unit: "ohm"
+    meaning: "resistance (material- and geometry-dependent)"
+    descriptor:
+      object_of_interest: resistor
+      property: http://qudt.org/vocab/quantitykind/Resistance
+      context: steady_state
+
+assumptions:
+  - "Linear (ohmic) material: R is independent of V, I, and temperature in the operating regime"
+  - "Steady state (no significant dV/dt or dI/dt effects)"
+  - "Scalar currents / voltages (no anisotropy or tensorial resistivity)"
+
+derivation_from:
+  - "Empirical; Ohm (Die galvanische Kette, 1827)"
+  - "Derivable from the Drude model: linear response of free electrons to an applied field under collision-dominated transport"
+  - "Microscopically: J = σE with σ = ne²τ/m (τ = mean free time), then V = ∫E·dl and I = ∫J·dA yields V = IR for a uniform conductor"
+
+references:
+  - "Jackson, Classical Electrodynamics, 3rd ed., §5.18"
+  - "Ashcroft & Mermin, Solid State Physics, Ch. 1"
+
+axioms:
+  - algebraic
+  - linear
+  - constant_coefficients
+  - commutative_factors
+  - deterministic
+  - steady_state
+  - classical

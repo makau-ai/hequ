@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hooke&#x27;s Law (Linear Elastic Restoring Force) — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Ctext x='16' y='22' text-anchor='middle' font-family='serif' font-size='24' fill='%23d4a853'%3Eh%3C/text%3E%3C/svg%3E">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="current">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a></nav>
+  </div>
+</header>
+<main class="container">
+<div class="page-intro">
+<span class="overline">EQ-HOOKE · Classical Mechanics</span>
+<h1>Hooke&#x27;s Law (Linear Elastic Restoring Force)</h1>
+<div class="math-display">F_spring + k*x = 0</div>
+</div>
+<h2>Variables</h2>
+<div class="card-grid">
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">F_spring</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">restoring force exerted by the spring on the body</p><div class="card-meta"><span class="mono">newton</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>rigid_body</dd><dt>Property</dt><dd>Force</dd><dt>Context</dt><dd>inertial_frame</dd><dt>Constraint</dt><dd>net_external</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">k</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">spring constant (linear stiffness)</p><div class="card-meta"><span class="mono">newton / meter</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>spring</dd><dt>Property</dt><dd>Stiffness</dd><dt>Context</dt><dd>inertial_frame</dd></dl></div>
+<div class="card" style="cursor:default"><div class="card-id">variable</div><div class="card-name" style="font-size: 2.2rem; font-family: var(--mono); color: var(--accent-bright)">x</div><p style="margin: 0.5rem 0 0; font-size: 0.92rem">displacement from the spring&#x27;s natural length (signed)</p><div class="card-meta"><span class="mono">meter</span></div><dl class="kv" style="margin-top:0.8rem"><dt>Object</dt><dd>rigid_body</dd><dt>Property</dt><dd>Position</dd><dt>Context</dt><dd>inertial_frame</dd><dt>Constraint</dt><dd>displacement_from_equilibrium</dd></dl></div>
+</div>
+<h2>Axioms</h2>
+<p><span class="badge neutral" style="margin-right:0.3rem">algebraic</span> <span class="badge neutral" style="margin-right:0.3rem">classical</span> <span class="badge neutral" style="margin-right:0.3rem">commutative_factors</span> <span class="badge neutral" style="margin-right:0.3rem">conservative_force</span> <span class="badge neutral" style="margin-right:0.3rem">constant_coefficients</span> <span class="badge neutral" style="margin-right:0.3rem">deterministic</span> <span class="badge neutral" style="margin-right:0.3rem">linear</span> <span class="badge neutral" style="margin-right:0.3rem">non_relativistic</span></p>
+<h2>Assumptions</h2>
+<ul>
+<li>Linear-elastic regime: k is independent of x (no yielding or hardening)</li>
+<li>No damping: pure elastic, no dissipative term</li>
+<li>Spring has zero mass (massless idealisation)</li>
+<li>One-dimensional motion along the spring axis</li>
+<li>The body is a point mass attached to one end of the spring</li>
+</ul>
+<h2>Derivation</h2>
+<ul>
+<li>Hooke (1676): &#x27;Ut tensio, sic vis&#x27; — &#x27;as the extension, so the force&#x27;</li>
+<li>Linearisation of a generic potential V(x) near its minimum: V(x) ≈ V(x*) + (1/2) V&#x27;&#x27;(x*) (x − x*)², yielding F = −V&#x27;(x) = −V&#x27;&#x27;(x*)(x − x*)</li>
+<li>First term in the Taylor expansion of any restoring force around a stable equilibrium — the universal small-oscillation law</li>
+<li>STRUCTURAL IDENTITY with Newton II via F &lt;-&gt; F_spring: substituting Hooke&#x27;s F into Newton II gives the simple harmonic oscillator equation m*ẍ + k*x = 0, the archetype of cross-domain composition the coupling sieve must rediscover</li>
+</ul>
+<h2>References</h2>
+<ul>
+<li>Hooke, Lectures De Potentia Restitutiva, or of Spring Explaining the Power of Springing Bodies (1678)</li>
+<li>Goldstein, Classical Mechanics, 3rd ed., §6.1</li>
+<li>Landau &amp; Lifshitz, Theory of Elasticity, 3rd ed., §4</li>
+</ul>
+<a class="back-link" href="/discovery/equations/index.html">← back to corpus</a>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>
