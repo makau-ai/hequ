@@ -1,0 +1,144 @@
+composite_id: CMP-NEWTON-OHM-VOICECOIL-001
+name: Voice-coil actuator steady-state velocity from Newton II + Ohm via a linear gyrator
+description: >
+  The voice-coil actuator is the canonical LINEAR electromagnetic
+  composite: it couples Newton's second law (linear form,
+  ΣF = m·a) and Ohm's law (V = i·R for the coil) through a
+  port-Hamiltonian GYRATOR whose constitutive relations are
+
+      F_motor = BL · i         (Lorentz force ∝ current)
+      V_back  = BL · v         (back-EMF ∝ velocity)
+
+  The same constant BL (the force constant or BL product,
+  units N/A = V·s/m) appears in both relations by power
+  conservation, exactly as K appears in the DC motor. The
+  difference: this is a LINEAR actuator (force/velocity) rather
+  than a ROTATIONAL one (torque/angular-velocity), providing a
+  structurally independent test of the gyrator transducer
+  machinery.
+
+  This is the SECOND composite using the gyrator transducer
+  type (after CMP-NEWTON-OHM-MOTOR-001), providing the per-
+  transducer-type replication the board meta-analysis
+  identified as critical. If the voice-coil composite verifies
+  with the same gyrator structure (BL replacing K, v replacing
+  ω, F replacing τ), the port-Hamiltonian gyrator machinery is
+  confirmed to work for both linear and rotational coupling.
+
+  At steady state (constant velocity, a = 0), the coupled
+  system reduces to:
+      F_load = BL · i              (Newton II, linear, a = 0)
+      V_s    = i · R + BL · v      (Ohm + back-EMF loop)
+
+  Solving for v:
+      v = V_s / BL − F_load · R / BL²
+
+  This is structurally identical to the DC motor equation
+  ω = V_s/K − τ_L·R/K², confirming the gyrator formalism
+  generalizes across linear and rotational domains.
+
+parents:
+  eq_a: EQ-NEWTON-II
+  eq_a_problem_id: PRB-NEWTON-II-001
+  eq_b: EQ-OHM
+  eq_b_problem_id: PRB-OHM-001
+
+coupling:
+  tier: tier2_structural
+  v_a: F                            # Newton II (linear): force
+  v_b: V                            # Ohm: voltage across the coil
+  descriptor_note: >
+    F and V are the effort variables of their respective physical
+    domains (linear mechanics and electrical circuits), linked by
+    the gyrator with force constant BL. Structurally identical to
+    the DC motor coupling but in the linear domain, providing an
+    independent test of the gyrator formalism.
+  transducer_id: TRANSDUCER-GYRATOR-VOICECOIL
+  transducer_properties:
+    type: "port_Hamiltonian_gyrator"
+    domains: [linear_mechanics, electrical_circuits]
+    coefficient_name: "force constant BL (BL product)"
+    coefficient_dimensions: "[force] / [current]  ==  [voltage] · [time] / [length]"
+    constitutive_relations:
+      - "F_motor = BL * i"
+      - "V_back  = BL * v"
+    power_conservation:
+      statement: "F_motor * v == V_back * i  identically"
+      check: "(BL*i)*v == (BL*v)*i  ✓"
+    dirac_structure:
+      form: implicit_junction
+      junction_type: MGY
+      skew_symmetric_J: true
+    citation:
+      - "Beranek, L. L. & Mellow, T. (2012). Acoustics: Sound Fields and Transducers. Academic Press, Ch 2 (voice-coil loudspeaker model)."
+      - "Hunt, F. V. (1954). Electroacoustics: The Analysis of Transduction and its Historical Background. Harvard UP."
+      - "Paynter, H. M. (1961). Analysis and Design of Engineering Systems. MIT Press (GY element)."
+      - "van der Schaft, A. (2017). L2-Gain and Passivity Techniques in Nonlinear Control, 2nd ed., Springer, §4.2."
+
+composite_canonical_form: >
+  v - (V_s / BL - F_load * R / BL**2)
+composite_state_vars: [v, i]
+composite_parameters: [V_s, R, BL, F_load]
+
+canonical_problem:
+  id: CMP-NEWTON-OHM-VOICECOIL-001-Q1
+  statement: >
+    A voice-coil loudspeaker driver is powered by a 5.0 V
+    source (V_s = 5.0 V) through a coil with DC resistance
+    R = 8.0 Ω (typical 8-ohm speaker). The voice coil has a
+    BL product (force constant) of BL = 5.0 N/A (typical for
+    a mid-range driver). The mechanical load from the spider
+    and surround restoring force is F_load = 0.5 N. The
+    driver has reached steady state (constant velocity cone
+    excursion, a = 0).
+
+    Under these conditions, Newton II (linear, a = 0) gives
+    F_motor = F_load, which via the gyrator relation
+    F_motor = BL·i fixes the current i = F_load/BL.
+    Kirchhoff's voltage law gives V_s = i·R + BL·v.
+    Solving for v:
+
+        v = V_s / BL − F_load · R / BL²
+
+    What is the steady-state cone velocity v in m/s?
+  local_formula: "V_s / BL - F_load * R / BL**2"
+  canonical_substitutions:
+    V_s: 5.0
+    BL: 5.0
+    F_load: 0.5
+    R: 8.0
+  variable_ranges:
+    V_s: [0.1, 100.0]
+    BL: [0.1, 50.0]
+    F_load: [0.001, 50.0]
+    R: [0.1, 100.0]
+  expected_unit: meter / second
+  expected_dimension: "[length] / [time]"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260416
+
+assumptions_required:
+  - "Steady state: a = dv/dt = 0 (constant velocity excursion)"
+  - "Constant BL product (no position dependence; uniform magnetic gap)"
+  - "Linear coil: no iron saturation, no eddy currents, no inductance (DC steady state)"
+  - "Ohm's law holds on the coil (linear, ohmic)"
+  - "No mechanical friction or viscous damping beyond F_load"
+  - "BL_force = BL_emf — enforced by port-Hamiltonian power conservation"
+  - "Rigid cone (piston mode, no breakup)"
+  - "Classical regime"
+
+emergent_properties_expected:
+  - "Power conservation across the gyrator: P_mech = F_load · v equals (P_in − i²R) exactly"
+  - "Blocked condition: if F_load/BL > V_s/R then v ≤ 0 (motor stalls)"
+  - "Free-running velocity: v_0 = V_s/BL when F_load → 0"
+  - "Linear v-vs-F_load curve at fixed V_s: slope = −R/BL²"
+  - "Structurally identical to DC motor: v↔ω, F↔τ, BL↔K — confirms the gyrator formalism generalizes across linear and rotational domains"
+  - "BL²/R is the electromagnetic damping coefficient (W·s²/m²) — the voice-coil analog of K²/R for the DC motor"
+
+architect_anchor_citations:
+  - "Beranek, L. L. & Mellow, T. (2012). Acoustics: Sound Fields and Transducers. Academic Press, Ch 2."
+  - "Hunt, F. V. (1954). Electroacoustics: The Analysis of Transduction and its Historical Background. Harvard UP."
+  - "Small, R. H. (1972). Direct-Radiator Loudspeaker System Analysis. J. Audio Eng. Soc. 20, 383."
+  - "Paynter, H. M. (1961). Analysis and Design of Engineering Systems. MIT Press."

@@ -1,0 +1,138 @@
+composite_id: CMP-FOURIER-FICK-DUFOUR-001
+name: Dufour heat flux from Fourier + Fick composition (Onsager reciprocal of Soret)
+description: >
+  The Dufour effect is the Onsager reciprocal of the Soret effect:
+  where Soret describes a CONCENTRATION gradient driven by a
+  temperature gradient (verified as CMP-FOURIER-FICK-SORET-001),
+  Dufour describes a HEAT FLUX driven by a concentration gradient.
+
+  By Onsager reciprocity (L_12 = L_21), the same cross-coefficient
+  that couples heat transport to mass transport in one direction
+  must also couple mass transport to heat transport in the reverse
+  direction. This composite explicitly tests the L_21 direction,
+  validating that the Onsager transducer machinery correctly handles
+  the reciprocal coupling — not just the L_12 direction already
+  verified by the Soret composite.
+
+  This is the SECOND composite using the Onsager transducer type
+  (after Soret), providing the per-transducer-type replication that
+  the board meta-analysis identified as a critical validation need.
+  If the Dufour composite verifies with the same s_T as the Soret
+  composite, the Onsager machinery is confirmed to be symmetric as
+  required by irreversible thermodynamics.
+
+  The Dufour heat flux for a dilute binary solution with a
+  concentration gradient ΔC/L at temperature T is:
+
+      q_D = D · s_T · (R·T²/M) · (ΔC/L)
+
+  where D is the diffusion coefficient, s_T is the Soret coefficient,
+  R is the gas constant, T is the absolute temperature, M is the
+  solute molar mass, ΔC is the concentration difference, and L is
+  the distance. This uses the SAME s_T as the Soret composite —
+  the symmetry L_12 = L_21 is enforced by using a single named
+  transducer coefficient.
+
+parents:
+  eq_a: EQ-FOURIER-HEAT
+  eq_a_problem_id: PRB-FOURIER-001
+  eq_b: EQ-FICK-DIFFUSION
+  eq_b_problem_id: PRB-FICK-001
+
+coupling:
+  tier: tier2_structural
+  v_a: q                                # Fourier: heat flux
+  v_b: dC_dx                            # Fick: concentration gradient
+  descriptor_note: >
+    This is the REVERSE direction of the Soret composite: here a
+    concentration gradient (Fick's side) drives a heat flux
+    (Fourier's side). The transducer coefficient is the same
+    Soret coefficient s_T, entering through the Onsager cross-
+    coefficient L_21 = L_12. The Dufour coefficient D_F is not
+    an independent parameter but is derived from s_T, D, R, T, M.
+  transducer_id: TRANSDUCER-DUFOUR
+  transducer_properties:
+    type: "Onsager_cross_coefficient_reciprocal"
+    domains: [mass_transport, thermal_transport]
+    coefficient_name: "Dufour coefficient (derived from Soret s_T)"
+    coefficient_dimensions: "[energy] · [length]² / ([substance] · [time])"
+    constitutive_relation: "q_D = D · s_T · (R·T²/M) · (ΔC/L)"
+    onsager_symmetry: "L_12 = L_21 — the SAME s_T appears in both Soret and Dufour"
+    citation:
+      - "Dufour, L. (1872). Über die Diffusion der Gase durch poröse Wände und die sie begleitenden Temperaturveränderungen. Ann. Phys. 224, 490."
+      - "de Groot & Mazur, Non-Equilibrium Thermodynamics (1962), Ch XI §5 (Dufour effect)"
+      - "Kondepudi & Prigogine, Modern Thermodynamics, 2nd ed., §16.7"
+      - "Platten, J. K. (2006) The Soret effect: A review. J. Appl. Mech. 73, 5."
+
+composite_canonical_form: >
+  q_D - D * s_T * R * T**2 * delta_C / (M * L)
+composite_state_vars: [q_D]
+composite_parameters: [D, s_T, R, T, delta_C, M, L]
+
+canonical_problem:
+  id: CMP-FOURIER-FICK-DUFOUR-001-Q1
+  statement: >
+    A dilute aqueous solution of a small solute (molar mass
+    M = 0.018 kg/mol, representative of a small molecule or
+    ion in water) is held in a 1D cell at constant temperature
+    T = 298.15 K (25°C, isothermal). A concentration difference
+    ΔC = 8.0 mol/m³ is maintained across a distance L = 0.02 m
+    (the same geometry as PRB-FICK-001). The diffusion
+    coefficient is D = 1.0e-9 m²/s (typical aqueous value).
+    The Soret coefficient is s_T = 1.0e-3 K⁻¹ (the same value
+    used in CMP-FOURIER-FICK-SORET-001).
+
+    By the Dufour effect — the Onsager reciprocal of the Soret
+    effect — the concentration gradient drives a heat flux:
+
+        q_D = D · s_T · (R·T²/M) · (ΔC/L)
+
+    where R = 8.314472 J/(mol·K) is the gas constant.
+
+    What is the magnitude of the Dufour heat flux q_D, in W/m²?
+  local_formula: "D * s_T * R * T**2 * delta_C / (M * L)"
+  canonical_substitutions:
+    D: 1.0e-9
+    s_T: 1.0e-3
+    R: 8.314472
+    T: 298.15
+    delta_C: 8.0
+    M: 0.018
+    L: 0.02
+  variable_ranges:
+    D: [1.0e-12, 1.0e-4]
+    s_T: [1.0e-5, 0.1]
+    R: [8.314472, 8.314472]
+    T: [200.0, 1000.0]
+    delta_C: [0.01, 1000.0]
+    M: [0.002, 0.5]
+    L: [1.0e-4, 1.0]
+  expected_unit: watt / meter**2
+  expected_dimension: "[mass] / [time]**3"
+  pbt:
+    n_samples: 200
+    rel_tolerance: 1e-10
+    seed: 20260416
+
+assumptions_required:
+  - "Dilute binary solution (same as Soret composite)"
+  - "Linear-response regime: fluxes proportional to gradients (Onsager)"
+  - "Onsager reciprocity holds: L_12 = L_21"
+  - "Isothermal system (T = const, no Soret effect in this direction)"
+  - "One-dimensional transport along the concentration gradient"
+  - "Steady state (constant concentration profile maintained externally)"
+  - "The Soret coefficient s_T is the SAME value as in CMP-FOURIER-FICK-SORET-001"
+  - "Ideal dilute solution: activity coefficient = 1"
+  - "Both parent equations' assumptions also hold"
+
+emergent_properties_expected:
+  - "Onsager reciprocity symmetry: the SAME s_T drives both Soret (T→C) and Dufour (C→T) couplings"
+  - "The Dufour heat flux is typically very small (~10⁻² W/m² for aqueous solutions) — much smaller than typical conductive or convective heat fluxes, which is why it is often neglected"
+  - "The Dufour flux scales as T² — it grows quadratically with temperature, making it more significant at high temperatures"
+  - "Dimensionless Dufour number Du = D·s_T·R·T·ΔC / (M·k·ΔT) — ratio of Dufour heat flux to conductive heat flux"
+
+architect_anchor_citations:
+  - "Dufour, L. (1872). Über die Diffusion der Gase durch poröse Wände. Ann. Phys. 224, 490."
+  - "de Groot, S. R. & Mazur, P. (1962) Non-Equilibrium Thermodynamics. North-Holland, Ch XI §5."
+  - "Kondepudi, D. & Prigogine, I. (2014) Modern Thermodynamics, 2nd ed., Wiley, §16.7."
+  - "Bird, R. B., Stewart, W. E. & Lightfoot, E. N. (2007) Transport Phenomena, 2nd ed., §18.4."

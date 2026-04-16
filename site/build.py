@@ -865,14 +865,10 @@ def _render_page(
     nav_items = [
         ("Overview", f"{_MOUNT}index.html", "overview"),
         ("Equations", f"{_MOUNT}equations/index.html", "equations"),
-        ("Canonicals", f"{_MOUNT}canonicals.html", "canonicals"),
         ("Composites", f"{_MOUNT}composites.html", "composites"),
-        ("Couplings", f"{_MOUNT}couplings/index.html", "couplings"),
-        ("Ledger", f"{_MOUNT}ledger.html", "ledger"),
         ("Methodology", f"{_MOUNT}methodology.html", "methodology"),
-        ("AI Review", f"{_MOUNT}ai-review.html", "ai-review"),
+        ("Publications", f"{_MOUNT}research.html", "research"),
         ("About", f"{_MOUNT}about.html", "about"),
-        ("Research", f"{_MOUNT}research.html", "research"),
     ]
     nav_html = "".join(
         f'<a href="{href}" class="{"current" if key == nav_current else ""}">{label}</a>'
