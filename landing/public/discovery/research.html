@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Research — hequ.ai/discovery</title>
+<link rel="stylesheet" href="/discovery/_assets/site.css">
+<link rel="icon" type="image/svg+xml" href="/favicon.svg">
+<link rel="mask-icon" href="/favicon.svg" color="#5FB3B3">
+<meta name="theme-color" content="#0a0e1a">
+</head>
+<body>
+<canvas id="starfield" aria-hidden="true"></canvas>
+<header class="site">
+  <div class="inner">
+    <a href="/discovery/index.html" class="brand">hequ<span class="dot">.ai</span><span class="path">/ discovery</span></a>
+    <nav><a href="/discovery/index.html" class="">Overview</a><a href="/discovery/equations/index.html" class="">Equations</a><a href="/discovery/canonicals.html" class="">Canonicals</a><a href="/discovery/composites.html" class="">Composites</a><a href="/discovery/couplings/index.html" class="">Couplings</a><a href="/discovery/ledger.html" class="">Ledger</a><a href="/discovery/methodology.html" class="">Methodology</a><a href="/discovery/ai-review.html" class="">AI Review</a><a href="/discovery/about.html" class="">About</a><a href="/discovery/research.html" class="current">Research</a></nav>
+  </div>
+</header>
+<main class="container">
+<h1>Research</h1>
+<section class="card">
+<h2>Photon-pressure-driven seepage in porous media</h2>
+<p class="meta">Preprint draft v1 &middot; April 2026 &middot; Matthew Luallen, with AI review board</p>
+<p>A novel cross-domain prediction from automated equation coupling. The composite couples Darcy&rsquo;s law for porous-media flow with radiation-pressure momentum deposition from absorbed photon flux.</p>
+<h3>The prediction</h3>
+<p>In a horizontal porous medium saturated with an absorbing fluid:</p>
+<div class="equation">u = k &alpha; I / (&mu; c)</div>
+<p>where <em>k</em> is permeability, <em>&alpha;</em> is the absorption coefficient, <em>I</em> is beam intensity, <em>&mu;</em> is dynamic viscosity, and <em>c</em> is the speed of light.</p>
+<p>At representative parameters (k = 10<sup>&minus;12</sup> m&sup2;, &alpha; = 10<sup>3</sup> m<sup>&minus;1</sup>, I = 10<sup>9</sup> W/m&sup2;, &mu; = 10<sup>&minus;3</sup> Pa&middot;s): <strong>u &asymp; 3.3 &times; 10<sup>&minus;6</sup> m/s</strong> (~12 mm/hour).</p>
+<h3>Why this is novel</h3>
+<p>A systematic prior-art search (12 queries across Web, arXiv, and Google Scholar) found <strong>zero direct hits</strong> on this specific coupling. The acoustic analog (acoustic-streaming-driven pore flow) is well-published in J. Fluid Mech. and PMC (2018). The optical-in-bulk-fluid case is published (Leonhardt, Phys. Rev. A 90, 033801, 2014). But the specific gap &mdash; optical/electromagnetic momentum &rarr; pore-fluid flow in porous media &mdash; remains unfilled.</p>
+<p>The gap exists because the two parent communities (porous-media hydraulicists and radiation-pressure physicists) do not cite each other&rsquo;s journals. This is <strong>Mechanism A (cross-community isolation)</strong> from the hequ.ai novelty pathway.</p>
+<h3>Verification</h3>
+<table><thead><tr><th>Check</th><th>Result</th></tr></thead><tbody>
+<tr><td>A &mdash; symbolic canonicalization</td><td>rational normalization &rarr; zero</td></tr>
+<tr><td>B &mdash; property-based testing</td><td>200 stratified samples, all within 10<sup>&minus;10</sup> tolerance</td></tr>
+<tr><td>C &mdash; mpmath 50-digit cross-CAS</td><td>3.33564&times;10<sup>&minus;6</sup>, rel_err = 0</td></tr>
+<tr><td>Board formula</td><td>matches local formula exactly</td></tr>
+<tr><td>Board citations</td><td>Darcy 1856, Ashkin 1970, Jackson &sect;6.7, Bear Ch 5</td></tr>
+</tbody></table>
+<h3>Falsification conditions</h3>
+<ol>
+<li>Steady flux in a horizontal dyed porous sample must scale linearly with beam intensity (u &prop; I) after controlling for thermal buoyancy.</li>
+<li>Measured velocity at the stated parameters must be within an order of magnitude of 3.3 &times; 10<sup>&minus;6</sup> m/s.</li>
+<li>No prior peer-reviewed publication formalizing this specific coupling exists.</li>
+</ol>
+<h3>Distinguishing signature</h3>
+<p>The prediction is <strong>independent of pore-fluid density &rho;</strong>, unlike gravity-driven Darcy flow where u &prop; &rho;g. Varying fluid density while holding viscosity constant should not change the photon-pressure-driven seepage velocity. This decoupling provides a clean experimental control.</p>
+<h3>&ldquo;Board is not a CAS&rdquo; side contribution</h3>
+<p>On the Arrhenius+Fick Damk&ouml;hler composite, the AI board&rsquo;s numerical estimate was 7.24 &times; 10<sup>9</sup> while the true value is 725.4 &mdash; a <strong>10<sup>7</sup>-fold error</strong> that the local-CAS protocol caught by design. LLMs provide formulas and citations; SymPy + mpmath provide numbers.</p>
+<h3>Provenance</h3>
+<ul>
+<li>Descriptor schema frozen before proposal (SHA-256: <code>5b1af167...b4cd3633</code>)</li>
+<li>Candidate generated by the AI review board (OpenAI GPT-5, Mechanism B) during novelty-generation brief v1</li>
+<li>Sympy-verified before composite authored (Rule A9)</li>
+<li>Phase 13 verification: all four checks passed</li>
+<li>Source: <a href="https://github.com/makau-ai/hequ">github.com/makau-ai/hequ</a></li>
+</ul>
+</section>
+<section class="card">
+<h2>Verified composite catalog</h2>
+<table><thead><tr><th>#</th><th>Composite</th><th>Parents</th><th>Transducer</th><th>Novelty</th></tr></thead><tbody>
+<tr><td>1</td><td>Simple harmonic oscillator</td><td>Newton II + Hooke</td><td>identity</td><td>textbook</td></tr>
+<tr><td>2</td><td>Work = force &times; distance</td><td>Newton II + Work-Energy</td><td>identity</td><td>textbook</td></tr>
+<tr><td>3</td><td>Soret thermodiffusion</td><td>Fourier + Fick</td><td>Onsager s<sub>T</sub></td><td>textbook</td></tr>
+<tr><td>4</td><td>DC motor steady-state</td><td>Newton II + Ohm</td><td>gyrator K</td><td>textbook</td></tr>
+<tr><td>5</td><td>Damk&ouml;hler regime</td><td>Arrhenius + Fick</td><td>compound Da</td><td>textbook</td></tr>
+<tr><td>6</td><td><strong>Photon-pressure seepage</strong></td><td><strong>Darcy + RadPress</strong></td><td><strong>mobility k/&mu;</strong></td><td><strong>NOVEL</strong></td></tr>
+</tbody></table>
+</section>
+<footer class="site">
+  <p>Discovery engine · Medium milestone 2 · Layer 5 coupling sieve</p>
+  <p>Every record is traceable to an append-only SHA-256 hash-chained ledger. Nothing is claimed a discovery without a recorded AI review board vote.</p>
+</footer>
+</main>
+<script src="/discovery/_assets/starfield.js"></script>
+</body>
+</html>
