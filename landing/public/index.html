@@ -69,8 +69,15 @@ canvas {
      sharper color boundaries let the QU-within-EQU signal read */
   letter-spacing: 0.06em;
   text-transform: uppercase;
-  /* single subtle glow layer, down from the v3 double-shadow */
+  /* Space Grotesk stylistic set 2 gives the double-storey a
+     and cleaner straight-leg forms; sharpens the "equ" and
+     ".AI" lockup per the typography SME. */
+  font-feature-settings: "ss02", "cv11";
   text-shadow: 0 0 14px rgba(232, 135, 90, 0.12);
+  /* Contact shadow per the board chair's Pass 2 spec —
+     grounds the wordmark on #06050e so it reads as sitting
+     ON the page, not floating in the cosmos. */
+  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.55));
   line-height: 1;
   display: inline-block;
   color: #FFE9B3;  /* fallback; per-segment spans override */
@@ -87,6 +94,7 @@ canvas {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  text-shadow: 0 0 16px rgba(232, 135, 90, 0.38);
 }
 .brand .seg-equ {                               /* EQU: sky cyan — Equation.
                                                    Native text-decoration
@@ -97,6 +105,7 @@ canvas {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  text-shadow: 0 0 16px rgba(79, 195, 247, 0.35);
   text-decoration: underline;
   text-decoration-color: #4FC3F7;
   text-decoration-thickness: 0.07em;
@@ -110,7 +119,7 @@ canvas {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 18px rgba(155, 247, 196, 0.25);
+  text-shadow: 0 0 16px rgba(155, 247, 196, 0.4);
   position: relative;                           /* anchor for entanglement
                                                    thread + Q/U orbs */
 }
@@ -180,7 +189,7 @@ canvas {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 18px rgba(216, 179, 240, 0.3);
+  text-shadow: 0 0 16px rgba(216, 179, 240, 0.45);
   letter-spacing: 0;
 }
 .brand .seg-dot {                               /* dot binds into EQU sky cyan */
@@ -189,6 +198,7 @@ canvas {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  text-shadow: 0 0 12px rgba(79, 195, 247, 0.5);
 }
 .brand .seg-ai  {                               /* .AI: first light — dawn gold */
   background: linear-gradient(180deg, #FFF2CE 0%, #FFE9B3 50%, #F5D583 100%);
@@ -196,6 +206,7 @@ canvas {
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
+  text-shadow: 0 0 16px rgba(255, 233, 179, 0.35);
 }
 /* Entanglement thread — a vibrant strand running from Q-orb
    (25% of seg-qu) to U-orb (75%). A bright energy peak bounces
@@ -376,6 +387,19 @@ canvas {
   box-shadow: 0 0 5px rgba(216, 179, 240, 0.65);
   margin-left: 1px;
 }
+/* Non-acronym letters in the etymology tooltip — muted
+   white so the acronym letters (their semantic colors,
+   underline, or entanglement mark) read as the primary
+   signal and the full word still spells out underneath. */
+.em-w {
+  color: rgba(255, 255, 255, 0.78);
+}
+.em-equ-underline {
+  text-decoration: underline;
+  text-decoration-color: #4FC3F7;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.09em;
+}
 
 .discipline-ring {
   position: fixed;
@@ -461,10 +485,10 @@ canvas {
     <div class="about-name">
       <a href="#" tabindex="0" aria-describedby="etymology-text">about the name
         <span class="etymology-tooltip" id="etymology-text">
-          <span style="color:#E8875A">Human</span> &middot;
-          <span style="color:#4FC3F7;text-decoration:underline;text-decoration-color:#4FC3F7;text-underline-offset:0.09em;text-decoration-thickness:0.07em">Equation</span> &middot;
-          <span style="color:#9BF7C4">Quantum</span><span class="em-pair" aria-hidden="true"><span class="em-dot em-dot-q"></span><span class="em-dot em-dot-u"></span></span><span style="color:#D8B3F0">Unity</span> &middot;
-          <span style="color:#4FC3F7">.</span><span style="color:#FFE9B3">Artificial Intelligence</span>
+          <span style="color:#E8875A">H</span><span class="em-w">uman</span> &middot;
+          <span class="em-equ-underline"><span style="color:#4FC3F7">E</span><span style="color:#9BF7C4">q</span><span style="color:#D8B3F0">u</span></span><span class="em-w">ation</span> &middot;
+          <span style="color:#9BF7C4">Q</span><span class="em-w">uantum</span><span class="em-pair" aria-hidden="true"><span class="em-dot em-dot-q"></span><span class="em-dot em-dot-u"></span></span><span style="color:#D8B3F0">U</span><span class="em-w">nity</span> &middot;
+          <span style="color:#4FC3F7">.</span><span style="color:#FFE9B3">A</span><span class="em-w">rtificial </span><span style="color:#FFE9B3">I</span><span class="em-w">ntelligence</span>
         </span>
       </a>
     </div>
