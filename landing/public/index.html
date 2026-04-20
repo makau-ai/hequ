@@ -98,35 +98,39 @@ canvas {
   position: relative;                           /* anchor for entanglement
                                                    thread + Q-particle */
 }
-/* Entanglement thread — a horizontal strand of light
-   running between the Q-particle and the U-particle.
-   The gradient shifts left↔right to imply the non-local
-   correlation of a Bell pair. The thread IS the unity:
-   Q and U are two glyphs sharing one state, and that
-   shared state is what binds the word 'hequ' together.
-   Color grades aqua → parchment so the Q side reads
-   'quantum' and the U side chains into '.AI'. */
+/* Entanglement thread — an aqua→lilac gradient strand
+   running from Q-center to U-center. The color handoff
+   at midspan is the yin-yang seam: Q's side reads aqua
+   (quantum), U's side reads lilac (unity), the crossing
+   is where the two bound particles exchange identity.
+   Animated background-position creates a subtle
+   shimmer, reinforcing the non-local correlation of a
+   Bell pair. */
 .brand .seg-qu::before {
   content: '';
   position: absolute;
   top: -0.09em;
-  left: 22%;
-  right: 22%;
+  left: 25%;
+  right: 25%;
   height: 0.035em;
   background: linear-gradient(90deg,
-    rgba(184, 255, 241, 0.1),
-    rgba(184, 255, 241, 0.95),
-    rgba(233, 225, 201, 0.95),
-    rgba(233, 225, 201, 0.1));
-  background-size: 220% 100%;
+    rgba(184, 255, 241, 0.1)  0%,
+    rgba(184, 255, 241, 0.95) 35%,
+    rgba(199, 184, 232, 0.95) 65%,
+    rgba(199, 184, 232, 0.1)  100%);
+  background-size: 180% 100%;
   animation: entangle-thread 3.2s ease-in-out infinite;
   border-radius: 0.03em;
-  box-shadow: 0 0 8px rgba(184, 255, 241, 0.3);
+  box-shadow: 0 0 8px rgba(184, 255, 241, 0.22),
+              0 0 8px rgba(199, 184, 232, 0.22);
 }
-/* Q-particle — luminous aqua orb above the Q glyph. Pulses
-   in correlated phase with the U-particle (same phase =
-   perfect correlation, the visual signature of an
-   entangled pair). */
+/* Q-particle — aqua orb centered above the Q glyph with
+   a soft lilac crescent inset on its right flank (the
+   side facing U). The opposing-hue trace is the yin-yang
+   residue: Q carries a drop of U inside it. Kept faint
+   (~22% opacity, feathered to transparent) so the
+   primary read stays "aqua orb" with the duality felt
+   rather than announced. */
 .brand .seg-qu::after {
   content: '';
   position: absolute;
@@ -136,26 +140,36 @@ canvas {
   width: 0.14em;
   height: 0.14em;
   border-radius: 50%;
-  background: #B8FFF1;
+  background:
+    radial-gradient(circle at 72% 50%,
+      rgba(199, 184, 232, 0.38) 0%,
+      rgba(199, 184, 232, 0)    55%),
+    #B8FFF1;
   box-shadow: 0 0 12px rgba(184, 255, 241, 0.75),
               0 0 26px rgba(184, 255, 241, 0.32);
   animation: entangle-pulse 3.2s ease-in-out infinite;
 }
-.brand .seg-u {                                 /* The U is the final glyph
-                                                   of the EQU word. Killing
-                                                   letter-spacing on this
-                                                   span removes the trailing
-                                                   0.06em space that would
-                                                   otherwise extend the
-                                                   underline past U. */
+.brand .seg-u {                                 /* The U is Unity — its own
+                                                   fifth brand color, lilac
+                                                   violet. Distinct from H
+                                                   (amber), EQU (teal), QU
+                                                   (aqua) and .AI (parchment).
+                                                   Lilac carries the cosmic /
+                                                   spiritual unity reading.
+                                                   Letter-spacing zero keeps
+                                                   the EQU underline from
+                                                   extending past U. */
+  color: #C7B8E8;
+  text-shadow: 0 0 18px rgba(199, 184, 232, 0.3);
   letter-spacing: 0;
   position: relative;                           /* anchor for U-particle */
 }
-/* U-particle — parchment orb above the U, matched in
-   scale with the Q-particle and pulsing in lockstep.
-   Parchment color makes the U-end of the entangled pair
-   read as the tether to .AI, so the wordmark flows
-   amber(H) → teal(EQU) → aqua(Q) → parchment(U→.AI). */
+/* U-particle — lilac orb centered above U with a soft
+   aqua crescent inset on its left flank (the side facing
+   Q). Mirror of the Q-particle's lilac crescent — the
+   two orbs each hold a trace of the other, completing
+   the yin-yang reading. Each is primarily itself, but
+   looks toward its partner in the other's color. */
 .brand .seg-u::before {
   content: '';
   position: absolute;
@@ -165,9 +179,13 @@ canvas {
   width: 0.14em;
   height: 0.14em;
   border-radius: 50%;
-  background: #E9E1C9;
-  box-shadow: 0 0 12px rgba(233, 225, 201, 0.7),
-              0 0 26px rgba(233, 225, 201, 0.3);
+  background:
+    radial-gradient(circle at 28% 50%,
+      rgba(184, 255, 241, 0.38) 0%,
+      rgba(184, 255, 241, 0)    55%),
+    #C7B8E8;
+  box-shadow: 0 0 12px rgba(199, 184, 232, 0.75),
+              0 0 26px rgba(199, 184, 232, 0.32);
   animation: entangle-pulse 3.2s ease-in-out infinite;
 }
 .brand .seg-dot { color: #5FB3B3; }             /* dot binds into EQU teal */
@@ -385,10 +403,11 @@ canvas {
         <span class="etymology-tooltip" id="etymology-text">
           <span style="color:#D4A853">H</span>uman &middot;
           <span style="color:#5FB3B3;text-decoration:underline;text-decoration-color:#5FB3B3;text-underline-offset:0.09em;text-decoration-thickness:0.07em">EQU</span>ation &middot;
-          <span style="color:#B8FFF1">QU</span>antum &middot;
+          <span style="color:#B8FFF1">Q</span>uantum &middot;
+          <span style="color:#C7B8E8">U</span>nity &middot;
           <span style="color:#E9E1C9">.A</span>rtificial <span style="color:#E9E1C9">I</span>ntelligence
           <br>
-          <span class="etymology-unity"><span style="color:#B8FFF1">Q</span> and <span style="color:#E9E1C9">U</span> entangled &mdash; the entanglement is the unity</span>
+          <span class="etymology-unity"><span style="color:#B8FFF1">Q</span> (quantum) entangled with <span style="color:#C7B8E8">U</span> (unity) &mdash; each holds a trace of the other</span>
         </span>
       </a>
     </div>
