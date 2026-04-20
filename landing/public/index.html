@@ -149,7 +149,8 @@ canvas {
     #9BF7C4;
   box-shadow: 0 0 12px rgba(155, 247, 196, 0.75),
               0 0 26px rgba(155, 247, 196, 0.32);
-  animation: entangle-pulse 3.2s ease-in-out infinite;
+  animation: entangle-pulse 3.2s ease-in-out infinite,
+             entangle-flicker 7.3s linear infinite;
 }
 /* U-orb — vesper, sits in the dead center of the U
    glyph itself (inside the U's bowl). The firefly
@@ -172,7 +173,8 @@ canvas {
     #D8B3F0;
   box-shadow: 0 0 12px rgba(216, 179, 240, 0.75),
               0 0 26px rgba(216, 179, 240, 0.32);
-  animation: entangle-pulse 3.2s ease-in-out infinite;
+  animation: entangle-pulse 3.2s ease-in-out infinite,
+             entangle-flicker 7.3s linear infinite;
 }
 .brand .seg-u {                                 /* The U is Unity — its own
                                                    fifth brand color, lilac
@@ -208,13 +210,14 @@ canvas {
   color: transparent;
   text-shadow: 0 0 16px rgba(255, 233, 179, 0.35);
 }
-/* Entanglement thread — a vibrant strand running from Q-orb
-   (25% of seg-qu) to U-orb (75%). A bright energy peak bounces
-   back and forth between them on a 2.4s ease-in-out alternate
-   cycle, rendering the live quantum channel the founder asked
-   for. Firefly on Q side, Vesper on U side, white peak in the
-   middle; background-position animation translates the peak
-   along the thread. */
+/* Entanglement thread — a STATIC luminous tie from Q-orb
+   (25%) to U-orb (75%) indicating shared state, not a
+   channel. Per the physicist SME, any bouncing packet
+   between the orbs reads as signal propagation, which
+   violates the no-communication theorem's mental model.
+   The entanglement lives in the orbs' correlated flicker
+   (see entangle-flicker below), not in motion along the
+   thread. */
 .entangle-thread {
   content: '';
   position: absolute;
@@ -224,23 +227,34 @@ canvas {
   height: 0.035em;
   transform: translateY(-50%);
   background: linear-gradient(90deg,
-    rgba(155, 247, 196, 0.7)  0%,
-    rgba(216, 245, 222, 0.9)  35%,
-    rgba(255, 255, 255, 0.95) 50%,
-    rgba(232, 214, 248, 0.9)  65%,
-    rgba(216, 179, 240, 0.7)  100%);
-  background-size: 300% 100%;
-  background-position: 100% 0;
-  animation: entangle-bounce 2.4s ease-in-out infinite alternate;
+    rgba(155, 247, 196, 0.65) 0%,
+    rgba(220, 248, 232, 0.88) 40%,
+    rgba(245, 230, 252, 0.88) 60%,
+    rgba(216, 179, 240, 0.65) 100%);
   border-radius: 0.03em;
-  box-shadow: 0 0 6px rgba(255, 255, 255, 0.35),
-              0 0 12px rgba(155, 247, 196, 0.25),
-              0 0 12px rgba(216, 179, 240, 0.25);
+  box-shadow: 0 0 8px rgba(220, 230, 252, 0.28),
+              0 0 14px rgba(155, 247, 196, 0.2),
+              0 0 14px rgba(216, 179, 240, 0.2);
   pointer-events: none;
 }
-@keyframes entangle-bounce {
-  from { background-position: 100% 0; }
-  to   { background-position: 0%   0; }
+/* Joint stochastic flicker — both orbs simultaneously
+   flash to a shared correlated hue on an irregular 7.3s
+   cycle. Same keyframe on both orbs = perfect correlation
+   in whatever basis the flash picks. The "randomness" is
+   faked via irregular keyframe intervals (prime-ish period
+   vs. the 3.2s pulse so flashes never lock to the breath).
+   Green-dominant and violet-dominant flashes alternate —
+   the measurement outcome in a shared basis. */
+@keyframes entangle-flicker {
+  0%,   13.9%   { filter: brightness(1); }
+  14.2%, 14.5% { filter: brightness(1.45) drop-shadow(0 0 3px #9BF7C4); }
+  14.8%, 37.9% { filter: brightness(1); }
+  38.2%, 38.5% { filter: brightness(1.45) drop-shadow(0 0 3px #D8B3F0); }
+  38.8%, 60.9% { filter: brightness(1); }
+  61.2%, 61.5% { filter: brightness(1.45) drop-shadow(0 0 3px #9BF7C4); }
+  61.8%, 83.9% { filter: brightness(1); }
+  84.2%, 84.5% { filter: brightness(1.45) drop-shadow(0 0 3px #D8B3F0); }
+  84.8%, 100%  { filter: brightness(1); }
 }
 
 @keyframes entangle-pulse {
@@ -278,10 +292,7 @@ canvas {
      peak parked at center, nothing moves. */
   .brand .seg-qu::before,
   .brand .seg-qu::after { animation: none !important; }
-  .entangle-thread {
-    animation: none !important;
-    background-position: 50% 0 !important;
-  }
+  /* Thread is already static; nothing to freeze. */
 }
 
 .tagline {
@@ -348,7 +359,7 @@ canvas {
 }
 .about-name:hover .etymology-tooltip,
 .about-name:focus-within .etymology-tooltip {
-  max-height: 48px;
+  max-height: 96px;
   opacity: 1;
   margin-top: 6px;
 }
@@ -399,6 +410,26 @@ canvas {
   text-decoration-color: #4FC3F7;
   text-decoration-thickness: 0.07em;
   text-underline-offset: 0.09em;
+}
+/* Chinese etymology line — 河曲 (Hequ, the bend of the
+   Yellow River; also a horse breed and a Mongolian
+   constellation). Muted so it reads as provenance under
+   the acronym breakdown, not a competing signal. */
+.em-cn {
+  display: inline-block;
+  font-family: 'Cormorant Garamond', 'Songti SC', serif;
+  font-style: italic;
+  font-size: 0.95em;
+  opacity: 0.78;
+  letter-spacing: 0.04em;
+  margin-left: 0.1em;
+}
+.em-cn-hanzi {
+  font-family: 'Songti SC', 'Noto Serif CJK SC', serif;
+  font-style: normal;
+  letter-spacing: 0.08em;
+  color: rgba(255, 255, 255, 0.82);
+  margin: 0 0.15em;
 }
 
 .discipline-ring {
@@ -489,6 +520,8 @@ canvas {
           <span class="em-equ-underline"><span style="color:#4FC3F7">E</span><span style="color:#9BF7C4">q</span><span style="color:#D8B3F0">u</span></span><span class="em-w">ation</span> &middot;
           <span style="color:#9BF7C4">Q</span><span class="em-w">uantum</span><span class="em-pair" aria-hidden="true"><span class="em-dot em-dot-q"></span><span class="em-dot em-dot-u"></span></span><span style="color:#D8B3F0">U</span><span class="em-w">nity</span> &middot;
           <span style="color:#4FC3F7">.</span><span style="color:#FFE9B3">A</span><span class="em-w">rtificial </span><span style="color:#FFE9B3">I</span><span class="em-w">ntelligence</span>
+          <br>
+          <span class="em-cn"><span class="em-cn-hanzi">河曲</span> &mdash; bend of the Yellow River</span>
         </span>
       </a>
     </div>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  hequ.ai favicon (monogram) — Q with a vesper orb in its counter.
+
+  Derived from the Tier 2 atom: at favicon scale (16/32/64), the full
+  wordmark + entanglement pair collapses to illegibility. The strategist
+  SME's fix: the Q itself is the most distinctive letter, and its counter
+  structurally holds a mate. Vesper dot in the Q's counter carries the
+  entanglement idea to 16x16.
+
+  Square viewBox for clean favicon / avatar use.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 64 64"
+     role="img"
+     aria-label="hequ monogram — Q with unity orb"
+     width="64" height="64">
+  <rect width="64" height="64" fill="#06050e"/>
+
+  <!-- Q letterform (simplified geometric) in firefly gradient -->
+  <defs>
+    <linearGradient id="qGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#BFFADB"/>
+      <stop offset="50%" stop-color="#9BF7C4"/>
+      <stop offset="100%" stop-color="#78EDAB"/>
+    </linearGradient>
+    <radialGradient id="vesperOrb" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"  stop-color="#E0C4F5"/>
+      <stop offset="70%" stop-color="#D8B3F0"/>
+      <stop offset="100%" stop-color="#C69BE8"/>
+    </radialGradient>
+  </defs>
+
+  <!-- Q: circular bowl + short tail at bottom-right -->
+  <g fill="none" stroke="url(#qGrad)" stroke-width="5" stroke-linecap="round">
+    <circle cx="32" cy="30" r="18"/>
+    <line x1="42" y1="42" x2="50" y2="52"/>
+  </g>
+
+  <!-- Vesper unity orb inside Q's counter -->
+  <circle cx="32" cy="30" r="5" fill="url(#vesperOrb)"/>
+</svg>

@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  hequ.ai wordmark — Tier 2 standard identity lockup.
+
+  Five-color static wordmark with the lemniscate-orb entanglement pair
+  replacing the animated thread (motion is hero-only; this tier is for
+  contexts where animation can't reach — PDF decks, stationery, merch,
+  laptop stickers, email signature banner, paper paper footers).
+
+  Static equivalent of the hero composition without the CSS-only effects.
+  Can be embedded as-is on dark or flipped to light-ground variant by
+  swapping each letter's gradient darker (see comments below).
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 520 110"
+     role="img"
+     aria-label="hequ.AI — unity of equations"
+     width="520" height="110">
+  <defs>
+    <!-- per-letter vertical luminance gradients -->
+    <linearGradient id="emberG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#F0A17B"/>
+      <stop offset="50%" stop-color="#E8875A"/>
+      <stop offset="100%" stop-color="#D46D3E"/>
+    </linearGradient>
+    <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#7ED0FA"/>
+      <stop offset="50%" stop-color="#4FC3F7"/>
+      <stop offset="100%" stop-color="#2BAEE4"/>
+    </linearGradient>
+    <linearGradient id="fireflyG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#BFFADB"/>
+      <stop offset="50%" stop-color="#9BF7C4"/>
+      <stop offset="100%" stop-color="#78EDAB"/>
+    </linearGradient>
+    <linearGradient id="vesperG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#E0C4F5"/>
+      <stop offset="50%" stop-color="#D8B3F0"/>
+      <stop offset="100%" stop-color="#CBA0E7"/>
+    </linearGradient>
+    <linearGradient id="firstLightG" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"  stop-color="#FFF2CE"/>
+      <stop offset="50%" stop-color="#FFE9B3"/>
+      <stop offset="100%" stop-color="#F5D583"/>
+    </linearGradient>
+    <linearGradient id="entangleThread" x1="0%" y1="50%" x2="100%" y2="50%">
+      <stop offset="0%"   stop-color="#9BF7C4" stop-opacity="0.65"/>
+      <stop offset="40%"  stop-color="#DCF8E8" stop-opacity="0.88"/>
+      <stop offset="60%"  stop-color="#F5E6FC" stop-opacity="0.88"/>
+      <stop offset="100%" stop-color="#D8B3F0" stop-opacity="0.65"/>
+    </linearGradient>
+    <radialGradient id="qCrescent2" cx="72%" cy="50%" r="55%">
+      <stop offset="0%"  stop-color="#D8B3F0" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#D8B3F0" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="uCrescent2" cx="28%" cy="50%" r="55%">
+      <stop offset="0%"  stop-color="#9BF7C4" stop-opacity="0.4"/>
+      <stop offset="100%" stop-color="#9BF7C4" stop-opacity="0"/>
+    </radialGradient>
+    <style>
+      .wm {
+        font: 700 78px 'Space Grotesk', 'Rajdhani', sans-serif;
+        font-feature-settings: "ss02", "cv11";
+        letter-spacing: 4.7px;
+        text-transform: uppercase;
+      }
+    </style>
+  </defs>
+
+  <!-- letterforms: H Ember, EQU with sky underline, Q firefly, U vesper, .AI First Light -->
+  <text class="wm" y="80">
+    <tspan x="10" fill="url(#emberG)">H</tspan>
+    <tspan fill="url(#skyG)" text-decoration="underline">E</tspan><tspan fill="url(#fireflyG)" text-decoration="underline">Q</tspan><tspan fill="url(#vesperG)" text-decoration="underline">U</tspan>
+    <tspan fill="url(#skyG)">.</tspan><tspan fill="url(#firstLightG)">AI</tspan>
+  </text>
+
+  <!-- Entangled pair inlay: lemniscate + orbs layered over Q and U centers.
+       Q letter center (~x=215), U letter center (~x=285). Baseline ~y=68. -->
+  <g transform="translate(215, 52)">
+    <path d="M 0 0 C 0 -24, 32 -24, 50 0 C 68 24, 100 24, 100 0
+             C 100 -24, 68 -24, 50 0 C 32 24, 0 24, 0 0 Z"
+          fill="none" stroke="url(#entangleThread)" stroke-width="1.2"
+          stroke-linejoin="round" opacity="0.85"/>
+    <circle cx="0"  cy="0" r="8" fill="#9BF7C4"/>
+    <circle cx="0"  cy="0" r="8" fill="url(#qCrescent2)"/>
+    <circle cx="100" cy="0" r="8" fill="#D8B3F0"/>
+    <circle cx="100" cy="0" r="8" fill="url(#uCrescent2)"/>
+  </g>
+</svg>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  hequ.ai wordmark — Tier 3 monochrome lockup.
+
+  Single-color use: screen printing, embossed stationery, one-color
+  press ads, fax, dark-mode-inverted contexts. Strategist SME's prescription:
+  Sky Cyan #4FC3F7 is the brand's anchor hue (the EQU semantic spine).
+  Keep only the decoration that carries meaning, not atmosphere: the EQU
+  underline. Drop halos, orbs, gradients, contact shadow, thread.
+
+  The currentColor pattern lets this mark be re-inked in one line of CSS
+  when embedded: `svg { color: #4FC3F7 }` or any other single hue.
+-->
+<svg xmlns="http://www.w3.org/2000/svg"
+     viewBox="0 0 420 90"
+     role="img"
+     aria-label="hequ.AI wordmark"
+     width="420" height="90">
+  <style>
+    .wm {
+      font: 700 68px 'Space Grotesk', 'Rajdhani', sans-serif;
+      font-feature-settings: "ss02", "cv11";
+      letter-spacing: 4.1px;
+      fill: currentColor;
+      text-transform: uppercase;
+    }
+  </style>
+
+  <text class="wm" x="0" y="66" color="#4FC3F7">
+    <tspan fill="currentColor">H</tspan><tspan fill="currentColor" text-decoration="underline">EQU</tspan><tspan fill="currentColor">.AI</tspan>
+  </text>
+</svg>
