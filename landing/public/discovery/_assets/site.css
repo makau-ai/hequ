@@ -162,8 +162,7 @@ header.site .brand .seg-qu::before {
     #9BF7C4;
   box-shadow: 0 0 5px rgba(155, 247, 196, 0.75),
               0 0 10px rgba(155, 247, 196, 0.32);
-  animation: entangle-pulse 3.2s ease-in-out infinite,
-             entangle-flicker 7.3s linear infinite;
+  animation: entangle-pulse 3.2s ease-in-out infinite;
 }
 header.site .brand .seg-qu::after {
   content: '';
@@ -181,8 +180,8 @@ header.site .brand .seg-qu::after {
     #D8B3F0;
   box-shadow: 0 0 5px rgba(216, 179, 240, 0.75),
               0 0 10px rgba(216, 179, 240, 0.32);
-  animation: entangle-pulse 3.2s ease-in-out infinite,
-             entangle-flicker 7.3s linear infinite;
+  animation: entangle-pulse 3.2s ease-in-out infinite;
+  animation-delay: -1.6s;
 }
 header.site .brand .seg-u {
   background: linear-gradient(135deg, #E5CCF7 0%, #D8B3F0 50%, #9870C2 100%);
@@ -246,20 +245,12 @@ header.site .brand .seg-ai {
   -webkit-text-fill-color: transparent;
   color: transparent;
 }
+/* Anti-correlated breath — same rule as the hero. U-orb
+   runs with animation-delay: -1.6s so it's 180° out of
+   phase with Q-orb at every instant. */
 @keyframes entangle-pulse {
-  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.82; }
-  50%      { transform: translate(-50%, -50%) scale(1.15); opacity: 1;    }
-}
-@keyframes entangle-flicker {
-  0%,   13.9%   { filter: brightness(1); }
-  14.2%, 14.5% { filter: brightness(1.45) drop-shadow(0 0 2px #9BF7C4); }
-  14.8%, 37.9% { filter: brightness(1); }
-  38.2%, 38.5% { filter: brightness(1.45) drop-shadow(0 0 2px #D8B3F0); }
-  38.8%, 60.9% { filter: brightness(1); }
-  61.2%, 61.5% { filter: brightness(1.45) drop-shadow(0 0 2px #9BF7C4); }
-  61.8%, 83.9% { filter: brightness(1); }
-  84.2%, 84.5% { filter: brightness(1.45) drop-shadow(0 0 2px #D8B3F0); }
-  84.8%, 100%  { filter: brightness(1); }
+  0%, 100% { transform: translate(-50%, -50%) scale(0.88); opacity: 0.45; }
+  50%      { transform: translate(-50%, -50%) scale(1.20); opacity: 1;    }
 }
 @media (prefers-reduced-motion: reduce) {
   header.site .brand .seg-qu::before,
