@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Rajdhani:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=Rajdhani:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap');
 
 :root {
   --bg: #06050e;
@@ -85,34 +85,186 @@ header.site .inner {
   justify-content: space-between;
   gap: 2rem;
 }
-/* Header brand — per-letter synthesis palette matching the
-   hero wordmark. At header scale the five colors (H Ember,
-   E Sky Cyan, Q Firefly, U Vesper, .AI First Light) read as
-   a chromatic chain rather than five distinct signals, but
-   the semantic encoding carries through. The EQU group
-   carries the Sky Cyan underline echoing the Flavin tube
-   on the hero. */
+/* Header brand — true match to the hero wordmark treatment.
+   Same typography (Space Grotesk 700 with ss02/cv11), same
+   per-letter 135° shape-from-shading gradients, same Flavin
+   glow under EQU, same Skyspace aperture on the .AI dot,
+   same Q/U entangled-pair orbs with static thread and joint
+   stochastic flicker. Scaled for ~22px header size so the
+   orbs remain visible (0.22em vs hero's 0.14em). */
 header.site .brand {
-  font-family: var(--sans);
-  font-weight: 600;
+  font-family: 'Space Grotesk', var(--sans), sans-serif;
+  font-weight: 700;
   font-size: 1.35rem;
-  letter-spacing: 0.12em;
+  letter-spacing: 0.06em;
   text-transform: uppercase;
-  color: #FFE9B3;                           /* fallback */
+  font-feature-settings: "ss02", "cv11";
+  line-height: 1;
   text-decoration: none;
+  color: #FFE9B3;
+  filter: drop-shadow(2px 3px 4px rgba(0, 0, 0, 0.55));
 }
-header.site .brand .bh   { color: #E8875A; }
-header.site .brand .b-equ {
+header.site .brand .seg-h {
+  background: linear-gradient(135deg, #F3AA84 0%, #E8875A 50%, #A8502A 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+header.site .brand .seg-equ {
+  background: linear-gradient(135deg, #8DD8FB 0%, #4FC3F7 50%, #1580A5 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  position: relative;
   text-decoration: underline;
   text-decoration-color: #4FC3F7;
-  text-decoration-thickness: 0.06em;
-  text-underline-offset: 0.11em;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.09em;
   text-decoration-skip-ink: auto;
 }
-header.site .brand .be   { color: #4FC3F7; }
-header.site .brand .bq   { color: #9BF7C4; }
-header.site .brand .bu   { color: #D8B3F0; }
-header.site .brand .dot  { color: #FFE9B3; }
+header.site .brand .seg-equ::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.13em;
+  height: 0.07em;
+  background: transparent;
+  box-shadow:
+    0 -0.06em 0.2em  rgba(79, 195, 247, 0.4),
+    0 -0.16em 0.55em rgba(79, 195, 247, 0.22),
+    0  0.05em 0.18em rgba(79, 195, 247, 0.26);
+  pointer-events: none;
+}
+header.site .brand .seg-qu {
+  background: linear-gradient(135deg, #CAFBE2 0%, #9BF7C4 50%, #4FC38A 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  position: relative;
+}
+header.site .brand .seg-qu::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  transform: translate(-50%, -50%);
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 72% 50%,
+      rgba(216, 179, 240, 0.4) 0%,
+      rgba(216, 179, 240, 0)   55%),
+    #9BF7C4;
+  box-shadow: 0 0 5px rgba(155, 247, 196, 0.75),
+              0 0 10px rgba(155, 247, 196, 0.32);
+  animation: entangle-pulse 3.2s ease-in-out infinite,
+             entangle-flicker 7.3s linear infinite;
+}
+header.site .brand .seg-qu::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 75%;
+  transform: translate(-50%, -50%);
+  width: 0.22em;
+  height: 0.22em;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 28% 50%,
+      rgba(155, 247, 196, 0.4) 0%,
+      rgba(155, 247, 196, 0)   55%),
+    #D8B3F0;
+  box-shadow: 0 0 5px rgba(216, 179, 240, 0.75),
+              0 0 10px rgba(216, 179, 240, 0.32);
+  animation: entangle-pulse 3.2s ease-in-out infinite,
+             entangle-flicker 7.3s linear infinite;
+}
+header.site .brand .seg-u {
+  background: linear-gradient(135deg, #E5CCF7 0%, #D8B3F0 50%, #9870C2 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  letter-spacing: 0;
+}
+header.site .brand .entangle-thread {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  right: 25%;
+  height: 0.045em;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg,
+    rgba(155, 247, 196, 0.65) 0%,
+    rgba(220, 248, 232, 0.88) 40%,
+    rgba(245, 230, 252, 0.88) 60%,
+    rgba(216, 179, 240, 0.65) 100%);
+  border-radius: 0.03em;
+  box-shadow: 0 0 3px rgba(220, 230, 252, 0.28),
+              0 0 6px rgba(155, 247, 196, 0.2),
+              0 0 6px rgba(216, 179, 240, 0.2);
+  pointer-events: none;
+}
+header.site .brand .seg-dot {
+  background: radial-gradient(circle at 40% 40%,
+    #FFF7D8 0%,
+    #FFE9B3 45%,
+    #A77F33 85%,
+    #4C3A18 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+  position: relative;
+}
+header.site .brand .seg-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.52em;
+  height: 0.52em;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 233, 179, 0.22) 0%,
+    rgba(255, 233, 179, 0.09) 45%,
+    rgba(255, 233, 179, 0)    100%);
+  pointer-events: none;
+  z-index: -1;
+}
+header.site .brand .seg-ai {
+  background: linear-gradient(135deg, #FFF6D5 0%, #FFE9B3 50%, #AE8433 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+@keyframes entangle-pulse {
+  0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.82; }
+  50%      { transform: translate(-50%, -50%) scale(1.15); opacity: 1;    }
+}
+@keyframes entangle-flicker {
+  0%,   13.9%   { filter: brightness(1); }
+  14.2%, 14.5% { filter: brightness(1.45) drop-shadow(0 0 2px #9BF7C4); }
+  14.8%, 37.9% { filter: brightness(1); }
+  38.2%, 38.5% { filter: brightness(1.45) drop-shadow(0 0 2px #D8B3F0); }
+  38.8%, 60.9% { filter: brightness(1); }
+  61.2%, 61.5% { filter: brightness(1.45) drop-shadow(0 0 2px #9BF7C4); }
+  61.8%, 83.9% { filter: brightness(1); }
+  84.2%, 84.5% { filter: brightness(1.45) drop-shadow(0 0 2px #D8B3F0); }
+  84.8%, 100%  { filter: brightness(1); }
+}
+@media (prefers-reduced-motion: reduce) {
+  header.site .brand .seg-qu::before,
+  header.site .brand .seg-qu::after { animation: none !important; }
+}
 header.site .brand .path {
   font-family: var(--serif);
   font-size: 1.1rem;
