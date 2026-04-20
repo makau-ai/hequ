@@ -101,40 +101,46 @@ canvas {
   color: transparent;
 }
 .brand .seg-equ {                               /* EQU: sky cyan — Equation.
-                                                   The underline is rendered
-                                                   as a pseudo-element
-                                                   Flavin tube (see ::after)
-                                                   rather than
-                                                   text-decoration, so it
-                                                   can carry asymmetric
-                                                   volumetric glow above
-                                                   and below the bar. */
+                                                   The underline is the
+                                                   native text-decoration
+                                                   rule (so skip-ink keeps
+                                                   the gap around the Q
+                                                   descender); the Flavin
+                                                   volumetric glow rides
+                                                   on a separate
+                                                   pseudo-element. */
   background: linear-gradient(135deg, #8DD8FB 0%, #4FC3F7 50%, #1580A5 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
   position: relative;
+  text-decoration: underline;
+  text-decoration-color: #4FC3F7;
+  text-decoration-thickness: 0.07em;
+  text-underline-offset: 0.09em;
+  text-decoration-skip-ink: auto;
 }
-/* Flavin-tube EQU underline — the underline becomes a
-   physical fluorescent tube per the Turrell/Flavin SME.
-   Asymmetric glow (stronger upward into the letter bowls,
-   softer downward) because a real fluorescent tube lights
-   the ceiling more than the floor. Replaces native
-   text-decoration. */
+/* Flavin-tube glow — no visible bar of its own (the bar is
+   rendered by text-decoration above, which automatically
+   skips around the Q descender). This pseudo-element is
+   just a zero-fill box sitting exactly where the underline
+   is; its asymmetric box-shadow is the volumetric glow
+   that turns the underline into a physical fluorescent
+   tube. Stronger upward (into the letter bowls), softer
+   downward. */
 .brand .seg-equ::after {
   content: '';
   position: absolute;
   left: 0;
   right: 0;
-  bottom: 0.04em;
-  height: 0.09em;
-  background: linear-gradient(180deg, #8DD8FB 0%, #4FC3F7 60%, #2389AF 100%);
-  border-radius: 0.06em;
+  bottom: 0.13em;
+  height: 0.07em;
+  background: transparent;
   box-shadow:
-    0 -0.08em 0.25em rgba(79, 195, 247, 0.55),
-    0 -0.18em 0.55em rgba(79, 195, 247, 0.28),
-    0  0.04em 0.18em rgba(79, 195, 247, 0.32);
+    0 -0.06em 0.2em  rgba(79, 195, 247, 0.4),
+    0 -0.16em 0.55em rgba(79, 195, 247, 0.22),
+    0  0.05em 0.18em rgba(79, 195, 247, 0.26);
   pointer-events: none;
 }
 .brand .seg-qu  {                               /* Q: firefly — Quantum,
