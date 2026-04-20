@@ -106,14 +106,14 @@ canvas {
    pair that hovers between the two letters. Each orb
    keeps its home color and carries a crescent trace of
    the other on the flank that faces its partner. */
-/* Q-orb — aqua, sits just left of the midline at the
-   dead-center of seg-qu (vertical + horizontal). The
-   lilac crescent on its right flank faces U. */
+/* Q-orb — firefly green, sits in the dead center of the
+   Q glyph itself (inside the Q's counter). The vesper
+   crescent on its right flank faces U across the gap. */
 .brand .seg-qu::before {
   content: '';
   position: absolute;
   top: 50%;
-  left: calc(50% - 0.075em);
+  left: 25%;
   transform: translate(-50%, -50%);
   width: 0.14em;
   height: 0.14em;
@@ -127,16 +127,16 @@ canvas {
               0 0 26px rgba(155, 247, 196, 0.32);
   animation: entangle-pulse 3.2s ease-in-out infinite;
 }
-/* U-orb — lilac, sits just right of the midline at the
-   same vertical center. Mirror of the Q-orb — the two
-   circles touch at the seam and each holds a trace of
-   the other. Together they form a compact yin-yang pair
-   in the dead center of Q and U. */
+/* U-orb — vesper, sits in the dead center of the U
+   glyph itself (inside the U's bowl). The firefly
+   crescent on its left flank faces Q across the gap —
+   each orb lives inside its own letter but looks toward
+   its entangled partner. */
 .brand .seg-qu::after {
   content: '';
   position: absolute;
   top: 50%;
-  left: calc(50% + 0.075em);
+  left: 75%;
   transform: translate(-50%, -50%);
   width: 0.14em;
   height: 0.14em;
@@ -394,7 +394,7 @@ canvas {
           <span style="color:#E8875A">Human</span> &middot;
           <span style="color:#4FC3F7;text-decoration:underline;text-decoration-color:#4FC3F7;text-underline-offset:0.09em;text-decoration-thickness:0.07em">Equation</span> &middot;
           <span style="color:#9BF7C4">Quantum</span><span class="em-pair" aria-hidden="true"><span class="em-dot em-dot-q"></span><span class="em-dot em-dot-u"></span></span><span style="color:#D8B3F0">Unity</span> &middot;
-          <span style="color:#FFE9B3">Artificial Intelligence</span>
+          <span style="color:#4FC3F7">.</span><span style="color:#FFE9B3">Artificial Intelligence</span>
         </span>
       </a>
     </div>
