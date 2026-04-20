@@ -75,29 +75,44 @@ canvas {
   display: inline-block;
   color: #FFE9B3;  /* fallback; per-segment spans override */
 }
-/* Four-segment semantic encoding of the H / EQU / QU / .AI acronym. */
-.brand .seg-h   { color: #E8875A; }             /* H: warm amber — Human */
-.brand .seg-equ {                               /* EQU: teal — Equation.
+/* Per-letter intrinsic stroke gradient — each segment's color
+   becomes a vertical 3-stop gradient (cap-height +8% lightness,
+   baseline −10%) rendered via background-clip: text. The depth
+   lives INSIDE the letterform — the typographer's rule: depth
+   baked into the shape ages on geologic time, depth stacked on
+   top ages in months. */
+.brand .seg-h   {
+  background: linear-gradient(180deg, #F0A17B 0%, #E8875A 50%, #D46D3E 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.brand .seg-equ {                               /* EQU: sky cyan — Equation.
                                                    Native text-decoration
-                                                   underline with skip-ink
-                                                   disabled so the line
-                                                   passes THROUGH the Q
-                                                   descender, integrating
-                                                   visually with the Q
-                                                   tail. */
-  color: #4FC3F7;
+                                                   underline runs under all
+                                                   three glyphs. */
+  background: linear-gradient(180deg, #7ED0FA 0%, #4FC3F7 50%, #2BAEE4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
   text-decoration: underline;
   text-decoration-color: #4FC3F7;
   text-decoration-thickness: 0.07em;
   text-underline-offset: 0.09em;
   text-decoration-skip-ink: auto;
 }
-.brand .seg-qu  {                               /* QU: luminous aqua highlight
-                                                   WITHIN the EQU word-unit */
-  color: #9BF7C4;
+.brand .seg-qu  {                               /* Q: firefly — Quantum,
+                                                   nested inside EQU. */
+  background: linear-gradient(180deg, #BFFADB 0%, #9BF7C4 50%, #78EDAB 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
   text-shadow: 0 0 18px rgba(155, 247, 196, 0.25);
   position: relative;                           /* anchor for entanglement
-                                                   thread + Q-particle */
+                                                   thread + Q/U orbs */
 }
 /* The entangled pair lives AT the seam between Q and U,
    not over the individual glyphs. Two adjacent orbs
@@ -160,12 +175,62 @@ canvas {
                                                    Letter-spacing zero keeps
                                                    the EQU underline from
                                                    extending past U. */
-  color: #D8B3F0;
+  background: linear-gradient(180deg, #E0C4F5 0%, #D8B3F0 50%, #CBA0E7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
   text-shadow: 0 0 18px rgba(216, 179, 240, 0.3);
   letter-spacing: 0;
 }
-.brand .seg-dot { color: #4FC3F7; }             /* dot binds into EQU teal */
-.brand .seg-ai  { color: #FFE9B3; }             /* .AI: light parchment */
+.brand .seg-dot {                               /* dot binds into EQU sky cyan */
+  background: linear-gradient(180deg, #7ED0FA 0%, #4FC3F7 50%, #2BAEE4 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+.brand .seg-ai  {                               /* .AI: first light — dawn gold */
+  background: linear-gradient(180deg, #FFF2CE 0%, #FFE9B3 50%, #F5D583 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  color: transparent;
+}
+/* Entanglement thread — a vibrant strand running from Q-orb
+   (25% of seg-qu) to U-orb (75%). A bright energy peak bounces
+   back and forth between them on a 2.4s ease-in-out alternate
+   cycle, rendering the live quantum channel the founder asked
+   for. Firefly on Q side, Vesper on U side, white peak in the
+   middle; background-position animation translates the peak
+   along the thread. */
+.entangle-thread {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 25%;
+  right: 25%;
+  height: 0.035em;
+  transform: translateY(-50%);
+  background: linear-gradient(90deg,
+    rgba(155, 247, 196, 0.7)  0%,
+    rgba(216, 245, 222, 0.9)  35%,
+    rgba(255, 255, 255, 0.95) 50%,
+    rgba(232, 214, 248, 0.9)  65%,
+    rgba(216, 179, 240, 0.7)  100%);
+  background-size: 300% 100%;
+  background-position: 100% 0;
+  animation: entangle-bounce 2.4s ease-in-out infinite alternate;
+  border-radius: 0.03em;
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.35),
+              0 0 12px rgba(155, 247, 196, 0.25),
+              0 0 12px rgba(216, 179, 240, 0.25);
+  pointer-events: none;
+}
+@keyframes entangle-bounce {
+  from { background-position: 100% 0; }
+  to   { background-position: 0%   0; }
+}
 
 @keyframes entangle-pulse {
   0%, 100% { transform: translate(-50%, -50%) scale(1);    opacity: 0.82; }
@@ -197,10 +262,15 @@ canvas {
 @media (prefers-reduced-motion: reduce) {
   .title-group { animation: none !important; }
   .enter-link  { animation: none !important; }
-  /* Freeze the entangled pair in mid-correlation — the
-     orbs remain lit but nothing moves. */
+  /* Freeze the entangled pair and thread in mid-correlation —
+     orbs remain lit, thread remains visible with the energy
+     peak parked at center, nothing moves. */
   .brand .seg-qu::before,
   .brand .seg-qu::after { animation: none !important; }
+  .entangle-thread {
+    animation: none !important;
+    background-position: 50% 0 !important;
+  }
 }
 
 .tagline {
@@ -385,7 +455,7 @@ canvas {
 
 <div class="overlay">
   <div class="title-group">
-    <h1 class="brand" aria-label="hequ dot A I"><span class="seg-h">H</span><span class="seg-equ">E<span class="seg-qu">Q<span class="seg-u">U</span></span></span><span class="seg-dot">.</span><span class="seg-ai">AI</span></h1>
+    <h1 class="brand" aria-label="hequ dot A I"><span class="seg-h">H</span><span class="seg-equ">E<span class="seg-qu">Q<span class="seg-u">U</span><span class="entangle-thread" aria-hidden="true"></span></span></span><span class="seg-dot">.</span><span class="seg-ai">AI</span></h1>
     <div class="tagline">analyzing equations for unity</div>
     <div class="subtitle">The critical equations &middot; A select thread</div>
     <div class="about-name">
