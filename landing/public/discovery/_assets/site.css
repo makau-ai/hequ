@@ -85,16 +85,34 @@ header.site .inner {
   justify-content: space-between;
   gap: 2rem;
 }
+/* Header brand — per-letter synthesis palette matching the
+   hero wordmark. At header scale the five colors (H Ember,
+   E Sky Cyan, Q Firefly, U Vesper, .AI First Light) read as
+   a chromatic chain rather than five distinct signals, but
+   the semantic encoding carries through. The EQU group
+   carries the Sky Cyan underline echoing the Flavin tube
+   on the hero. */
 header.site .brand {
   font-family: var(--sans);
   font-weight: 600;
   font-size: 1.35rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #FFE9B3;                           /* fallback */
   text-decoration: none;
 }
-header.site .brand .dot { color: var(--accent-bright); }
+header.site .brand .bh   { color: #E8875A; }
+header.site .brand .b-equ {
+  text-decoration: underline;
+  text-decoration-color: #4FC3F7;
+  text-decoration-thickness: 0.06em;
+  text-underline-offset: 0.11em;
+  text-decoration-skip-ink: auto;
+}
+header.site .brand .be   { color: #4FC3F7; }
+header.site .brand .bq   { color: #9BF7C4; }
+header.site .brand .bu   { color: #D8B3F0; }
+header.site .brand .dot  { color: #FFE9B3; }
 header.site .brand .path {
   font-family: var(--serif);
   font-size: 1.1rem;
