@@ -73,11 +73,11 @@ canvas {
      and cleaner straight-leg forms; sharpens the "equ" and
      ".AI" lockup per the typography SME. */
   font-feature-settings: "ss02", "cv11";
-  text-shadow: 0 0 14px rgba(232, 135, 90, 0.12);
-  /* Contact shadow per the board chair's Pass 2 spec —
-     grounds the wordmark on #06050e so it reads as sitting
-     ON the page, not floating in the cosmos. */
-  filter: drop-shadow(0 3px 8px rgba(0, 0, 0, 0.55));
+  /* Directional cast shadow — single declared light vector
+     (azimuth 135°, elevation 60°) per the perception SME.
+     Shadow offset matches light direction so the eye reads
+     letters as objects on a surface, not text with sheen. */
+  filter: drop-shadow(4px 6px 8px rgba(0, 0, 0, 0.6));
   line-height: 1;
   display: inline-block;
   color: #FFE9B3;  /* fallback; per-segment spans override */
@@ -88,38 +88,62 @@ canvas {
    lives INSIDE the letterform — the typographer's rule: depth
    baked into the shape ages on geologic time, depth stacked on
    top ages in months. */
+/* Per-letter shape-from-shading gradient aligned to the
+   declared 135°/60° light vector — top-left bright, bottom-
+   right dark. This replaces the omnidirectional text-shadow
+   halos (which the perception SME flagged as actively
+   degrading depth by contradicting the light vector). */
 .brand .seg-h   {
-  background: linear-gradient(180deg, #F0A17B 0%, #E8875A 50%, #D46D3E 100%);
+  background: linear-gradient(135deg, #F3AA84 0%, #E8875A 50%, #A8502A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 16px rgba(232, 135, 90, 0.38);
 }
 .brand .seg-equ {                               /* EQU: sky cyan — Equation.
-                                                   Native text-decoration
-                                                   underline runs under all
-                                                   three glyphs. */
-  background: linear-gradient(180deg, #7ED0FA 0%, #4FC3F7 50%, #2BAEE4 100%);
+                                                   The underline is rendered
+                                                   as a pseudo-element
+                                                   Flavin tube (see ::after)
+                                                   rather than
+                                                   text-decoration, so it
+                                                   can carry asymmetric
+                                                   volumetric glow above
+                                                   and below the bar. */
+  background: linear-gradient(135deg, #8DD8FB 0%, #4FC3F7 50%, #1580A5 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 16px rgba(79, 195, 247, 0.35);
-  text-decoration: underline;
-  text-decoration-color: #4FC3F7;
-  text-decoration-thickness: 0.07em;
-  text-underline-offset: 0.09em;
-  text-decoration-skip-ink: auto;
+  position: relative;
+}
+/* Flavin-tube EQU underline — the underline becomes a
+   physical fluorescent tube per the Turrell/Flavin SME.
+   Asymmetric glow (stronger upward into the letter bowls,
+   softer downward) because a real fluorescent tube lights
+   the ceiling more than the floor. Replaces native
+   text-decoration. */
+.brand .seg-equ::after {
+  content: '';
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.04em;
+  height: 0.09em;
+  background: linear-gradient(180deg, #8DD8FB 0%, #4FC3F7 60%, #2389AF 100%);
+  border-radius: 0.06em;
+  box-shadow:
+    0 -0.08em 0.25em rgba(79, 195, 247, 0.55),
+    0 -0.18em 0.55em rgba(79, 195, 247, 0.28),
+    0  0.04em 0.18em rgba(79, 195, 247, 0.32);
+  pointer-events: none;
 }
 .brand .seg-qu  {                               /* Q: firefly — Quantum,
                                                    nested inside EQU. */
-  background: linear-gradient(180deg, #BFFADB 0%, #9BF7C4 50%, #78EDAB 100%);
+  background: linear-gradient(135deg, #CAFBE2 0%, #9BF7C4 50%, #4FC38A 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 16px rgba(155, 247, 196, 0.4);
   position: relative;                           /* anchor for entanglement
                                                    thread + Q/U orbs */
 }
@@ -186,29 +210,58 @@ canvas {
                                                    Letter-spacing zero keeps
                                                    the EQU underline from
                                                    extending past U. */
-  background: linear-gradient(180deg, #E0C4F5 0%, #D8B3F0 50%, #CBA0E7 100%);
+  background: linear-gradient(135deg, #E5CCF7 0%, #D8B3F0 50%, #9870C2 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 16px rgba(216, 179, 240, 0.45);
   letter-spacing: 0;
 }
-.brand .seg-dot {                               /* dot binds into EQU sky cyan */
-  background: linear-gradient(180deg, #7ED0FA 0%, #4FC3F7 50%, #2BAEE4 100%);
+.brand .seg-dot {                               /* .AI dot — Skyspace aperture.
+                                                   Radial gradient makes the
+                                                   dot read as looking INTO
+                                                   a chamber of first-light
+                                                   gold, not as a glyph on
+                                                   the surface. Paired with
+                                                   the ::before ambient
+                                                   aperture glow below. */
+  background: radial-gradient(circle at 40% 40%,
+    #FFF7D8 0%,
+    #FFE9B3 45%,
+    #A77F33 85%,
+    #4C3A18 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 12px rgba(79, 195, 247, 0.5);
+  position: relative;
+}
+/* Skyspace ambient aperture — soft first-light halo behind
+   the .AI dot suggesting the dot is the mouth of a chamber
+   leaking light into the space around it. Kept faint so the
+   dot reads as aperture, not as a bulb. */
+.brand .seg-dot::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 0.52em;
+  height: 0.52em;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 233, 179, 0.22) 0%,
+    rgba(255, 233, 179, 0.09) 45%,
+    rgba(255, 233, 179, 0) 100%);
+  pointer-events: none;
+  z-index: -1;
 }
 .brand .seg-ai  {                               /* .AI: first light — dawn gold */
-  background: linear-gradient(180deg, #FFF2CE 0%, #FFE9B3 50%, #F5D583 100%);
+  background: linear-gradient(135deg, #FFF6D5 0%, #FFE9B3 50%, #AE8433 100%);
   -webkit-background-clip: text;
   background-clip: text;
   -webkit-text-fill-color: transparent;
   color: transparent;
-  text-shadow: 0 0 16px rgba(255, 233, 179, 0.35);
 }
 /* Entanglement thread — a STATIC luminous tie from Q-orb
    (25%) to U-orb (75%) indicating shared state, not a
@@ -266,14 +319,11 @@ canvas {
    strip the glow and thicken the underline so the QU signal
    still reads without relying on color + shadow alone. */
 @media (prefers-contrast: more) {
-  .brand {
-    text-shadow: none;
-  }
-  .brand .seg-equ {
-    text-decoration-thickness: 0.14em;
-  }
-  .brand .seg-qu {
-    text-shadow: none;
+  .brand { text-shadow: none; }
+  .brand .seg-qu { text-shadow: none; }
+  .brand .seg-equ::after {
+    height: 0.14em;
+    box-shadow: none;
   }
   .brand .seg-qu::before,
   .brand .seg-qu::after {
@@ -281,6 +331,7 @@ canvas {
     height: 0.2em;
     box-shadow: none;
   }
+  .brand .seg-dot::before { display: none; }
 }
 /* Reduced-motion: disable the micro-animation if the user
    declared reduced-motion preference. */
